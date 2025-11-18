@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="p:domain_verify" content="ee9ab2c4e17d1904199ce6c30e0e9eb8"/>
-    <title>BEEHTA - Under Construction</title>
+    <title>beehta - Coming Soon</title>
     <style>
         * {
             margin: 0;
@@ -13,47 +12,202 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            overflow: hidden;
         }
 
-        main {
+        .main-content {
             flex: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
             padding: 20px;
+            position: relative;
+        }
+
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 177, 153, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(186, 200, 224, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            text-align: center;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
         }
 
         h1 {
-            font-size: 2rem;
-            color: #333;
-            text-align: center;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: #718096;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .construction-icon {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 2rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        .loader {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .loader span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        .loader span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loader span:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
         footer {
-            background-color: #474747;
-            padding: 20px;
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: flex-end;
             align-items: center;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        footer p {
-            color: white;
-            font-size: 0.9rem;
+        .footer-brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .footer-brand:hover {
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                margin-bottom: 1rem;
+            }
+
+            .subtitle {
+                margin-bottom: 1.5rem;
+            }
+
+            footer {
+                padding: 1rem 1.5rem;
+            }
+
+            .footer-brand {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            footer {
+                padding: 1rem;
+            }
+
+            .footer-brand {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <main>
-        <h1>The next big thing is under construction</h1>
+    <main class="main-content">
+        <div class="content-wrapper">
+            <div class="construction-icon">🚧</div>
+            <h1>
+                The <span class="highlight">next big thing</span><br>
+                is under construction
+            </h1>
+            <p class="subtitle">Something amazing is coming soon</p>
+            <div class="loader">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
     </main>
     
     <footer>
-        <p>beehta.com</p>
+        <a href="https://beehta.com" class="footer-brand">beehta.com</a>
     </footer>
 </body>
 </html>
