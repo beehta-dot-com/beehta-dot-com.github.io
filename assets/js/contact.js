@@ -42,14 +42,23 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAC_GXOmwB_iSkRvM";
 // Destination email - assembled at runtime, never in HTML.
 // Split across multiple variables to defeat simple scrapers.
 (function buildFormTarget() {
-  const _u  = "emails";
-  const _at = "\x40";           // @ (hex encoded)
-  const _d  = "beehta";
+  const _u   = "emails";
+  const _at  = "\x40";          // @ (hex encoded)
+  const _d   = "beehta";
   const _tld = "\x2ecom";       // .com (hex encoded)
   const _addr = _u + _at + _d + _tld;
   const form  = document.getElementById("contactForm");
   if (form) {
     form.action = "https://formsubmit.co/" + _addr;
+
+    // FormSubmit requires _next to be an absolute URL.
+    // A relative value would be resolved against formsubmit.co's own
+    // domain and cause a "Form should POST" error on redirect.
+    // new URL() resolves it correctly against the current page URL.
+    const nextField = form.querySelector('[name="_next"]');
+    if (nextField) {
+      nextField.value = new URL("contact.html?sent=1", window.location.href).href;
+    }
   }
 })();
 
