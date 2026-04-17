@@ -1,0 +1,317 @@
+/* ============================================================
+   TERMS.CSS - Legal / Terms & Conditions page styles
+============================================================ */
+
+/* ── Anchor link override for this page ────────────────── */
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  line-height: 1.7;
+}
+
+/* ── Header - terms-specific elements ──────────────────── */
+.header-inner {
+  max-width: 900px;
+  justify-content: space-between;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), box-shadow var(--transition);
+  font-family: var(--font);
+  text-decoration: none;
+}
+
+.back-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0, 122, 255, .3);
+  text-decoration: none;
+}
+
+.back-btn svg {
+  flex-shrink: 0;
+}
+
+.header-brand {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+
+.header-brand em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+/* ── Page Wrapper ───────────────────────────────────────── */
+.page-wrap {
+  margin-top: var(--header-h);
+  padding: 48px 24px 96px;
+}
+
+.content-shell {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── Page Hero ──────────────────────────────────────────── */
+.page-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-eyebrow {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 14px;
+}
+
+.page-hero h1 {
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+}
+
+.page-hero p {
+  margin-top: 10px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+/* ── Jump Navigation ────────────────────────────────────── */
+.jump-nav {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.jump-link {
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.jump-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ── Document Section Card ──────────────────────────────── */
+.doc-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 36px 40px;
+  margin-bottom: 24px;
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+.section-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.doc-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.doc-section p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.doc-section p:last-child {
+  margin-bottom: 0;
+}
+
+.doc-section h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 22px 0 10px;
+}
+
+.doc-section ul {
+  list-style: none;
+  margin-bottom: 14px;
+}
+
+.doc-section ul li {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  padding: 6px 0 6px 22px;
+  position: relative;
+  border-bottom: 1px solid var(--bg-page);
+}
+
+.doc-section ul li::before {
+  content: '›';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── Callout Boxes ──────────────────────────────────────── */
+.highlight-box {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+}
+
+.highlight-box p {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.warning-box {
+  background: #FFF8E5;
+  border-left: 3px solid #FF9F0A;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+}
+
+.warning-box p {
+  color: #7A5000;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ── Effective Date Badge ───────────────────────────────── */
+.effective-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F2F2F7;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* ── Back to Top ────────────────────────────────────────── */
+.back-top-wrap {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.back-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+
+.back-top-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color var(--transition);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .doc-section  { padding: 24px 22px; }
+  .page-wrap    { padding: 36px 16px 80px; }
+  .header-inner { padding: 0 16px; }
+  .jump-nav     { gap: 8px; }
+}

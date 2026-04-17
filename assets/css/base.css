@@ -1,0 +1,118 @@
+/* ============================================================
+   BASE.CSS - Shared tokens, reset & header across all pages
+============================================================ */
+
+/* ── Design Tokens ─────────────────────────────────────── */
+:root {
+  --bg-page:        #F2F2F7;
+  --bg-card:        #FFFFFF;
+  --bg-header:      rgba(255, 255, 255, 0.82);
+  --text-primary:   #2D2824;
+  --text-secondary: #5E564F;
+  --text-tertiary:  #9E968F;
+  --accent:         #C46D31;
+  --accent-light:   #F7EBE2;
+  --accent-hover:   #A65824;
+  --green:          #7B9160;
+  --border:         #DCD8D3;
+  --shadow-xs:      0 1px 4px rgba(0, 0, 0, .05);
+  --shadow-sm:      0 2px 12px rgba(0, 0, 0, .07);
+  --shadow-md:      0 6px 24px rgba(0, 0, 0, .10);
+  --shadow-lg:      0 12px 40px rgba(0, 0, 0, .14);
+  --radius-icon:    20px;
+  --radius-card:    20px;
+  --radius-pill:    100px;
+  --header-h:       62px;
+  --font:           'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --transition:     0.22s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+}
+
+input {
+  font-family: var(--font);
+}
+
+/* ── Fixed Header (shared shell) ────────────────────────── */
+header {
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--header-h);
+  background: var(--bg-header);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+}
+
+.header-inner {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* ── Responsive base ────────────────────────────────────── */
+@media (max-width: 720px) {
+  .header-inner {
+    padding: 0 18px;
+  }
+}
+
+/* ── Page Transition Animations ─────────────────────────── */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pageFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Runs automatically on every page load */
+body {
+  animation: pageFadeIn 0.35s ease both;
+}
+
+/* Added by transitions.js just before navigating away */
+body.page-leaving {
+  animation: pageFadeOut 0.26s ease forwards;
+  pointer-events: none; /* prevent clicks during fade-out */
+}

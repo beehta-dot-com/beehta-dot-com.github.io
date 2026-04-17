@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact - beehta.com</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/contact.css" />
+
+  <!-- Cloudflare Turnstile
+       Rendered explicitly via onloadTurnstileCallback in contact.js.
+       Site key is set in contact.js (TURNSTILE_SITE_KEY) - edit it there.
+  -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
+</head>
+<body>
+
+<!-- ============================================================
+     FIXED HEADER
+============================================================ -->
+<header>
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Back to Apps
+    </a>
+    <div class="header-brand">beehta<em>.com</em></div>
+    <!-- Spacer keeps brand centred -->
+    <div style="width:110px;" aria-hidden="true"></div>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE BODY
+============================================================ -->
+<div class="page-wrap">
+<div class="content-shell">
+
+  <!-- Page Hero -->
+  <div class="page-hero">
+    <div class="page-eyebrow">Get in Touch</div>
+    <h1>Contact Us</h1>
+    <p>Have a question, suggestion, or just want to say hello? We'd love to hear from you.</p>
+  </div>
+
+  <!-- Two-column layout: info left, form right -->
+  <div class="contact-layout">
+
+    <!-- ── Left: Info Panel ─────────────────────────────── -->
+    <div class="info-card">
+
+      <div class="info-item">
+        <div class="info-icon" style="background:#E5F1FF;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Email</h3>
+          <!-- No email shown here - use the form below -->
+          <p>Send us a message using the secure contact form. We'll reply to your email address.</p>
+        </div>
+      </div>
+
+      <hr class="info-divider" />
+
+      <div class="info-item">
+        <div class="info-icon" style="background:#C8F5F0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007A70"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Working Hours</h3>
+          <p>Monday – Friday<br/>9:00 AM – 6:00 PM (IST)</p>
+        </div>
+      </div>
+
+      <hr class="info-divider" />
+
+      <div class="info-item">
+        <div class="info-icon" style="background:#D4F5E2;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00743A"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="info-text">
+          <h3>Support Topics</h3>
+          <p>App feedback, bugs, business enquiries, and general questions.</p>
+        </div>
+      </div>
+
+      <hr class="info-divider" />
+
+      <div class="response-time">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007AFF"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span>Typical reply within 24 hours</span>
+      </div>
+
+    </div><!-- /info-card -->
+
+    <!-- ── Right: Contact Form ───────────────────────────── -->
+    <div class="form-card">
+      <h2>Send a Message</h2>
+
+      <!-- ── Success State (shown after redirect back) ────── -->
+      <!-- Optionally shown via URL param ?sent=1 -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#00743A"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="success-title">Message Sent!</div>
+        <div class="success-sub">Thanks for reaching out. We'll get back to you within 24 hours.</div>
+        <a class="back-home-btn" href="index.html">← Back to Apps</a>
+      </div>
+
+      <!-- ── Contact Form ──────────────────────────────────
+           ACTION is set dynamically by contact.js.
+           _next redirects back here with ?sent=1 on success.
+           _captcha:false disables FormSubmit's own reCAPTCHA
+           since we use Cloudflare Turnstile instead.
+      ─────────────────────────────────────────────────────── -->
+      <form id="contactForm" method="POST" autocomplete="off">
+
+        <!-- FormSubmit hidden controls -->
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_template" value="box" />
+        <input type="hidden" name="_subject" id="emailSubject" value="New message from beehta.com contact form" />
+        <!-- Replace the URL below with your live domain when deployed -->
+        <input type="hidden" name="_next" value="contact.html?sent=1" />
+        <!-- Honeypot - bots fill this, real users don't -->
+        <input type="text" name="_honey" style="display:none;" tabindex="-1" autocomplete="off" />
+
+        <!-- Name + Email row -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fieldName">Your Name <span class="req">*</span></label>
+            <input type="text" id="fieldName" name="name"
+                   placeholder="Jane Smith" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="fieldEmail">Your Email <span class="req">*</span></label>
+            <input type="email" id="fieldEmail" name="email"
+                   placeholder="jane@example.com" required autocomplete="email" />
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div class="form-group">
+          <label for="fieldSubject">Subject <span class="req">*</span></label>
+          <select id="fieldSubject" name="subject" required>
+            <option value="" disabled selected>Select a topic...</option>
+            <option value="App Feedback">App Feedback</option>
+            <option value="Bug Report">Bug Report</option>
+            <option value="Feature Request">Feature Request</option>
+            <option value="Business Enquiry">Business Enquiry</option>
+            <option value="General Question">General Question</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Message -->
+        <div class="form-group">
+          <label for="fieldMessage">Message <span class="req">*</span></label>
+          <textarea id="fieldMessage" name="message" rows="5"
+                    placeholder="Tell us how we can help..." required></textarea>
+        </div>
+
+        <!-- Cloudflare Turnstile
+             Widget is rendered explicitly by onloadTurnstileCallback in contact.js.
+             To change the site key, update TURNSTILE_SITE_KEY in contact.js only.
+        -->
+        <div class="turnstile-wrap">
+          <span class="turnstile-label">Human verification - required before sending</span>
+          <!-- Turnstile mounts the iframe widget into this div -->
+          <div id="turnstileWidget"></div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="submitBtn" class="submit-btn" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          Send Message
+        </button>
+        <p class="submit-hint" id="submitHint">Complete the verification above to enable sending.</p>
+
+      </form><!-- /contactForm -->
+    </div><!-- /form-card -->
+
+  </div><!-- /contact-layout -->
+
+</div><!-- /content-shell -->
+</div><!-- /page-wrap -->
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <div class="footer-links">
+    <a href="index.html">← Back to Apps</a>
+    <a href="terms.html">Terms &amp; Conditions</a>
+    <a href="terms.html#disclaimer">Disclaimer</a>
+    <a href="terms.html#privacy">Privacy Policy</a>
+  </div>
+  <p class="footer-copy">&copy; <span id="footerYear"></span> beehta.com. All rights reserved.</p>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script src="assets/js/contact.js"></script>
+<script src="assets/js/transitions.js"></script>
+
+<script>
+  // Show success state if redirected back with ?sent=1
+  (function checkSent() {
+    if (new URLSearchParams(window.location.search).get("sent") === "1") {
+      const form    = document.getElementById("contactForm");
+      const success = document.getElementById("successState");
+      const heading = document.querySelector(".form-card h2");
+      if (form)    form.style.display    = "none";
+      if (success) success.style.display = "block";
+      if (heading) heading.style.display = "none";
+    }
+  })();
+
+  // Mirror selected subject into the hidden _subject field
+  document.getElementById("fieldSubject").addEventListener("change", function () {
+    document.getElementById("emailSubject").value =
+      "beehta.com - " + this.value;
+  });
+</script>
+
+</body>
+</html>
