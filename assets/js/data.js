@@ -79,7 +79,7 @@ const APPS = [
     id: 2,
     name: "Authistant",
     tagline: "Logins Manager",
-    description: "Manage all the logins at one place without having to save password but through password hints",
+    description: "Manage all the logins at one place without having to save password but through password hints.",
     category: "Utilities",
     url: "https://logins.beehta.com",
     color: "#C9F7DC",
@@ -95,46 +95,46 @@ const APPS = [
       <path d="M14.5 15h6a2.5 2.5 0 0 1 0 5h-3a2.5 2.5 0 0 0 0 5h6" stroke="#1B8A4C" stroke-width="2" stroke-linecap="round"/>
     </svg>`,
   },
-  // {
-  //   id: 3,
-  //   name: "CloudNotes",
-  //   tagline: "Rich Text Note Taking",
-  //   description: "Capture every idea with rich formatting, embedded images, inline code, and smart tags. Syncs instantly across all your devices.",
-  //   category: "Productivity",
-  //   url: "#",
-  //   color: "#D0E9FF",
-  //   iconColor: "#0066CC",
-  //   rating: "4.8",
-  //   reviews: "3.4k",
-  //   isNew: false,
-  //   isFeatured: false,
-  //   logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-  //     <rect x="7" y="5" width="22" height="28" rx="3.5" fill="#0066CC" opacity="0.10"/>
-  //     <rect x="7" y="5" width="22" height="28" rx="3.5" stroke="#0066CC" stroke-width="2.2"/>
-  //     <path d="M12 14h14M12 19h14M12 24h9" stroke="#0066CC" stroke-width="2" stroke-linecap="round"/>
-  //     <circle cx="27" cy="8" r="5.5" fill="#0066CC"/>
-  //     <path d="M24.5 8h5M27 5.5V11" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
-  //   </svg>`,
-  // },
-  // {
-  //   id: 4,
-  //   name: "WeatherVue",
-  //   tagline: "Live Weather Dashboard",
-  //   description: "Real-time conditions, hourly and 7-day forecasts, severe weather alerts, and animated radar maps for any location worldwide.",
-  //   category: "Utilities",
-  //   url: "#",
-  //   color: "#FFF5CC",
-  //   iconColor: "#C97A00",
-  //   rating: "4.6",
-  //   reviews: "987",
-  //   isNew: false,
-  //   isFeatured: false,
-  //   logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-  //     <circle cx="19" cy="15" r="6" fill="#C97A00" opacity="0.9"/>
-  //     <path d="M19 5v3M19 24v3M8 15H5M32 15h-3M11.5 7.5l2 2M25.5 23.5l2 2M25.5 7.5l-2 2M11.5 23.5l-2 2" stroke="#C97A00" stroke-width="2" stroke-linecap="round"/>
-  //     <path d="M7 30c0-3.5 2.5-6 6-6 1.2 0 2.3.35 3.2.95C17 23.37 18.8 22 21 22c3.3 0 6 2.7 6 6" stroke="#C97A00" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
-  //   </svg>`,
-  // },
+  {
+    id: 3,
+    name: "Star Birthday",
+    tagline: "Star Birthday Calculator",
+    description: "",
+    category: "Utilities",
+    url: "https://star.beehta.com",
+    color: "#D0E9FF",
+    iconColor: "#0066CC",
+    rating: "4.8",
+    reviews: "3.4k",
+    isNew: false,
+    isFeatured: false,
+    logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="7" y="5" width="22" height="28" rx="3.5" fill="#0066CC" opacity="0.10"/>
+      <rect x="7" y="5" width="22" height="28" rx="3.5" stroke="#0066CC" stroke-width="2.2"/>
+      <path d="M12 14h14M12 19h14M12 24h9" stroke="#0066CC" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="27" cy="8" r="5.5" fill="#0066CC"/>
+      <path d="M24.5 8h5M27 5.5V11" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>`,
+  },
+  {
+    id: 4,
+    name: "AllCards",
+    tagline: "All data as cards",
+    description: "",
+    category: "Productivity",
+    url: "https://cards.beehta.com",
+    color: "#FFF5CC",
+    iconColor: "#C97A00",
+    rating: "4.6",
+    reviews: "987",
+    isNew: false,
+    isFeatured: false,
+    logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="19" cy="15" r="6" fill="#C97A00" opacity="0.9"/>
+      <path d="M19 5v3M19 24v3M8 15H5M32 15h-3M11.5 7.5l2 2M25.5 23.5l2 2M25.5 7.5l-2 2M11.5 23.5l-2 2" stroke="#C97A00" stroke-width="2" stroke-linecap="round"/>
+      <path d="M7 30c0-3.5 2.5-6 6-6 1.2 0 2.3.35 3.2.95C17 23.37 18.8 22 21 22c3.3 0 6 2.7 6 6" stroke="#C97A00" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
+    </svg>`,
+  },
   // {
   //   id: 5,
   //   name: "FitTrack",
