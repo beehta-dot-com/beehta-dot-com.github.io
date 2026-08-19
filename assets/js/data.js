@@ -197,4 +197,70 @@ const APPS = [
       <path d="M7 30c0-3.5 2.5-6 6-6 1.2 0 2.3.35 3.2.95C17 23.37 18.8 22 21 22c3.3 0 6 2.7 6 6" stroke="#C97A00" stroke-width="2" stroke-linecap="round" opacity="0.45"/>
     </svg>`,
   },
+  {
+    id: 5,
+    name: "BreakEvenCalc",
+    shortName: "BreakEvenCalc",
+    tagline: "Average Down Calculator",
+    description: "TBD",
+    category: "Utilities",
+    tags: ["TBD"],
+    subdomain: "beehta.com",
+    url: "https://beehta.com/break-even-calc/",
+    demoUrl: "https://beehta.com/break-even-calc/demo",
+    allowEmbed: false,
+    thumbnail: "",
+    previewAspect: "16:9",
+    status: "active",
+    version: "1.4.0",
+    launchDate: "2024-11",
+    updatedDate: "2026-06-02",
+    docsUrl: "",
+    repoUrl: "",
+    featured: true,
+    visible: true,
+    sortOrder: 1,
+    color: "#FFD6E7",
+    iconColor: "#D63384",
+    logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="7" y="9"  width="16" height="3" rx="1.5" fill="#D63384" opacity="0.25"/>
+      <rect x="7" y="15" width="22" height="3" rx="1.5" fill="#D63384" opacity="0.55"/>
+      <rect x="7" y="21" width="13" height="3" rx="1.5" fill="#D63384" opacity="0.80"/>
+      <circle cx="28" cy="28" r="7" fill="#D63384"/>
+      <path d="M24.5 28l2.8 2.8L31.5 24" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+  },
+  {
+    id: 6,
+    name: "ToToTo",
+    shortName: "ToToTO",
+    tagline: "Notes List Manager",
+    description: "TBD",
+    category: "Utilities",
+    tags: ["TBD"],
+    subdomain: "beehta.com",
+    url: "https://beehta.com/tototo/",
+    demoUrl: "http://beehta.com/tototo/demo",
+    allowEmbed: false,
+    thumbnail: "",
+    previewAspect: "16:9",
+    status: "active",
+    version: "1.4.0",
+    launchDate: "2024-11",
+    updatedDate: "2026-06-02",
+    docsUrl: "",
+    repoUrl: "",
+    featured: true,
+    visible: true,
+    sortOrder: 1,
+    color: "#FFD6E7",
+    iconColor: "#D63384",
+    logo: `<svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="7" y="9"  width="16" height="3" rx="1.5" fill="#D63384" opacity="0.25"/>
+      <rect x="7" y="15" width="22" height="3" rx="1.5" fill="#D63384" opacity="0.55"/>
+      <rect x="7" y="21" width="13" height="3" rx="1.5" fill="#D63384" opacity="0.80"/>
+      <circle cx="28" cy="28" r="7" fill="#D63384"/>
+      <path d="M24.5 28l2.8 2.8L31.5 24" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+  },
 ];
