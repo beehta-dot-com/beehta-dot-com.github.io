@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>beehta.com</title>
+  <meta name="description" content="A collection of small applications for everyday digital work." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/index.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">beehta<em>.com</em></div>
+
+    <nav class="header-nav" aria-label="Primary">
+      <a href="#directory">Applications</a>
+      <a href="#" id="categoriesLink">Categories</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <span class="header-count mono" id="headerCount"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero: intentionally small, hands off to the catalogue quickly -->
+  <section class="hero">
+    <p class="hero-eyebrow mono">beehta.com</p>
+    <h1>A collection of small applications for everyday digital work.</h1>
+    <p class="hero-sub">Each application runs on its own subdomain. This page is the directory.</p>
+  </section>
+
+  <!-- Search + filters -->
+  <section class="control-bar" id="directory">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" id="searchInput" placeholder="Search applications" autocomplete="off" aria-label="Search applications" />
+      <kbd class="search-kbd mono">⌘K</kbd>
+    </div>
+    <div class="filter-row" id="filterRow" role="list" aria-label="Filter by category"></div>
+  </section>
+
+  <!-- Catalogue -->
+  <section class="catalogue">
+    <div class="catalogue-header">
+      <h2 class="section-title" id="sectionTitle">Applications</h2>
+      <span class="section-count mono" id="sectionCount" aria-live="polite"></span>
+    </div>
+    <div class="apps-list" id="appsList" role="list"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-name">beehta<em>.com</em></div>
+        <p class="footer-brand-sub">A collection of small applications for everyday digital work.</p>
+      </div>
+      <div class="footer-cols">
+        <div>
+          <div class="footer-col-title">Legal</div>
+          <div class="footer-col">
+            <a href="terms.html">Terms &amp; Conditions</a>
+            <a href="terms.html#disclaimer">Disclaimer</a>
+            <a href="terms.html#privacy">Privacy Policy</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Contact</div>
+          <div class="footer-col">
+            <a href="contact.html">Contact us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider" />
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; <span id="copYear"></span> beehta.com. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/transitions.js"></script>
+
+</body>
+</html>
