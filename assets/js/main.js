@@ -99,8 +99,6 @@ function previewPanel(app) {
       </div>
     </div>`;
 }
-
-/* ── App rows ───────────────────────────────────────────── */
 function renderApps() {
   const query    = document.getElementById("searchInput").value.toLowerCase().trim();
   const category = activeCategory();
@@ -128,7 +126,7 @@ function renderApps() {
       <div class="empty-state">
         <p class="empty-title">No applications found</p>
         <p class="empty-sub">Try a different search term or category.</p>
-        <button class="btn-secondary" id="clearFiltersBtn">Clear filters</button>
+        <button class="btn-clear" id="clearFiltersBtn">Clear filters</button>
       </div>`;
     const clearBtn = document.getElementById("clearFiltersBtn");
     if (clearBtn) clearBtn.addEventListener("click", () => {
@@ -147,13 +145,19 @@ function renderApps() {
 
     return `
       <article class="app-row${app.featured ? " is-featured" : ""}" role="listitem">
-        <div class="row-main">
+        <a class="row-main" href="${app.url}" target="_blank" rel="noopener noreferrer"
+           aria-label="Open ${app.name} in a new tab">
           <div class="row-icon" style="background:${app.color};">${app.logo}</div>
           <div class="row-identity">
             <div class="row-name-line">
               <h3 class="row-name">${app.name}</h3>
               ${app.version ? `<span class="row-version mono">v${app.version}</span>` : ""}
               ${app.featured ? `<span class="row-featured-tag">Featured</span>` : ""}
+              <svg class="row-external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
             </div>
             <p class="row-tagline">${app.tagline}</p>
             <p class="row-desc">${app.description}</p>
@@ -163,13 +167,9 @@ function renderApps() {
               <span class="row-subdomain mono">${app.subdomain}</span>
               ${updated ? `<span class="row-updated">${updated}</span>` : ""}
             </div>
-            <div class="row-actions">
-              <a class="btn-primary" href="${app.url}" target="_blank" rel="noopener noreferrer">Open application</a>
-              ${app.demoUrl ? `<button class="btn-secondary preview-toggle" data-toggle="${app.id}" aria-expanded="false">View demo</button>` : ""}
-            </div>
           </div>
-        </div>
-        <div class="row-preview" id="preview-${app.id}" hidden>
+        </a>
+        <div class="row-preview">
           ${previewPanel(app)}
         </div>
       </article>`;
@@ -178,19 +178,8 @@ function renderApps() {
   attachRowHandlers();
 }
 
-/* ── Interaction: expand/collapse preview, lazy-load iframe ── */
+/* ── Interaction: lazy-load the live demo iframe on request ── */
 function attachRowHandlers() {
-  document.querySelectorAll(".preview-toggle").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.toggle;
-      const panel = document.getElementById(`preview-${id}`);
-      const isOpen = !panel.hidden;
-      panel.hidden = isOpen;
-      btn.setAttribute("aria-expanded", String(!isOpen));
-      btn.textContent = isOpen ? "View demo" : "Hide demo";
-    });
-  });
-
   document.querySelectorAll("[data-load-demo]").forEach(btn => {
     btn.addEventListener("click", () => {
       const id   = btn.dataset.loadDemo;
@@ -240,14 +229,7 @@ function initSearchShortcut() {
 
 /* ── Initialise ─────────────────────────────────────────── */
 (function init() {
-  const visibleCount = APPS.filter(a => a.visible).length;
-
-  const copYearEl = document.getElementById("copYear");
-  const countEl   = document.getElementById("headerCount");
-  const searchEl  = document.getElementById("searchInput");
-
-  if (copYearEl) copYearEl.textContent = new Date().getFullYear();
-  if (countEl)   countEl.textContent   = `${visibleCount} apps`;
+  const searchEl = document.getElementById("searchInput");
 
   if (!document.getElementById("filterRow") || !document.getElementById("appsList") || !searchEl) {
     console.error(

@@ -130,9 +130,3 @@ function onTurnstileExpired() {        // eslint-disable-line no-unused-vars
     // No e.preventDefault() - let it submit normally.
   });
 })();
-
-/* ── Footer Year ────────────────────────────────────────── */
-(function setYear() {
-  const el = document.getElementById("footerYear");
-  if (el) el.textContent = new Date().getFullYear();
-})();

@@ -17,21 +17,9 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="brand">beehta<em>.com</em></div>
-
-    <nav class="header-nav" aria-label="Primary">
-      <a href="#directory">Applications</a>
-      <a href="#" id="categoriesLink">Categories</a>
-      <a href="/contact">Contact</a>
-    </nav>
-
-    <div class="header-right">
-      <span class="header-count mono" id="headerCount"></span>
-    </div>
-  </div>
-</header>
+<header id="siteHeader"></header>
+<script src="assets/js/partials.js"></script>
+<script>Partials.renderHeader();</script>
 
 <main>
 
@@ -66,36 +54,8 @@
 
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-brand-name">beehta<em>.com</em></div>
-        <p class="footer-brand-sub">A collection of small applications for everyday digital work.</p>
-      </div>
-      <div class="footer-cols">
-        <div>
-          <div class="footer-col-title">Legal</div>
-          <div class="footer-col">
-            <a href="/terms">Terms &amp; Conditions</a>
-            <a href="/terms#disclaimer">Disclaimer</a>
-            <a href="/terms#privacy">Privacy Policy</a>
-          </div>
-        </div>
-        <div>
-          <div class="footer-col-title">Contact</div>
-          <div class="footer-col">
-            <a href="/contact">Contact us</a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr class="footer-divider" />
-    <div class="footer-bottom">
-      <p class="footer-copy">&copy; <span id="copYear"></span> beehta.com. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+<footer id="siteFooter"></footer>
+<script>Partials.renderFooter();</script>
 
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>

@@ -22,19 +22,9 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a class="back-btn" href="/">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M19 12H5M12 5l-7 7 7 7"/>
-      </svg>
-      Back to apps
-    </a>
-    <div class="header-brand">beehta<em>.com</em></div>
-    <div style="width:96px;" aria-hidden="true"></div>
-  </div>
-</header>
+<header id="siteHeader"></header>
+<script src="assets/js/partials.js"></script>
+<script>Partials.renderHeader();</script>
 
 <div class="page-wrap">
 <div class="content-shell">
@@ -196,15 +186,8 @@
 </div><!-- /content-shell -->
 </div><!-- /page-wrap -->
 
-<footer>
-  <div class="footer-links">
-    <a href="/">Back to apps</a>
-    <a href="/terms">Terms &amp; Conditions</a>
-    <a href="/terms#disclaimer">Disclaimer</a>
-    <a href="/terms#privacy">Privacy Policy</a>
-  </div>
-  <p class="footer-copy">&copy; <span id="footerYear"></span> beehta.com. All rights reserved.</p>
-</footer>
+<footer id="siteFooter"></footer>
+<script>Partials.renderFooter();</script>
 
 <script src="assets/js/contact.js"></script>
 <script src="assets/js/transitions.js"></script>
