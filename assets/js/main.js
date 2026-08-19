@@ -241,12 +241,26 @@ function initSearchShortcut() {
 /* ── Initialise ─────────────────────────────────────────── */
 (function init() {
   const visibleCount = APPS.filter(a => a.visible).length;
-  document.getElementById("copYear").textContent = new Date().getFullYear();
-  document.getElementById("headerCount").textContent = `${visibleCount} apps`;
+
+  const copYearEl = document.getElementById("copYear");
+  const countEl   = document.getElementById("headerCount");
+  const searchEl  = document.getElementById("searchInput");
+
+  if (copYearEl) copYearEl.textContent = new Date().getFullYear();
+  if (countEl)   countEl.textContent   = `${visibleCount} apps`;
+
+  if (!document.getElementById("filterRow") || !document.getElementById("appsList") || !searchEl) {
+    console.error(
+      "beehta: expected elements (#filterRow, #appsList, #searchInput) were not found. " +
+      "This usually means index.html is out of sync with main.js - check that both files " +
+      "were deployed from the same version of the site."
+    );
+    return;
+  }
 
   renderFilters();
   renderApps();
   initSearchShortcut();
 
-  document.getElementById("searchInput").addEventListener("input", renderApps);
+  searchEl.addEventListener("input", renderApps);
 })();

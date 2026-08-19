@@ -51,13 +51,13 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAC_GXOmwB_iSkRvM";
   if (form) {
     form.action = "https://formsubmit.co/" + _addr;
 
-    // FormSubmit requires _next to be an absolute URL.
-    // A relative value would be resolved against formsubmit.co's own
-    // domain and cause a "Form should POST" error on redirect.
-    // new URL() resolves it correctly against the current page URL.
+    // FormSubmit requires _next to be an absolute URL, otherwise it
+    // resolves against formsubmit.co's own domain and errors out.
+    // Built from location.origin (not a relative path) so the redirect
+    // lands back on the clean "/contact" URL rather than "/contact.html".
     const nextField = form.querySelector('[name="_next"]');
     if (nextField) {
-      nextField.value = new URL("contact.html?sent=1", window.location.href).href;
+      nextField.value = window.location.origin + "/contact?sent=1";
     }
   }
 })();
