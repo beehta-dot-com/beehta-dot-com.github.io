@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>beehta.com</title>
+  <meta name="description" content="A collection of small applications for everyday digital work." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/index.css" />
+</head>
+<body>
+
+<header id="siteHeader"></header>
+<script src="assets/js/partials.js"></script>
+<script>Partials.renderHeader();</script>
+
+<main>
+
+  <!-- Hero: compact, hands off to the directory quickly -->
+  <section class="hero">
+    <p class="hero-eyebrow mono">beehta.com — application portal</p>
+    <h1>A collection of small applications for everyday digital work.</h1>
+    <p class="hero-sub">Each application runs on its own subdomain. Select one to preview it live.</p>
+  </section>
+
+  <!-- Search + filters -->
+  <section class="control-bar" id="directory">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" id="searchInput" placeholder="Search applications" autocomplete="off" aria-label="Search applications" />
+      <kbd class="search-kbd mono">&#8984;K</kbd>
+    </div>
+    <div class="filter-row" id="filterRow" role="list" aria-label="Filter by category"></div>
+  </section>
+
+  <!-- Portfolio: split master/detail on desktop, card grid on mobile -->
+  <section class="portfolio">
+    <div class="portfolio-header">
+      <h2 class="section-title" id="sectionTitle">Applications</h2>
+      <span class="section-count mono" id="sectionCount" aria-live="polite"></span>
+    </div>
+
+    <div class="portfolio-shell">
+
+      <!-- Left / Navigation pane -->
+      <div class="nav-pane">
+        <div class="apps-nav-list" id="appsNavList" role="list" aria-label="Application list"></div>
+      </div>
+
+      <!-- Right / Live interactive preview pane (desktop only) -->
+      <aside class="preview-pane" id="previewPane" aria-label="Live application preview"></aside>
+
+      <!-- Mobile fallback: static cards, no iframe -->
+      <div class="apps-card-grid" id="appsCardGrid" role="list" aria-label="Application list"></div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer id="siteFooter"></footer>
+<script>Partials.renderFooter();</script>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/transitions.js"></script>
+
+</body>
+</html>

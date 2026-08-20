@@ -1,0 +1,308 @@
+/* ============================================================
+   CONTACT.CSS - Contact page
+============================================================ */
+
+a { color: var(--accent); }
+a:hover { text-decoration: underline; }
+
+body { line-height: 1.6; }
+
+/* ── Page wrapper ───────────────────────────────────────── */
+.page-wrap { margin-top: var(--header-h); padding: 44px 24px 90px; }
+.content-shell { max-width: 860px; margin: 0 auto; }
+
+/* ── Page hero ──────────────────────────────────────────── */
+.page-hero { text-align: center; margin-bottom: 34px; }
+
+.page-eyebrow {
+  font-size: 11.5px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.4vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+
+.page-hero p {
+  margin-top: 9px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Contact layout ─────────────────────────────────────── */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 1px;
+  align-items: start;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+/* ── Info panel ─────────────────────────────────────────── */
+.info-card {
+  background: var(--bg-surface);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.info-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.info-text h3 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.info-text p {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.info-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+.response-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-tint);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 9px 13px;
+}
+
+.response-time svg { color: var(--accent); flex-shrink: 0; }
+
+.response-time span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-soft);
+}
+
+/* ── Form card ──────────────────────────────────────────── */
+.form-card {
+  background: var(--bg-surface);
+  padding: 30px 32px;
+}
+
+.form-card h2 {
+  font-family: var(--font-display);
+  font-size: 16.5px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+/* ── Form elements ──────────────────────────────────────── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.form-group label .req { color: var(--accent); margin-left: 2px; }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-sunken);
+  font-size: 13.5px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--t-fast), background var(--t-fast);
+  resize: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text-tertiary); }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  background: var(--bg-raised);
+}
+
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235C6577' stroke-width='2.3' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.form-group select option { background: var(--bg-surface); color: var(--text-primary); }
+
+/* ── Turnstile ──────────────────────────────────────────── */
+.turnstile-wrap { margin: 16px 0 18px; }
+
+.turnstile-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 9px;
+  display: block;
+}
+
+/* ── Submit button ──────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  padding: 12px 22px;
+  border-radius: var(--r-sm);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  color: var(--text-tertiary);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: not-allowed;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn.ready {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #12161F;
+  cursor: pointer;
+}
+
+.submit-btn.ready:hover { background: var(--accent-soft); border-color: var(--accent-soft); }
+
+.submit-btn.loading {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: rgba(18,22,31,.7);
+  cursor: wait;
+}
+
+.submit-hint {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  margin-top: 11px;
+}
+
+/* ── Success state ──────────────────────────────────────── */
+.success-state { display: none; text-align: center; padding: 44px 20px; }
+
+.success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-lg);
+  background: var(--accent-tint);
+  color: var(--accent);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.success-sub {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+}
+
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--t-fast), color var(--t-fast);
+}
+
+.back-home-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .contact-layout { grid-template-columns: 1fr; }
+  .form-card      { padding: 22px 20px; }
+}
+
+@media (max-width: 560px) {
+  .form-row     { grid-template-columns: 1fr; }
+  .page-wrap    { padding: 32px 16px 70px; }
+  .header-inner { padding: 0 16px; }
+}
