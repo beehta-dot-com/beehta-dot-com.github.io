@@ -1,0 +1,271 @@
+/* ============================================================
+   TERMS.CSS - Legal / Policies page (accordion)
+============================================================ */
+
+a { color: var(--accent-dark); }
+a:hover { text-decoration: underline; }
+
+body { line-height: 1.65; }
+
+/* ── Page wrapper ───────────────────────────────────────── */
+.page-wrap { margin-top: var(--header-h); padding: 48px 24px 100px; }
+.content-shell { max-width: 800px; margin: 0 auto; }
+
+/* ── Page hero ──────────────────────────────────────────── */
+.page-hero { text-align: center; margin-bottom: 30px; }
+
+.page-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  color: var(--accent-dark);
+  margin-bottom: 11px;
+}
+
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.6vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.page-hero p {
+  margin-top: 10px;
+  font-size: 14.5px;
+  color: var(--text-secondary);
+}
+
+/* ── Jump nav ───────────────────────────────────────────── */
+.jump-nav {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.jump-link {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast);
+}
+
+.jump-link:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+  background: var(--accent-tint);
+  text-decoration: none;
+}
+
+/* ── Accordion container ────────────────────────────────── */
+.doc-accordion {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.acc-item {
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+.acc-item:last-child { border-bottom: none; }
+
+/* ── Accordion header (clickable) ───────────────────────── */
+.acc-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  text-align: left;
+  transition: background var(--t-fast);
+}
+
+.acc-header:hover { background: var(--bg-raised); }
+
+.acc-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--accent-tint);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.acc-title-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.acc-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  color: var(--text-primary);
+}
+
+.acc-date {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.acc-chevron {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform var(--t-base);
+}
+
+.acc-item.is-open .acc-chevron { transform: rotate(180deg); color: var(--accent-dark); }
+
+/* ── Accordion panel: smooth height via grid-rows trick ──── */
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--t-base);
+}
+
+.acc-item.is-open .acc-panel { grid-template-rows: 1fr; }
+
+.acc-panel-inner {
+  overflow: hidden;
+  padding: 0 24px;
+}
+
+.acc-item.is-open .acc-panel-inner {
+  padding: 0 24px 24px;
+}
+
+/* ── Document text ──────────────────────────────────────── */
+.acc-panel-inner p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 13px;
+}
+
+.acc-panel-inner p:last-child { margin-bottom: 0; }
+
+.acc-panel-inner h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 18px 0 9px;
+}
+
+.acc-panel-inner ul { list-style: none; margin-bottom: 13px; }
+
+.acc-panel-inner ul li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 0 6px 20px;
+  position: relative;
+  border-bottom: 1px solid var(--bg-sunken);
+}
+
+.acc-panel-inner ul li::before {
+  content: '\2013';
+  position: absolute;
+  left: 2px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ── Callout boxes ──────────────────────────────────────── */
+.highlight-box {
+  background: var(--sage-tint);
+  border-left: 3px solid var(--sage);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 13px 17px;
+  margin: 16px 0;
+}
+
+.highlight-box p {
+  color: #4E6045;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.warning-box {
+  background: var(--ochre-tint);
+  border-left: 3px solid var(--ochre);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 13px 17px;
+  margin: 16px 0;
+}
+
+.warning-box p {
+  color: #6B551A;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ── Contact CTA ────────────────────────────────────────── */
+.contact-cta {
+  text-align: center;
+  margin-top: 26px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 32px 24px;
+}
+
+.contact-cta h2 {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.contact-cta p {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.btn-primary-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 11px 26px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #FFF8EE;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+
+.btn-primary-lg:hover {
+  background: var(--accent-dark);
+  text-decoration: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .acc-header   { padding: 16px 18px; gap: 12px; }
+  .acc-panel-inner { padding: 0 18px; }
+  .acc-item.is-open .acc-panel-inner { padding: 0 18px 20px; }
+  .page-wrap    { padding: 34px 16px 80px; }
+  .header-inner { padding: 0 16px; }
+  .jump-nav     { gap: 7px; }
+}
