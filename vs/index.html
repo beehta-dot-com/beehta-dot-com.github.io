@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera Studio — Identity design, modular by default</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F2EA;
+    --ink:#2A2438;
+    --ink-soft:#6A6379;
+    --line: rgba(42,36,56,0.14);
+    --card-bg: rgba(255,255,255,0.88);
+    --tile-neutral:#EFE9FB;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  html, body{ position:relative; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', system-ui, sans-serif; margin:0; letter-spacing:-0.01em; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  .wrap{ max-width:1180px; margin:0 auto; padding-left:clamp(1.25rem,4vw,3rem); padding-right:clamp(1.25rem,4vw,3rem); }
+
+  /* ============ FULL-PAGE TILE BACKGROUND ============ */
+  #block-grid{
+    position:absolute;
+    top:0; left:0; width:100%;
+    z-index:0;
+    overflow:hidden;
+  }
+  .tile{
+    position:absolute; top:0; left:0;
+    box-sizing:border-box;
+    cursor:default;
+    user-select:none;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Grotesk', sans-serif;
+    transition:transform .22s cubic-bezier(.4,0,.2,1), filter .15s ease;
+  }
+  .tile.movable{ cursor:pointer; }
+  .tile.movable:hover{ filter:brightness(1.05); }
+  .tile:focus-visible{ outline:3px solid var(--ink); outline-offset:-3px; z-index:3; }
+
+  .tile-gap{
+    position:absolute; top:0; left:0;
+    box-sizing:border-box;
+    border:2px dashed var(--line);
+    border-radius:6px;
+    background:rgba(255,255,255,0.25);
+    transition:transform .22s cubic-bezier(.4,0,.2,1);
+    pointer-events:none;
+  }
+
+  /* --- band 1: color, solid border --- */
+  .tile.band-1{ border:4px solid var(--ink); }
+
+  /* --- band 2: color, no border, flush --- */
+  .tile.band-2{ border:0; }
+
+  /* --- band 3: double border (thick outer, thin inner) --- */
+  .tile.band-3{ background-color:var(--ink) !important; padding:6px; }
+  .tile.band-3 .inner-frame{ width:100%; height:100%; border:2px solid var(--paper); box-sizing:border-box; }
+
+  /* --- band 4: numbered, no border --- */
+  .tile.band-4{ border:0; }
+  .tile.band-4 .tile-number{
+    font-family:'IBM Plex Mono', monospace; font-weight:600;
+    font-size:clamp(0.95rem, 1.6vw, 1.3rem); color:var(--ink);
+    text-shadow:0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  /* --- band 5: raised 3D shadow (needs a transparent gap to be visible) --- */
+  .tile.band-5{
+    border:7px solid transparent;
+    background-clip:padding-box;
+    box-shadow:
+      -6px -6px 12px rgba(255,255,255,0.55),
+      6px 6px 16px rgba(42,36,56,0.28),
+      inset 1px 1px 2px rgba(255,255,255,0.35);
+  }
+
+  /* --- band 6: no border, chasing glow (toggled via inline style in JS) --- */
+  .tile.band-6{ border:0; outline-width:3px; outline-offset:-3px; }
+
+  /* sparkle particles (small feedback burst when a tile successfully slides) */
+  .sparkle{
+    position:absolute; width:18px; height:18px; background:var(--ink);
+    clip-path:polygon(50% 0%, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0% 50%, 39% 38%);
+    box-shadow:0 0 10px 3px rgba(255,255,255,0.95);
+    pointer-events:none; z-index:7; opacity:0; transform:scale(0) rotate(0deg);
+    animation:sparkle-pulse .55s ease forwards;
+  }
+  @keyframes sparkle-pulse{
+    0%{ opacity:0; transform:scale(0) rotate(0deg); }
+    45%{ opacity:1; transform:scale(1) rotate(50deg); }
+    100%{ opacity:0; transform:scale(0.35) rotate(90deg); }
+  }
+
+  /* ============ CONTENT LAYER ============ */
+  .content{ position:relative; z-index:1; pointer-events:none; }
+  .content nav, .content .hero-card, .content .section-card, .content footer, .content .tip{ pointer-events:auto; }
+
+  /* ============ Nav ============ */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(245,242,234,0.85);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem; }
+  .brand .dot{ width:9px; height:9px; border-radius:2px; background:#DFEDF7; border:1px solid var(--ink); display:inline-block; transform:rotate(20deg); }
+  .nav-links{ display:flex; gap:1.75rem; font-size:0.92rem; list-style:none; margin:0; padding:0; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); transition:color .2s; }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-cta{ font-size:0.85rem; padding:0.5rem 1.05rem; border:1px solid var(--ink); border-radius:100px; text-decoration:none; white-space:nowrap; }
+  @media (max-width:720px){ .nav-links{ display:none; } }
+
+  /* ============ Hero ============ */
+  .hero-row{ min-height:70vh; width:100%; display:flex; align-items:center; justify-content:center; padding:5rem 1.5rem 2.5rem; }
+  .hero-card{
+    max-width:760px; text-align:center;
+    background:var(--card-bg);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    padding:clamp(2.25rem,5vw,3.25rem) clamp(1.5rem,5vw,3rem);
+    border-radius:24px;
+    box-shadow:0 20px 50px rgba(42,36,56,0.10), 0 0 0 1px rgba(255,255,255,0.5);
+  }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:0.76rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:1rem; display:flex; align-items:center; justify-content:center; gap:0.6rem; }
+  .eyebrow::before,.eyebrow::after{ content:''; width:20px; height:1px; background:var(--ink-soft); }
+  .hero-card h1{ font-size:clamp(1.9rem,5vw,3.3rem); font-weight:600; line-height:1.1; }
+  .hero-card p{ margin-top:1.25rem; max-width:48ch; margin-left:auto; margin-right:auto; color:var(--ink-soft); font-size:clamp(1rem,1.3vw,1.08rem); }
+  .ctas{ margin-top:1.75rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  .btn{ font-size:0.95rem; font-weight:600; padding:0.8rem 1.6rem; border-radius:100px; text-decoration:none; display:inline-block; border:none; cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn.primary{ background:var(--ink); color:var(--paper); }
+  .btn.primary:hover{ box-shadow:0 10px 24px rgba(42,36,56,0.28); }
+  .btn.secondary{ background:rgba(255,255,255,0.9); border:1px solid var(--ink); color:var(--ink); }
+
+  .tip{
+    display:block; text-align:center; margin:0 auto 2.5rem; max-width:640px;
+    background:rgba(255,255,255,0.65); backdrop-filter:blur(6px);
+    border-radius:16px; padding:0.85rem 1.3rem; font-size:0.86rem; color:var(--ink-soft);
+  }
+
+  /* ============ Section divider labels (mark where each band begins) ============ */
+  .band-label{
+    display:flex; justify-content:center; margin:0 0 1.25rem;
+  }
+  .band-label span{
+    background:rgba(255,255,255,0.75); backdrop-filter:blur(6px);
+    border:1px solid var(--line); border-radius:100px;
+    padding:0.45rem 1.1rem; font-family:'IBM Plex Mono', monospace;
+    font-size:0.74rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);
+  }
+  .band-spacer{ height:clamp(30vh, 34vh, 40vh); position:relative; }
+
+  /* ============ Data sections ============ */
+  .data-row{ padding:clamp(2.5rem,6vw,4rem) 1.5rem; }
+  .section-card{
+    max-width:1080px; margin:0 auto;
+    background:var(--card-bg);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-radius:26px;
+    padding:clamp(2rem,4vw,3rem);
+    box-shadow:0 20px 50px rgba(42,36,56,0.08), 0 0 0 1px rgba(255,255,255,0.5);
+  }
+  .section-card.dark{ background:rgba(42,36,56,0.92); color:var(--paper); }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:2rem; margin-bottom:2rem; flex-wrap:wrap; }
+  .section-head h2{ font-size:clamp(1.5rem,3.2vw,2.1rem); font-weight:600; }
+  .section-head p{ max-width:38ch; color:var(--ink-soft); font-size:0.95rem; margin-top:0.5rem; }
+  .section-card.dark .section-head p{ color:rgba(245,242,234,0.65); }
+  .section-note{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--ink-soft); text-align:right; max-width:20ch; }
+  .section-card.dark .section-note{ color:rgba(245,242,234,0.55); }
+
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:1px; background:rgba(245,242,234,0.16); border:1px solid rgba(245,242,234,0.16); border-radius:14px; overflow:hidden; }
+  .stat{ background:rgba(42,36,56,0.98); padding:1.4rem 1.2rem; }
+  .stat .num{ font-family:'IBM Plex Mono', monospace; font-size:clamp(1.7rem,3.6vw,2.3rem); font-weight:500; }
+  .stat:nth-child(1) .num{ color:#DFEDF7; }
+  .stat:nth-child(2) .num{ color:#FBF1CE; }
+  .stat:nth-child(3) .num{ color:#FBE6E3; }
+  .stat:nth-child(4) .num{ color:#E1F0E2; }
+  .stat .label{ margin-top:0.4rem; font-size:0.82rem; color:rgba(245,242,234,0.7); }
+
+  .study-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.1rem; }
+  .study-card{ background:rgba(255,255,255,0.7); border:1px solid var(--line); border-radius:16px; padding:1.4rem 1.3rem; }
+  .study-card .head{ display:flex; align-items:center; gap:0.55rem; margin-bottom:0.65rem; }
+  .study-card .name{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:1.02rem; }
+  .study-card .sector{ font-size:0.8rem; color:var(--ink-soft); margin-bottom:0.9rem; }
+  .study-card .metric-row{ display:flex; justify-content:space-between; align-items:baseline; padding-top:0.75rem; border-top:1px dashed var(--line); }
+  .study-card .metric-row .k{ font-size:0.78rem; color:var(--ink-soft); }
+  .study-card .metric-row .v{ font-family:'IBM Plex Mono', monospace; font-weight:500; font-size:0.92rem; }
+  .swatch-dot{ width:9px; height:9px; border-radius:2px; display:inline-block; margin-right:0.5rem; border:1px solid rgba(42,36,56,0.3); }
+
+  /* ============ Footer ============ */
+  footer{ background:var(--ink); color:var(--paper); padding:clamp(2.5rem,5vw,3.5rem) 0 1.5rem; }
+  .footer-top{ display:flex; justify-content:space-between; gap:2.5rem; flex-wrap:wrap; padding-bottom:2.25rem; border-bottom:1px solid rgba(245,242,234,0.16); }
+  .footer-brand{ max-width:32ch; }
+  .footer-brand .brand{ color:var(--paper); }
+  .footer-brand p{ color:rgba(245,242,234,0.62); font-size:0.92rem; margin-top:0.9rem; }
+  .footer-cols{ display:flex; gap:3.5rem; flex-wrap:wrap; }
+  .footer-col h4{ font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase; color:rgba(245,242,234,0.55); margin-bottom:0.9rem; font-weight:400; }
+  .footer-col a{ display:block; text-decoration:none; color:rgba(245,242,234,0.85); font-size:0.92rem; margin-bottom:0.6rem; }
+  .footer-col a:hover{ color:#DFEDF7; }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:1.5rem; font-size:0.8rem; color:rgba(245,242,234,0.5); font-family:'IBM Plex Mono', monospace; flex-wrap:wrap; gap:0.5rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Interactive tile background: six vertical bands, each its own box treatment -->
+<div id="block-grid" aria-hidden="true"></div>
+
+<div class="content">
+  <nav>
+    <div class="wrap">
+      <div class="brand"><span class="dot"></span>Tessera</div>
+      <ul class="nav-links">
+        <li><a href="#numbers">Numbers</a></li>
+        <li><a href="#studies">Case studies</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a class="nav-cta" href="#contact">Start a project</a>
+    </div>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <div class="hero-row">
+    <div class="hero-card">
+      <div class="eyebrow">Identity design, modular by default</div>
+      <h1>Every brand is a set of loose pieces. We help you arrange them until they click.</h1>
+      <p>Tessera is a small identity studio. The tiled field behind this page is built from the same units we design brands with — six bands, six treatments of the same box.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#contact">Start a project</a>
+        <a class="btn secondary" href="#studies">See the results</a>
+      </div>
+    </div>
+  </div>
+
+  <p class="tip">Each band below is its own sliding puzzle with one or two empty gaps. Click a tile next to a gap to slide it in — or focus a tile and press an arrow key.</p>
+
+  <!-- ================= BAND 1 ================= -->
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 1 — color, bordered</span></div>
+  </div>
+
+  <!-- ================= DATA SECTION 1 ================= -->
+  <section class="data-row" id="numbers">
+    <div class="section-card dark">
+      <div class="section-head">
+        <div>
+          <h2>By the measure</h2>
+          <p>No tiles here — this is the studio's actual production record, fixed in place.</p>
+        </div>
+        <div class="section-note mono">FIXED DATA — 2021–2026</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="num mono">214</div><div class="label">Identities shipped</div></div>
+        <div class="stat"><div class="num mono">6</div><div class="label">Industries specialized</div></div>
+        <div class="stat"><div class="num mono">3.2 wk</div><div class="label">Average sprint length</div></div>
+        <div class="stat"><div class="num mono">94%</div><div class="label">Clients retained past yr. 1</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BAND 2 ================= -->
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 2 — color, borderless</span></div>
+  </div>
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 3 — double border</span></div>
+  </div>
+
+  <!-- ================= DATA SECTION 2 ================= -->
+  <section class="data-row" id="studies">
+    <div class="section-card">
+      <div class="section-head">
+        <div>
+          <h2>Case studies, in numbers</h2>
+          <p>A fixed record, not a board — four engagements and what changed after launch.</p>
+        </div>
+        <div class="section-note mono">FIXED DATA — SELECTED CLIENTS</div>
+      </div>
+      <div class="study-grid">
+        <div class="study-card">
+          <div class="head"><span class="swatch-dot" style="background:#FCE9D6"></span><span class="name">Fernwell Botanicals</span></div>
+          <div class="sector">CPG · full identity + packaging</div>
+          <div class="metric-row"><span class="k">Time to launch</span><span class="v">4 weeks</span></div>
+          <div class="metric-row"><span class="k">Result</span><span class="v">+38% DTC conversion</span></div>
+        </div>
+        <div class="study-card">
+          <div class="head"><span class="swatch-dot" style="background:#DFEDF7"></span><span class="name">Northbound Coffee</span></div>
+          <div class="sector">Hospitality · identity + signage</div>
+          <div class="metric-row"><span class="k">Time to launch</span><span class="v">3 weeks</span></div>
+          <div class="metric-row"><span class="k">Result</span><span class="v">+52% repeat visits</span></div>
+        </div>
+        <div class="study-card">
+          <div class="head"><span class="swatch-dot" style="background:#EFE6F6"></span><span class="name">Aster &amp; Cole</span></div>
+          <div class="sector">Fintech · identity + product UI</div>
+          <div class="metric-row"><span class="k">Time to launch</span><span class="v">6 weeks</span></div>
+          <div class="metric-row"><span class="k">Result</span><span class="v">+21% signup completion</span></div>
+        </div>
+        <div class="study-card">
+          <div class="head"><span class="swatch-dot" style="background:#FBF1CE"></span><span class="name">Loom Studio Co.</span></div>
+          <div class="sector">Creative services · identity + site</div>
+          <div class="metric-row"><span class="k">Time to launch</span><span class="v">2 weeks</span></div>
+          <div class="metric-row"><span class="k">Result</span><span class="v">+64% inbound inquiries</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BAND 4 ================= -->
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 4 — numbered</span></div>
+  </div>
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 5 — raised 3D</span></div>
+  </div>
+  <div class="band-spacer">
+    <div class="band-label"><span>Band 6 — chasing glow</span></div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="contact">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand"><span class="dot"></span>Tessera</div>
+          <p>A small identity studio. Six modules, one system, arranged for one brand at a time.</p>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Studio</h4>
+            <a href="#numbers">Numbers</a>
+            <a href="#studies">Case studies</a>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <a href="mailto:hello@tessera.studio">hello@tessera.studio</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Tessera Studio. All pieces reserved.</span>
+        <span>Built to be rearranged.</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var grid = document.getElementById('block-grid');
+  var BAND_VARIANTS = ['band-1','band-2','band-3','band-4','band-5','band-6'];
+  var EMPTY_PER_BAND = 2; // one or two gaps per section — using two throughout
+  var STORAGE_KEY = 'tessera_puzzle_bands_v1';
+
+  var blockSize = 130;
+  var cols = 0, totalRows = 0;
+  var glowIntervals = [];
+  var bandControllers = [];
+
+  function getBlockSize(){
+    var w = window.innerWidth;
+    if (w < 480) return 78;
+    if (w < 768) return 96;
+    if (w < 1200) return 116;
+    if (w < 1600) return 136;
+    return 156;
+  }
+
+  function getPageHeight(){
+    return Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+  }
+
+  function randomHue(seedIndex){
+    // spread hues pleasantly rather than fully random clumping
+    return (seedIndex * 137.508) % 360;
+  }
+  function tileColor(hue){ return 'hsl(' + hue + ', 60%, 88%)'; }
+
+  function loadAllBandStates(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch(e){ return null; }
+  }
+  function saveAllBandStates(){
+    try{
+      var payload = bandControllers.map(function(bc){ return bc.serialize(); });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ cols: cols, payload: payload }));
+    } catch(e){ /* storage unavailable — arrangement just won't persist */ }
+  }
+
+  function getAdjacentSlots(slot, rowsN, colsN){
+    var r = Math.floor(slot / colsN), c = slot % colsN;
+    var res = [];
+    if (r > 0) res.push(slot - colsN);
+    if (r < rowsN - 1) res.push(slot + colsN);
+    if (c > 0) res.push(slot - 1);
+    if (c < colsN - 1) res.push(slot + 1);
+    return res;
+  }
+
+  function spawnSparkles(container, x, y, count){
+    count = count || 3;
+    for (var i = 0; i < count; i++){
+      var s = document.createElement('span');
+      s.className = 'sparkle';
+      s.style.width = '13px'; s.style.height = '13px';
+      s.style.left = (x + (Math.random() * 30 - 15)) + 'px';
+      s.style.top = (y + (Math.random() * 30 - 15)) + 'px';
+      s.style.animationDelay = (Math.random() * 90) + 'ms';
+      container.appendChild(s);
+      (function(el){ setTimeout(function(){ el.remove(); }, 650); })(s);
+    }
+  }
+
+  function startGlowChase(tiles){
+    var idx = 0, hueStep = 0;
+    return setInterval(function(){
+      tiles.forEach(function(t){ t.style.outlineColor = 'transparent'; t.style.boxShadow = 'none'; });
+      if (!tiles.length) return;
+      var t = tiles[idx];
+      var h = hueStep % 360;
+      t.style.outlineColor = 'hsl(' + h + ', 70%, 50%)';
+      t.style.boxShadow = '0 0 16px 3px hsla(' + h + ', 80%, 60%, 0.6)';
+      idx = (idx + 1) % tiles.length;
+      hueStep += 18;
+    }, 360);
+  }
+
+  // ---------- one sliding puzzle for a single band ----------
+  function createBandPuzzle(container, bandRowsN, colsN, size, variant, savedState){
+    var total = bandRowsN * colsN;
+    var emptyCount = Math.min(EMPTY_PER_BAND, Math.max(1, total - 2));
+    var tileCount = total - emptyCount;
+
+    var tileAt = new Array(total);
+    var slotOf = new Array(tileCount);
+    var emptySlots = [];
+
+    function resetSolved(){
+      for (var i = 0; i < total; i++) tileAt[i] = (i < tileCount) ? i : -1;
+      for (var j = 0; j < tileCount; j++) slotOf[j] = j;
+      emptySlots = [];
+      for (var k = tileCount; k < total; k++) emptySlots.push(k);
+    }
+
+    function shuffle(moves){
+      for (var m = 0; m < moves; m++){
+        var eIdx = Math.floor(Math.random() * emptySlots.length);
+        var emptySlot = emptySlots[eIdx];
+        var neigh = getAdjacentSlots(emptySlot, bandRowsN, colsN).filter(function(s){ return tileAt[s] !== -1; });
+        if (!neigh.length) continue;
+        var pick = neigh[Math.floor(Math.random() * neigh.length)];
+        var tId = tileAt[pick];
+        tileAt[emptySlot] = tId; slotOf[tId] = emptySlot;
+        tileAt[pick] = -1;
+        emptySlots[eIdx] = pick;
+      }
+    }
+
+    var restored = false;
+    if (savedState && savedState.total === total && savedState.tileCount === tileCount &&
+        Array.isArray(savedState.slotOf) && Array.isArray(savedState.emptySlots)){
+      slotOf = savedState.slotOf.slice();
+      emptySlots = savedState.emptySlots.slice();
+      for (var s = 0; s < total; s++) tileAt[s] = -1;
+      for (var tId2 = 0; tId2 < tileCount; tId2++) tileAt[slotOf[tId2]] = tId2;
+      restored = true;
+    } else {
+      resetSolved();
+      shuffle(220);
+    }
+
+    container.style.position = 'relative';
+    container.style.width = '100%';
+    container.style.height = (bandRowsN * size) + 'px';
+
+    var tileEls = new Array(tileCount);
+    var gapEls = [];
+    var band6List = [];
+
+    for (var i2 = 0; i2 < tileCount; i2++){
+      var tile = document.createElement('div');
+      tile.className = 'tile ' + variant;
+      tile.style.width = size + 'px';
+      tile.style.height = size + 'px';
+      tile.tabIndex = 0;
+      tile.setAttribute('role', 'button');
+      tile.dataset.tileId = i2;
+
+      var hue = randomHue(i2 + Math.floor(Math.random() * 3));
+      if (variant === 'band-3'){
+        var inner = document.createElement('div');
+        inner.className = 'inner-frame';
+        inner.style.background = tileColor(hue);
+        tile.appendChild(inner);
+      } else {
+        tile.style.backgroundColor = tileColor(hue);
+      }
+      if (variant === 'band-4'){
+        var label = document.createElement('span');
+        label.className = 'tile-number';
+        label.textContent = i2 + 1;
+        tile.appendChild(label);
+      }
+      tile.setAttribute('aria-label', (variant === 'band-4' ? ('Puzzle tile ' + (i2 + 1)) : 'Puzzle tile') + ', click or press an arrow key to slide it into an adjacent gap');
+
+      tile.addEventListener('click', function(){ tryMove(parseInt(this.dataset.tileId, 10)); });
+      tile.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ' ||
+            e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+          e.preventDefault();
+          tryMove(parseInt(this.dataset.tileId, 10));
+        }
+      });
+
+      container.appendChild(tile);
+      tileEls[i2] = tile;
+      if (variant === 'band-6') band6List.push(tile);
+    }
+
+    for (var g = 0; g < emptyCount; g++){
+      var gap = document.createElement('div');
+      gap.className = 'tile-gap';
+      gap.style.width = size + 'px';
+      gap.style.height = size + 'px';
+      container.appendChild(gap);
+      gapEls.push(gap);
+    }
+
+    function coordsFor(slot){
+      return { x: (slot % colsN) * size, y: Math.floor(slot / colsN) * size };
+    }
+
+    function placeAll(){
+      for (var t = 0; t < tileCount; t++){
+        var xy = coordsFor(slotOf[t]);
+        tileEls[t].style.transform = 'translate(' + xy.x + 'px,' + xy.y + 'px)';
+      }
+      for (var e2 = 0; e2 < emptySlots.length; e2++){
+        var xy2 = coordsFor(emptySlots[e2]);
+        gapEls[e2].style.transform = 'translate(' + xy2.x + 'px,' + xy2.y + 'px)';
+      }
+    }
+    placeAll();
+
+    function updateMovable(){
+      for (var t2 = 0; t2 < tileCount; t2++){
+        var adj = getAdjacentSlots(slotOf[t2], bandRowsN, colsN);
+        var movable = adj.some(function(s){ return emptySlots.indexOf(s) !== -1; });
+        tileEls[t2].classList.toggle('movable', movable);
+      }
+    }
+    updateMovable();
+
+    function tryMove(tileId){
+      var slot = slotOf[tileId];
+      var adj = getAdjacentSlots(slot, bandRowsN, colsN);
+      var emptyIdx = -1;
+      for (var k2 = 0; k2 < emptySlots.length; k2++){
+        if (adj.indexOf(emptySlots[k2]) !== -1){ emptyIdx = k2; break; }
+      }
+      if (emptyIdx === -1) return;
+      var emptySlot = emptySlots[emptyIdx];
+      tileAt[emptySlot] = tileId; slotOf[tileId] = emptySlot;
+      tileAt[slot] = -1;
+      emptySlots[emptyIdx] = slot;
+      placeAll();
+      updateMovable();
+      var xy = coordsFor(emptySlot);
+      spawnSparkles(container, xy.x + size / 2, xy.y + size / 2, 3);
+      saveAllBandStates();
+    }
+
+    if (band6List.length) glowIntervals.push(startGlowChase(band6List));
+    if (!restored) saveAllBandStates();
+
+    return {
+      serialize: function(){
+        return { total: total, tileCount: tileCount, slotOf: slotOf.slice(), emptySlots: emptySlots.slice() };
+      }
+    };
+  }
+
+  // ---------- overall page background: split into six bands ----------
+  function buildBackground(){
+    blockSize = getBlockSize();
+    var pageHeight = getPageHeight();
+    cols = Math.ceil(window.innerWidth / blockSize);
+    totalRows = Math.ceil(pageHeight / blockSize);
+
+    glowIntervals.forEach(function(id){ clearInterval(id); });
+    glowIntervals = [];
+    grid.innerHTML = '';
+    bandControllers = [];
+
+    var base = Math.floor(totalRows / BAND_VARIANTS.length);
+    var remainder = totalRows % BAND_VARIANTS.length;
+    var bandRowCounts = BAND_VARIANTS.map(function(_, idx){ return base + (idx < remainder ? 1 : 0); });
+
+    var savedAll = loadAllBandStates();
+    var savedMatches = savedAll && savedAll.cols === cols && Array.isArray(savedAll.payload) && savedAll.payload.length === BAND_VARIANTS.length;
+
+    grid.style.height = (totalRows * blockSize) + 'px';
+
+    for (var i = 0; i < BAND_VARIANTS.length; i++){
+      var bandRowsN = bandRowCounts[i];
+      if (bandRowsN <= 0) continue;
+      var bandContainer = document.createElement('div');
+      grid.appendChild(bandContainer);
+      var savedState = savedMatches ? savedAll.payload[i] : null;
+      var controller = createBandPuzzle(bandContainer, bandRowsN, cols, blockSize, BAND_VARIANTS[i], savedState);
+      bandControllers.push(controller);
+    }
+  }
+
+  var resizeTimer;
+  function scheduleRebuild(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      var newSize = getBlockSize();
+      var newCols = Math.ceil(window.innerWidth / newSize);
+      var newRows = Math.ceil(getPageHeight() / newSize);
+      if (newCols !== cols || newRows !== totalRows || newSize !== blockSize) buildBackground();
+    }, 180);
+  }
+
+  window.addEventListener('resize', scheduleRebuild);
+  var contentEl = document.querySelector('.content');
+  if (window.ResizeObserver && contentEl){
+    new ResizeObserver(scheduleRebuild).observe(contentEl);
+  }
+
+  buildBackground();
+  window.addEventListener('load', function(){ setTimeout(scheduleRebuild, 400); });
+})();
+</script>
+</body>
+</html>
