@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tessera Studio — Identity design, modular by default</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F2EA;
+    --paper-soft:#EFEADD;
+    --ink:#2A2438;
+    --ink-soft:#6A6379;
+    --line: rgba(42,36,56,0.16);
+    --blush:#F3C6C0;
+    --butter:#F1DC9B;
+    --sage:#BFD8C0;
+    --sky:#B7D2E9;
+    --lilac:#D2C1E7;
+    --peach:#F2CBA0;
+    --ring: rgba(42,36,56,0.55);
+    --radius: 14px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', system-ui, sans-serif;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding-left:clamp(1.25rem, 4vw, 3rem);
+    padding-right:clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,242,234,0.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .brand{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700; font-size:1.1rem; letter-spacing:0.01em;
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .brand .dot{
+    width:9px; height:9px; border-radius:2px;
+    background:var(--sky); border:1px solid var(--ink);
+    display:inline-block; transform:rotate(20deg);
+  }
+  .nav-links{ display:flex; gap:1.75rem; font-size:0.92rem; }
+  .nav-links a{ text-decoration:none; color:var(--ink-soft); transition:color .2s; }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-cta{
+    font-size:0.85rem; padding:0.5rem 1.05rem;
+    border:1px solid var(--ink); border-radius:100px;
+    text-decoration:none; white-space:nowrap;
+  }
+  @media (max-width:720px){ .nav-links{ display:none; } }
+
+  /* ---------- Ruler motif ---------- */
+  .ruler{
+    display:flex; align-items:flex-end;
+    width:100%; height:22px;
+    overflow:hidden;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .ruler .tick{
+    flex:1 0 auto;
+    width:1px;
+    height:7px;
+    background:var(--line);
+    position:relative;
+  }
+  .ruler .tick.major{ height:14px; background:var(--ink-soft); }
+  .ruler .tick.major::after{
+    content: attr(data-n);
+    position:absolute; bottom:16px; left:-6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9px; color:var(--ink-soft);
+  }
+  .ruler.on-dark .tick{ background:rgba(245,242,234,0.25); }
+  .ruler.on-dark .tick.major{ background:rgba(245,242,234,0.7); }
+  .ruler.on-dark .tick.major::after{ color:rgba(245,242,234,0.7); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    width:100%;
+    padding:clamp(3.5rem, 9vw, 6.5rem) 0 clamp(3rem, 7vw, 5rem);
+    background:
+      radial-gradient(ellipse at 85% 15%, rgba(183,210,233,0.5), transparent 55%),
+      radial-gradient(ellipse at 10% 85%, rgba(243,198,192,0.45), transparent 50%),
+      var(--paper);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--ink-soft); margin-bottom:1.1rem;
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .eyebrow::before{
+    content:''; width:22px; height:1px; background:var(--ink-soft);
+  }
+  .hero h1{
+    font-size:clamp(2.1rem, 5.4vw, 4rem);
+    font-weight:600;
+    max-width:16ch;
+    line-height:1.05;
+  }
+  .hero .sub{
+    margin-top:1.6rem;
+    max-width:46ch;
+    font-size:clamp(1rem, 1.3vw, 1.15rem);
+    color:var(--ink-soft);
+  }
+  .hero .ctas{ margin-top:2.2rem; display:flex; gap:1rem; flex-wrap:wrap; }
+  .btn{
+    font-family:'Inter', sans-serif;
+    font-size:0.95rem; font-weight:600;
+    padding:0.8rem 1.6rem; border-radius:100px;
+    text-decoration:none; display:inline-block;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn.primary{ background:var(--ink); color:var(--paper); }
+  .btn.primary:hover{ box-shadow:0 10px 24px rgba(42,36,56,0.28); }
+  .btn.secondary{ background:transparent; border:1px solid var(--ink); color:var(--ink); }
+
+  /* ---------- Section chrome ---------- */
+  section{ padding:clamp(3.25rem, 7vw, 5.5rem) 0; }
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:2rem; margin-bottom:clamp(2rem, 5vw, 3rem);
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:clamp(1.6rem, 3.4vw, 2.35rem); font-weight:600;
+  }
+  .section-head p{
+    max-width:38ch; color:var(--ink-soft); font-size:0.98rem; margin-top:0.6rem;
+  }
+  .section-note{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    color:var(--ink-soft); text-align:right; max-width:24ch;
+  }
+
+  /* ---------- Tile board ---------- */
+  .board{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 15vw, 200px), 1fr));
+    gap:clamp(0.7rem, 1.6vw, 1.2rem);
+  }
+  .tile{
+    --tile-color: var(--sky);
+    background:var(--tile-color);
+    aspect-ratio: 1 / 1;
+    border-radius:var(--radius);
+    border:1px solid rgba(42,36,56,0.14);
+    padding:clamp(0.8rem, 1.8vw, 1.2rem);
+    display:flex; flex-direction:column; justify-content:space-between;
+    cursor:grab;
+    user-select:none;
+    transition: transform .18s ease, box-shadow .18s ease, outline-color .15s ease;
+    outline: 2px solid transparent;
+    outline-offset:3px;
+    position:relative;
+  }
+  .tile:active{ cursor:grabbing; }
+  .tile:hover{ transform:translateY(-3px); box-shadow:0 10px 20px rgba(42,36,56,0.14); }
+  .tile:focus-visible{ outline-color:var(--ink); }
+  .tile.selected{
+    outline: 2px solid var(--ink);
+    box-shadow:0 0 0 5px rgba(42,36,56,0.10);
+  }
+  .tile.dragging{ opacity:0.4; }
+  .tile.swapped{ animation:pulse .4s ease; }
+  @keyframes pulse{ 0%{ transform:scale(0.94);} 60%{ transform:scale(1.03);} 100%{ transform:scale(1);} }
+  .tile .tile-index{
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:rgba(42,36,56,0.55);
+  }
+  .tile .tile-label{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:1.02rem;
+    line-height:1.2;
+  }
+  .tile .tile-desc{
+    font-size:0.78rem; color:rgba(42,36,56,0.62); margin-top:0.25rem;
+  }
+  .board-hint{
+    margin-top:1.1rem; font-size:0.82rem; color:var(--ink-soft);
+    display:flex; align-items:center; gap:0.5rem;
+  }
+  .board-hint svg{ width:14px; height:14px; flex:none; }
+
+  /* ---------- Data sections ---------- */
+  .data-dark{
+    background:var(--ink); color:var(--paper);
+  }
+  .data-dark .section-head p{ color:rgba(245,242,234,0.65); }
+  .data-dark .section-note{ color:rgba(245,242,234,0.55); }
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(190px,1fr));
+    gap:1px;
+    background:rgba(245,242,234,0.16);
+    border:1px solid rgba(245,242,234,0.16);
+  }
+  .stat{
+    background:var(--ink);
+    padding:clamp(1.4rem,3vw,2rem);
+  }
+  .stat .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(2rem, 4.4vw, 2.8rem);
+    font-weight:500;
+  }
+  .stat:nth-child(1) .num{ color:var(--sky); }
+  .stat:nth-child(2) .num{ color:var(--butter); }
+  .stat:nth-child(3) .num{ color:var(--blush); }
+  .stat:nth-child(4) .num{ color:var(--sage); }
+  .stat .label{
+    margin-top:0.5rem; font-size:0.85rem; color:rgba(245,242,234,0.7);
+  }
+
+  .data-light{ background:var(--paper-soft); }
+  table.study-table{
+    width:100%; border-collapse:collapse;
+    font-size:0.92rem;
+  }
+  table.study-table thead th{
+    text-align:left; font-family:'IBM Plex Mono', monospace;
+    font-weight:400; font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--ink-soft); padding:0.75rem 0.5rem;
+    border-bottom:1px solid var(--ink);
+  }
+  table.study-table td{
+    padding:1rem 0.5rem; border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  table.study-table td.metric{
+    font-family:'IBM Plex Mono', monospace; font-weight:500;
+  }
+  table.study-table tr td:first-child{ font-weight:600; font-family:'Space Grotesk',sans-serif; }
+  .swatch-dot{
+    width:9px; height:9px; border-radius:2px; display:inline-block;
+    margin-right:0.5rem; border:1px solid rgba(42,36,56,0.3);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{ background:var(--ink); color:var(--paper); padding:clamp(2.5rem,5vw,3.5rem) 0 1.5rem; }
+  .footer-top{
+    display:flex; justify-content:space-between; gap:2.5rem; flex-wrap:wrap;
+    padding-bottom:2.25rem; border-bottom:1px solid rgba(245,242,234,0.16);
+  }
+  .footer-brand{ max-width:32ch; }
+  .footer-brand .brand{ color:var(--paper); }
+  .footer-brand p{ color:rgba(245,242,234,0.62); font-size:0.92rem; margin-top:0.9rem; }
+  .footer-cols{ display:flex; gap:3.5rem; flex-wrap:wrap; }
+  .footer-col h4{
+    font-family:'IBM Plex Mono', monospace; font-size:0.75rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:rgba(245,242,234,0.55); margin-bottom:0.9rem; font-weight:400;
+  }
+  .footer-col a{
+    display:block; text-decoration:none; color:rgba(245,242,234,0.85);
+    font-size:0.92rem; margin-bottom:0.6rem;
+  }
+  .footer-col a:hover{ color:var(--sky); }
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:1.5rem; font-size:0.8rem; color:rgba(245,242,234,0.5);
+    font-family:'IBM Plex Mono', monospace; flex-wrap:wrap; gap:0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; animation:none !important; scroll-behavior:auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>Tessera</div>
+    <div class="nav-links">
+      <a href="#kit">Kit</a>
+      <a href="#process">Process</a>
+      <a href="#work">Work</a>
+      <a href="#numbers">Numbers</a>
+    </div>
+    <a class="nav-cta" href="#contact">Start a project</a>
+  </div>
+</nav>
+
+<!-- ================= HERO (full width) ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Identity design, modular by default</div>
+    <h1>Every brand is a set of loose pieces. We help you arrange them until they click.</h1>
+    <p class="sub">Tessera is a small identity studio for founders who'd rather test an arrangement than commit to a single mood board. Nothing on this page is decorative — drag it, click it, rebuild it.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#contact">Start a project</a>
+      <a class="btn secondary" href="#work">See the work</a>
+    </div>
+  </div>
+  <div class="ruler wrap-ruler" id="ruler-hero" style="margin-top:clamp(2.5rem,6vw,4rem);"></div>
+</header>
+
+<!-- ================= BLOCK SECTION 1: THE KIT ================= -->
+<section id="kit">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Six pieces, one system</h2>
+        <p>Every identity we ship breaks down into the same six modules. Drag a tile onto another — or select two in sequence — to trade places.</p>
+      </div>
+      <div class="section-note mono">SET 01 — NO FIXED ORDER</div>
+    </div>
+
+    <div class="board" data-board="kit">
+      <div class="tile" style="--tile-color:var(--blush)" data-pos="0" tabindex="0">
+        <span class="tile-index mono">A</span>
+        <div><div class="tile-label">Logotype</div><div class="tile-desc">The mark and its wordmark, drawn to hold at any size.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--butter)" data-pos="1" tabindex="0">
+        <span class="tile-index mono">B</span>
+        <div><div class="tile-label">Color</div><div class="tile-desc">A working palette, not a swatch book.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--sage)" data-pos="2" tabindex="0">
+        <span class="tile-index mono">C</span>
+        <div><div class="tile-label">Type</div><div class="tile-desc">A display and a body face that agree with each other.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--sky)" data-pos="3" tabindex="0">
+        <span class="tile-index mono">D</span>
+        <div><div class="tile-label">Motion</div><div class="tile-desc">How the mark behaves when it moves, not just sits.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--lilac)" data-pos="4" tabindex="0">
+        <span class="tile-index mono">E</span>
+        <div><div class="tile-label">Voice</div><div class="tile-desc">The words a brand uses when no one's watching.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--peach)" data-pos="5" tabindex="0">
+        <span class="tile-index mono">F</span>
+        <div><div class="tile-label">Layout</div><div class="tile-desc">A grid loose enough to survive a redesign.</div></div>
+      </div>
+    </div>
+
+    <div class="board-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg>
+      Drag a tile onto another, or click two in a row to swap them.
+    </div>
+  </div>
+</section>
+
+<!-- ================= DATA SECTION 1 ================= -->
+<section id="numbers" class="data-dark">
+  <div class="ruler on-dark" id="ruler-data1"></div>
+  <div class="wrap" style="margin-top:2.5rem;">
+    <div class="section-head">
+      <div>
+        <h2>By the measure</h2>
+        <p>No tiles here — this is the studio's actual production record, fixed in place.</p>
+      </div>
+      <div class="section-note mono">FIXED DATA — 2021–2026</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="num mono">214</div><div class="label">Identities shipped</div></div>
+      <div class="stat"><div class="num mono">6</div><div class="label">Industries specialized</div></div>
+      <div class="stat"><div class="num mono">3.2 wk</div><div class="label">Average sprint length</div></div>
+      <div class="stat"><div class="num mono">94%</div><div class="label">Clients retained past yr. 1</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCK SECTION 2: PROCESS ================= -->
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>The process — in the order we recommend</h2>
+        <p>This one actually is sequential. Rearrange it anyway and see what breaks (nothing does — that's the exercise).</p>
+      </div>
+      <div class="section-note mono">SET 02 — TRY REORDERING IT</div>
+    </div>
+
+    <div class="board" data-board="process">
+      <div class="tile" style="--tile-color:var(--sky)" data-pos="0" tabindex="0">
+        <span class="tile-index mono">01</span>
+        <div><div class="tile-label">Discover</div><div class="tile-desc">Interviews, audits, and a hard look at the competitive set.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--lilac)" data-pos="1" tabindex="0">
+        <span class="tile-index mono">02</span>
+        <div><div class="tile-label">Define</div><div class="tile-desc">One sentence the whole system has to be true to.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--blush)" data-pos="2" tabindex="0">
+        <span class="tile-index mono">03</span>
+        <div><div class="tile-label">Design</div><div class="tile-desc">The six pieces from the kit, drawn for this brand only.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--butter)" data-pos="3" tabindex="0">
+        <span class="tile-index mono">04</span>
+        <div><div class="tile-label">Deliver</div><div class="tile-desc">Files, guidelines, and a system built to hand off.</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--sage)" data-pos="4" tabindex="0">
+        <span class="tile-index mono">05</span>
+        <div><div class="tile-label">Iterate</div><div class="tile-desc">A 90-day check-in once the system meets real use.</div></div>
+      </div>
+    </div>
+
+    <div class="board-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg>
+      Drag a tile onto another, or click two in a row to swap them.
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCK SECTION 3: WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Recent work</h2>
+        <p>Six clients, six sectors. Swap them around — the portfolio doesn't mind.</p>
+      </div>
+      <div class="section-note mono">SET 03 — NO FIXED ORDER</div>
+    </div>
+
+    <div class="board" data-board="work">
+      <div class="tile" style="--tile-color:var(--peach)" data-pos="0" tabindex="0">
+        <span class="tile-index mono">01</span>
+        <div><div class="tile-label">Fernwell Botanicals</div><div class="tile-desc">CPG · full identity + packaging</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--sky)" data-pos="1" tabindex="0">
+        <span class="tile-index mono">02</span>
+        <div><div class="tile-label">Northbound Coffee</div><div class="tile-desc">Hospitality · identity + signage</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--lilac)" data-pos="2" tabindex="0">
+        <span class="tile-index mono">03</span>
+        <div><div class="tile-label">Aster &amp; Cole</div><div class="tile-desc">Fintech · identity + product UI</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--butter)" data-pos="3" tabindex="0">
+        <span class="tile-index mono">04</span>
+        <div><div class="tile-label">Loom Studio Co.</div><div class="tile-desc">Creative services · identity + site</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--sage)" data-pos="4" tabindex="0">
+        <span class="tile-index mono">05</span>
+        <div><div class="tile-label">Halcyon Press</div><div class="tile-desc">Publishing · identity + editorial system</div></div>
+      </div>
+      <div class="tile" style="--tile-color:var(--blush)" data-pos="5" tabindex="0">
+        <span class="tile-index mono">06</span>
+        <div><div class="tile-label">Marrow &amp; Vine</div><div class="tile-desc">Hospitality · identity + menu system</div></div>
+      </div>
+    </div>
+
+    <div class="board-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4"/></svg>
+      Drag a tile onto another, or click two in a row to swap them.
+    </div>
+  </div>
+</section>
+
+<!-- ================= DATA SECTION 2 ================= -->
+<section id="studies" class="data-light">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>Case studies, in numbers</h2>
+        <p>A fixed record, not a board — four engagements and what changed after launch.</p>
+      </div>
+      <div class="section-note mono">FIXED DATA — SELECTED CLIENTS</div>
+    </div>
+
+    <table class="study-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Sector</th>
+          <th>Time to launch</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="swatch-dot" style="background:var(--peach)"></span>Fernwell Botanicals</td>
+          <td>CPG</td>
+          <td class="metric">4 weeks</td>
+          <td class="metric">+38% DTC conversion</td>
+        </tr>
+        <tr>
+          <td><span class="swatch-dot" style="background:var(--sky)"></span>Northbound Coffee</td>
+          <td>Hospitality</td>
+          <td class="metric">3 weeks</td>
+          <td class="metric">+52% repeat visits</td>
+        </tr>
+        <tr>
+          <td><span class="swatch-dot" style="background:var(--lilac)"></span>Aster &amp; Cole</td>
+          <td>Fintech</td>
+          <td class="metric">6 weeks</td>
+          <td class="metric">+21% signup completion</td>
+        </tr>
+        <tr>
+          <td><span class="swatch-dot" style="background:var(--butter)"></span>Loom Studio Co.</td>
+          <td>Creative services</td>
+          <td class="metric">2 weeks</td>
+          <td class="metric">+64% inbound inquiries</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand"><span class="dot"></span>Tessera</div>
+        <p>A small identity studio. Six modules, one system, arranged for one brand at a time.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <a href="#kit">The kit</a>
+          <a href="#process">Process</a>
+          <a href="#work">Work</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="mailto:hello@tessera.studio">hello@tessera.studio</a>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Tessera Studio. All pieces reserved.</span>
+      <span>Built to be rearranged.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- Ruler builder ----------
+  function buildRuler(el, count){
+    for(let i=0;i<=count;i++){
+      const t = document.createElement('span');
+      t.className = 'tick' + (i % 5 === 0 ? ' major' : '');
+      if(i % 5 === 0) t.setAttribute('data-n', i);
+      el.appendChild(t);
+    }
+  }
+  document.querySelectorAll('.ruler').forEach(r => buildRuler(r, 48));
+
+  // ---------- Tile board: drag-and-drop + click-to-select swap ----------
+  function swapTiles(a, b){
+    if(!a || !b || a === b) return;
+    const aHTML = a.innerHTML, bHTML = b.innerHTML;
+    const aColor = a.style.getPropertyValue('--tile-color');
+    const bColor = b.style.getPropertyValue('--tile-color');
+    a.innerHTML = bHTML;
+    b.innerHTML = aHTML;
+    a.style.setProperty('--tile-color', bColor);
+    b.style.setProperty('--tile-color', aColor);
+    a.classList.add('swapped');
+    b.classList.add('swapped');
+    setTimeout(() => { a.classList.remove('swapped'); b.classList.remove('swapped'); }, 400);
+  }
+
+  document.querySelectorAll('[data-board]').forEach(board => {
+    let selected = null;
+    const tiles = board.querySelectorAll('.tile');
+
+    const clearSelection = () => {
+      if(selected){ selected.classList.remove('selected'); selected = null; }
+    };
+
+    tiles.forEach(tile => {
+      tile.setAttribute('draggable', 'true');
+
+      tile.addEventListener('dragstart', e => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', tile.dataset.pos);
+        tile.classList.add('dragging');
+      });
+      tile.addEventListener('dragend', () => tile.classList.remove('dragging'));
+
+      tile.addEventListener('dragover', e => e.preventDefault());
+
+      tile.addEventListener('drop', e => {
+        e.preventDefault();
+        const fromPos = e.dataTransfer.getData('text/plain');
+        const fromTile = board.querySelector('[data-pos="' + fromPos + '"]');
+        swapTiles(fromTile, tile);
+        clearSelection();
+      });
+
+      const activate = () => {
+        if(selected === tile){ clearSelection(); return; }
+        if(selected){
+          swapTiles(selected, tile);
+          clearSelection();
+        } else {
+          selected = tile;
+          tile.classList.add('selected');
+        }
+      };
+
+      tile.addEventListener('click', activate);
+      tile.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          activate();
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>
