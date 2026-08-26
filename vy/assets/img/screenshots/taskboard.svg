@@ -1,0 +1,35 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+<rect width="700" height="420" fill="#FBFAF7"/>
+<rect x="24" y="24" width="204" height="30" rx="4" fill="#102033"/>
+<text x="36" y="44" font-family="DM Sans, sans-serif" font-size="14" fill="#F5F4F0">To do</text>
+<rect x="248" y="24" width="204" height="30" rx="4" fill="#102033"/>
+<text x="260" y="44" font-family="DM Sans, sans-serif" font-size="14" fill="#F5F4F0">In progress</text>
+<rect x="472" y="24" width="204" height="30" rx="4" fill="#102033"/>
+<text x="484" y="44" font-family="DM Sans, sans-serif" font-size="14" fill="#F5F4F0">Done</text>
+
+<g font-family="DM Sans, sans-serif" font-size="12">
+<rect x="24" y="70" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="36" y="82" width="60" height="8" rx="4" fill="#E5B83B"/>
+<rect x="36" y="98" width="150" height="8" rx="4" fill="#D9DCD8"/>
+
+<rect x="24" y="136" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="36" y="148" width="60" height="8" rx="4" fill="#16845A"/>
+<rect x="36" y="164" width="130" height="8" rx="4" fill="#D9DCD8"/>
+
+<rect x="24" y="202" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="36" y="214" width="60" height="8" rx="4" fill="#66717D"/>
+<rect x="36" y="230" width="160" height="8" rx="4" fill="#D9DCD8"/>
+
+<rect x="248" y="70" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="260" y="82" width="60" height="8" rx="4" fill="#16845A"/>
+<rect x="260" y="98" width="140" height="8" rx="4" fill="#D9DCD8"/>
+
+<rect x="248" y="136" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="260" y="148" width="60" height="8" rx="4" fill="#E5B83B"/>
+<rect x="260" y="164" width="120" height="8" rx="4" fill="#D9DCD8"/>
+
+<rect x="472" y="70" width="204" height="56" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<rect x="484" y="82" width="60" height="8" rx="4" fill="#66717D"/>
+<rect x="484" y="98" width="150" height="8" rx="4" fill="#D9DCD8"/>
+</g>
+</svg>

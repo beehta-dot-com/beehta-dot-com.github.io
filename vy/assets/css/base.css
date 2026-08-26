@@ -1,0 +1,263 @@
+/* ============================================================
+   BASE.CSS
+   beehta.com, shared design tokens, resets, header, footer
+============================================================ */
+
+:root{
+  /* ---- palette ---- */
+  --bg:        #F5F4F0;   /* warm off-white page background */
+  --ink:       #102033;   /* deep ink / navy, header, footer, headings */
+  --slate:     #66717D;   /* muted slate, secondary text */
+  --accent:    #16845A;   /* muted green, primary actions */
+  --accent-dark:#116B48;
+  --gold:      #E5B83B;   /* restrained gold, tiny highlights only */
+  --sand:      #C08A4E;   /* sand brown, logo mark */
+  --border:    #D9DCD8;   /* hairline border */
+  --card:      #FFFFFF;
+  --tint:      rgba(22,132,90,0.07);
+
+  /* ---- on-dark variants (header / footer live on --ink) ---- */
+  --on-dark-text:  #F5F4F0;
+  --on-dark-muted: #93A0AD;
+  --on-dark-border:#243A50;
+
+  /* ---- type ---- */
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+
+  /* ---- misc ---- */
+  --radius-sm: 6px;
+  --radius:    8px;
+  --radius-lg: 10px;
+  --header-h: 64px;
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+img{ max-width: 100%; display: block; }
+
+a{ color: inherit; text-decoration: none; }
+
+button{ font-family: inherit; cursor: pointer; }
+
+h1, h2, h3, h4{ margin: 0 0 0.5em 0; line-height: 1.2; }
+
+p{ margin: 0 0 1em 0; color: var(--slate); }
+
+/* visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  html{ scroll-behavior: auto; }
+}
+
+/* ------------------------------------------------------------
+   LOGO
+   "beehta" in sand brown, ".com" in ink/black, except when the
+   logo sits on the dark header/footer, where ".com" switches to
+   an off-white so it stays readable against navy.
+------------------------------------------------------------- */
+.logo{
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.logo .mark{ color: var(--sand); }
+.logo .tld{ color: var(--ink); }
+.logo--on-dark .tld{ color: var(--on-dark-text); }
+
+/* ------------------------------------------------------------
+   HEADER
+------------------------------------------------------------- */
+header.site-header{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--header-h);
+  background: var(--ink);
+  border-bottom: 1px solid var(--on-dark-border);
+}
+.header-inner{
+  max-width: 1160px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.header-left{ display:flex; align-items:center; gap:36px; }
+
+.site-nav{
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.site-nav a{
+  font-size: 0.9rem;
+  color: var(--on-dark-muted);
+  transition: color .15s ease;
+}
+.site-nav a:hover,
+.site-nav a.active{ color: var(--on-dark-text); }
+
+.back-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--on-dark-muted);
+  transition: color .15s ease;
+}
+.back-link:hover{ color: var(--on-dark-text); }
+.back-link svg{ flex-shrink: 0; }
+
+.header-right{ display:flex; align-items:center; gap: 14px; }
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, opacity .15s ease;
+}
+.btn-primary{
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover{ background: var(--accent-dark); border-color: var(--accent-dark); }
+.btn-primary:disabled{ opacity: .45; cursor: not-allowed; }
+
+.btn-outline-on-dark{
+  border-color: var(--on-dark-border);
+  color: var(--on-dark-text);
+  background: transparent;
+}
+.btn-outline-on-dark:hover{ border-color: var(--sand); color: var(--sand); }
+
+.btn-ghost{
+  color: var(--ink);
+  padding: 9px 4px;
+}
+.btn-ghost:hover{ color: var(--accent); }
+
+/* ------------------------------------------------------------
+   PAGE WRAP (accounts for fixed header)
+------------------------------------------------------------- */
+.page-wrap{ padding-top: var(--header-h); }
+
+.content-shell{
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* shared small page hero used by contact/terms */
+.page-hero{
+  max-width: 640px;
+  margin: 56px auto 40px;
+  text-align: center;
+}
+.page-eyebrow{
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.page-hero h1{
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
+  color: var(--ink);
+}
+.page-hero p{ color: var(--slate); font-size: 1.02rem; }
+
+/* ------------------------------------------------------------
+   FOOTER
+------------------------------------------------------------- */
+footer.site-footer{
+  background: var(--ink);
+  color: var(--on-dark-muted);
+  margin-top: 80px;
+}
+.footer-inner{
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
+}
+.footer-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding-bottom: 24px;
+}
+.footer-brand p{
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+  color: var(--on-dark-muted);
+}
+.footer-links{
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 8px 40px;
+  font-size: 0.9rem;
+}
+.footer-links a{ color: var(--on-dark-muted); transition: color .15s ease; }
+.footer-links a:hover{ color: var(--on-dark-text); }
+
+.footer-rule{
+  border: none;
+  border-top: 1px solid var(--on-dark-border);
+  margin: 0;
+}
+.footer-copy{
+  padding-top: 18px;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #5E6C7A;
+}
+
+/* ------------------------------------------------------------
+   utility
+------------------------------------------------------------- */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+@media (max-width: 720px){
+  .site-nav{ display: none; }
+  .footer-top{ flex-direction: column; }
+}

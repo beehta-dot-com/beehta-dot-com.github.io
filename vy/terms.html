@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terms and Privacy | beehta.com</title>
+
+<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<style>
+  .legal-shell{ max-width: 720px; margin: 0 auto 80px; }
+  .legal-shell section{ margin-bottom: 40px; scroll-margin-top: 90px; }
+  .legal-shell h2{
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+  }
+  .legal-shell h3{ font-size: 1rem; color: var(--ink); margin-top: 20px; }
+  .legal-shell ul{ color: var(--slate); padding-left: 20px; margin: 0 0 1em; }
+  .legal-shell li{ margin-bottom: 6px; }
+  .legal-updated{ font-size: 0.82rem; color: var(--slate); margin-bottom: 32px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="index.html" class="logo logo--on-dark"><span class="mark">beehta</span><span class="tld">.com</span></a>
+      <nav class="site-nav">
+        <a href="index.html#explorer">Apps</a>
+        <a href="index.html#categories">Categories</a>
+        <a href="index.html#about">About</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to apps
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+<div class="content-shell">
+
+  <div class="page-hero">
+    <div class="page-eyebrow">Legal</div>
+    <h1>Terms, privacy and cookies</h1>
+    <p>Plain language, no filler. If anything here is unclear, write to us on the contact page.</p>
+  </div>
+
+  <div class="legal-shell">
+    <p class="legal-updated">Last updated: August 2026</p>
+
+    <section id="terms">
+      <h2>Terms and conditions</h2>
+      <p>By using any application listed on beehta.com, you agree to use it as intended and not to interfere with how it runs for other visitors.</p>
+      <h3>What we offer</h3>
+      <p>Each application is provided as is, without a guarantee of uninterrupted availability. We may update, change or remove an application at any time.</p>
+      <h3>Your responsibilities</h3>
+      <ul>
+        <li>Don't attempt to disrupt, overload or reverse engineer the applications.</li>
+        <li>Don't use the contact form to send anything unlawful, abusive or unrelated to the site.</li>
+        <li>Any data you save inside an application is your own responsibility to keep a copy of.</li>
+      </ul>
+    </section>
+
+    <section id="privacy">
+      <h2>Privacy policy</h2>
+      <p>We collect the minimum needed to run the site and respond to messages.</p>
+      <h3>Contact form</h3>
+      <p>When you submit the contact form, your name, email address and message are sent to us through FormSubmit, a third party mail relay, and used only to reply to you.</p>
+      <h3>Human verification</h3>
+      <p>The contact form uses Cloudflare Turnstile to confirm you're not a bot. Turnstile may process limited technical data as part of that check, under Cloudflare's own privacy policy.</p>
+      <h3>Individual applications</h3>
+      <p>Some applications in the catalogue may store data locally in your browser so your work is kept between visits. That data stays on your device unless the application states otherwise.</p>
+    </section>
+
+    <section id="cookies">
+      <h2>Cookies</h2>
+      <p>The main beehta.com site does not set tracking or advertising cookies. Some third party services used on individual pages may set their own:</p>
+      <ul>
+        <li>Cloudflare Turnstile, on the contact page, to complete human verification.</li>
+        <li>Google Fonts, sitewide, to load the typefaces used across the pages.</li>
+      </ul>
+      <p>Individual applications in the catalogue may use additional cookies or local storage of their own. Check the application itself for details.</p>
+    </section>
+  </div>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo logo--on-dark"><span class="mark">beehta</span><span class="tld">.com</span></a>
+        <p>Useful web applications.</p>
+      </div>
+      <div class="footer-links">
+        <a href="terms.html#privacy">Privacy</a>
+        <a href="terms.html#cookies">Cookies</a>
+        <a href="terms.html#terms">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <hr class="footer-rule" />
+    <p class="footer-copy">&copy; <span id="footerYear"></span> beehta.com. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

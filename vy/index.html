@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>beehta.com | Useful things, in one place</title>
+<meta name="description" content="A collection of small web applications built to solve specific problems without getting in your way." />
+
+<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/index.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="index.html" class="logo logo--on-dark"><span class="mark">beehta</span><span class="tld">.com</span></a>
+      <nav class="site-nav">
+        <a href="#explorer" class="active">Apps</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <a href="contact.html" class="btn btn-outline-on-dark">Contact</a>
+    </div>
+  </div>
+</header>
+
+<div class="page-wrap">
+<div class="content-shell">
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">A small software catalogue</div>
+      <h1>Useful things, in one place.</h1>
+      <p>A collection of small web applications built to solve specific problems without getting in your way.</p>
+      <div class="hero-actions">
+        <a href="#explorer" class="btn btn-primary">Explore applications</a>
+        <a href="#about" class="hero-secondary">How it works →</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="18" width="120" height="84" rx="6" fill="#FFFFFF" stroke="#D9DCD8"/>
+        <rect x="34" y="34" width="60" height="8" rx="4" fill="#16845A"/>
+        <rect x="34" y="50" width="88" height="6" rx="3" fill="#E7E6E1"/>
+        <rect x="34" y="62" width="70" height="6" rx="3" fill="#E7E6E1"/>
+
+        <rect x="160" y="60" width="140" height="100" rx="6" fill="#102033"/>
+        <rect x="176" y="76" width="70" height="8" rx="4" fill="#E5B83B"/>
+        <rect x="176" y="94" width="108" height="6" rx="3" fill="#2A415A"/>
+        <rect x="176" y="106" width="90" height="6" rx="3" fill="#2A415A"/>
+        <rect x="176" y="128" width="60" height="20" rx="4" fill="#16845A"/>
+
+        <rect x="46" y="132" width="120" height="84" rx="6" fill="#FFFFFF" stroke="#D9DCD8"/>
+        <circle cx="66" cy="152" r="8" fill="#C08A4E"/>
+        <rect x="82" y="148" width="70" height="7" rx="3" fill="#E7E6E1"/>
+        <rect x="60" y="172" width="92" height="6" rx="3" fill="#E7E6E1"/>
+        <rect x="60" y="184" width="70" height="6" rx="3" fill="#E7E6E1"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       APPLICATION EXPLORER
+  ============================================================ -->
+  <section class="explorer-section" id="explorer">
+    <div class="explorer-heading" id="categories">
+      <h2>Application explorer</h2>
+      <span class="explorer-count" id="explorerCount"></span>
+    </div>
+
+    <div class="explorer-controls">
+      <div class="search-field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <input type="text" id="appSearch" placeholder="Search applications..." aria-label="Search applications" />
+      </div>
+      <div class="category-filters" id="categoryFilters"></div>
+    </div>
+
+    <!-- mobile carousel, hidden on desktop -->
+    <div class="mobile-carousel">
+      <button type="button" class="carousel-nav-btn" id="carouselPrev" aria-label="Previous application">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="carousel-track" id="appCarousel"></div>
+      <span class="carousel-label" id="carouselLabel"></span>
+      <button type="button" class="carousel-nav-btn" id="carouselNext" aria-label="Next application">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <div class="explorer-grid">
+      <div class="app-list" id="appList"></div>
+      <div class="demo-side">
+        <div class="demo-panel" id="demoPanel"></div>
+        <div class="explorer-empty" id="explorerEmpty">No applications match your search.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT / HOW IT WORKS
+  ============================================================ -->
+  <section id="about" style="padding: 64px 0 40px; max-width: 640px;">
+    <h2 style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500;">How this catalogue works</h2>
+    <p>Each entry on the left is a small, independent application. Pick one to load its live view on the right, or open it in its own tab if you want the full window. New tools get added here as they're built, not bundled into one large product.</p>
+  </section>
+
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo logo--on-dark"><span class="mark">beehta</span><span class="tld">.com</span></a>
+        <p>Useful web applications.</p>
+      </div>
+      <div class="footer-links">
+        <a href="terms.html#privacy">Privacy</a>
+        <a href="terms.html#cookies">Cookies</a>
+        <a href="terms.html#terms">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <hr class="footer-rule" />
+    <p class="footer-copy">&copy; <span id="footerYear"></span> beehta.com. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+  document.getElementById("explorerCount").textContent = APPS.length + " applications";
+</script>
+</body>
+</html>

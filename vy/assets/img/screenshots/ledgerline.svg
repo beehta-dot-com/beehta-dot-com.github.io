@@ -1,0 +1,22 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+<rect width="700" height="420" fill="#FBFAF7"/>
+<text x="36" y="50" font-family="Source Serif 4, serif" font-size="20" fill="#102033">Cabin trip, 4 people</text>
+
+<g font-family="DM Sans, sans-serif" font-size="13">
+<rect x="36" y="80" width="628" height="46" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<text x="52" y="108" fill="#102033">Groceries</text>
+<text x="600" y="108" fill="#16845A" text-anchor="end">+$62.10</text>
+
+<rect x="36" y="134" width="628" height="46" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<text x="52" y="162" fill="#102033">Firewood</text>
+<text x="600" y="162" fill="#16845A" text-anchor="end">+$18.00</text>
+
+<rect x="36" y="188" width="628" height="46" rx="6" fill="#fff" stroke="#D9DCD8"/>
+<text x="52" y="216" fill="#102033">Gas split</text>
+<text x="600" y="216" fill="#16845A" text-anchor="end">+$41.75</text>
+</g>
+
+<rect x="36" y="256" width="628" height="1" fill="#D9DCD8"/>
+<text x="36" y="292" font-family="DM Sans, sans-serif" font-size="14" fill="#66717D">Each person owes</text>
+<text x="600" y="292" font-family="Source Serif 4, serif" font-size="18" fill="#102033" text-anchor="end">$30.46</text>
+</svg>

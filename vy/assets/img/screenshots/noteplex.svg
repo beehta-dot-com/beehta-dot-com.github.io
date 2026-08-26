@@ -1,0 +1,22 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+<rect width="700" height="420" fill="#FBFAF7"/>
+<rect x="0" y="0" width="200" height="420" fill="#F2F1EC"/>
+<g font-family="DM Sans, sans-serif" font-size="13" fill="#66717D">
+<text x="24" y="40" font-weight="600" fill="#102033">Folders</text>
+<rect x="24" y="60" width="152" height="30" rx="4" fill="#16845A" opacity="0.1"/>
+<text x="36" y="80" fill="#102033">Reading list</text>
+<text x="36" y="116">Recipes</text>
+<text x="36" y="152">Trip notes</text>
+<text x="36" y="188">Work</text>
+</g>
+
+<g>
+<text x="230" y="60" font-family="Source Serif 4, serif" font-size="20" fill="#102033">Sourdough timing</text>
+<line x1="230" y1="80" x2="640" y2="80" stroke="#D9DCD8"/>
+<rect x="230" y="104" width="380" height="10" rx="5" fill="#D9DCD8"/>
+<rect x="230" y="126" width="340" height="10" rx="5" fill="#D9DCD8"/>
+<rect x="230" y="148" width="360" height="10" rx="5" fill="#D9DCD8"/>
+<rect x="230" y="182" width="300" height="10" rx="5" fill="#D9DCD8"/>
+<rect x="230" y="204" width="380" height="10" rx="5" fill="#D9DCD8"/>
+</g>
+</svg>
