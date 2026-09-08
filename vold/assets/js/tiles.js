@@ -21,6 +21,7 @@
   "use strict";
 
   var KEY = "beehta.tiles.v1";
+  var HINT_KEY = "beehta.tiles.hint-seen";
 
   var field = document.getElementById("tile-field");
   if (!field) return;
@@ -193,6 +194,7 @@
     if (!tile) return;
     tile.focus({ preventScroll: true });
     pickOrSwap(tile);
+    dismissHint();
   });
 
   field.addEventListener("dragstart", function (e) {
@@ -229,6 +231,7 @@
 
     var source = tiles[+from[0]] && tiles[+from[0]][+from[1]];
     swap(source, tile);
+    dismissHint();
   });
 
   field.addEventListener("dragend", function () {
@@ -256,6 +259,7 @@
       case " ":
         e.preventDefault();
         pickOrSwap(tile);
+        dismissHint();
         return;
       case "Escape":
         unpick();
@@ -271,6 +275,29 @@
     next.tabIndex = 0;
     next.focus({ preventScroll: true });
   });
+
+  /* ---------- the hint ---------- */
+
+  var hint = document.getElementById("tile-hint");
+
+  function dismissHint() {
+    if (!hint || hint.hidden) return;
+    hint.hidden = true;
+    try { localStorage.setItem(HINT_KEY, "1"); } catch (err) { /* ignore */ }
+  }
+
+  function maybeShowHint() {
+    if (!hint) return;
+    var seen = false;
+    try { seen = localStorage.getItem(HINT_KEY) === "1"; } catch (err) { seen = true; }
+    if (seen) return;
+    // Late enough that it does not compete with the page loading.
+    setTimeout(function () { hint.hidden = false; }, 1400);
+  }
+
+  if (hint) {
+    hint.querySelector("[data-dismiss]").addEventListener("click", dismissHint);
+  }
 
   /* ---------- build and rebuild ---------- */
 
@@ -309,4 +336,5 @@
   };
 
   build();
+  maybeShowHint();
 })();

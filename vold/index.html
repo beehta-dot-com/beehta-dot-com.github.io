@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>beehta.com | Small applications for everyday digital work</title>
+<meta name="description" content="A directory of small web applications, each running on its own subdomain. Try one here before you sign up for anything.">
+
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="stylesheet" href="assets/demos/logins/logins.css">
+
+<script defer src="assets/js/data.js"></script>
+<script defer src="assets/js/tiles.js"></script>
+<script defer src="assets/demos/logins/logins.js"></script>
+<script defer src="assets/js/explorer.js"></script>
+<script defer src="assets/js/contact.js"></script>
+<script defer src="assets/js/shell.js"></script>
+<script defer src="assets/js/router.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser.
+
+     To see this layout on the flat background instead, delete the
+     tiles.js line above. Nothing else depends on it. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="index.html" aria-label="beehta.com, home">
+        <img src="assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html">Apps</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="home">
+    <div class="shell page-pad">
+
+      <section class="panel block block--hero">
+        <span class="kicker">beehta.com</span>
+        <h1>A collection of small applications for everyday digital work.</h1>
+        <p class="block-lede">Each application runs on its own subdomain. This page is the directory. Every entry below has a working stand-in you can try without signing up for anything.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#apps">See the applications</a>
+          <a class="btn btn--ghost" href="about.html">About beehta.com</a>
+        </div>
+      </section>
+
+      <section class="facts" aria-label="How the shelf is put together">
+        <div class="panel fact">
+          <span class="fact-num">01</span>
+          <h2>One account</h2>
+          <p>Sign in once, in one place, and it covers every application here.</p>
+        </div>
+        <div class="panel fact">
+          <span class="fact-num">02</span>
+          <h2>Its own address</h2>
+          <p>Each application runs on its own subdomain, kept apart from the rest.</p>
+        </div>
+        <div class="panel fact">
+          <span class="fact-num">03</span>
+          <h2>Try before you join</h2>
+          <p>Every entry has a working stand-in. Nothing to sign up for to look.</p>
+        </div>
+      </section>
+
+      <section class="panel block block--tools" id="apps">
+        <div class="tools-head">
+          <h2>Applications</h2>
+          <span class="cat-count" id="resultCount" role="status"></span>
+        </div>
+        <p class="block-lede">Each preview below is a small stand-in, not the application itself. Nothing you type into one is saved or sent anywhere.</p>
+        <div class="filters" id="appFilters" role="group" aria-label="Filter by category"></div>
+      </section>
+
+      <div class="entries" id="entries"></div>
+      <p class="panel block entries-empty" id="entriesEmpty" hidden></p>
+
+      <section class="panel block block--how">
+        <span class="kicker">How it works</span>
+        <h2>Three steps, and one of them is optional.</h2>
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <h3>Have a look</h3>
+            <p>Every application on this page has a stand-in you can use straight away, with no account and nothing to install.</p>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <h3>Sign in once</h3>
+            <p>If one of them is useful, a single account covers it and everything else on the shelf. There is one sign-in page and no application asks for a password of its own.</p>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <h3>Open the real thing</h3>
+            <p>You land back where you started, signed in. Closing your account later closes it everywhere at once.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="panel block block--cta">
+        <div>
+          <h2>Nothing here fits?</h2>
+          <p class="block-lede">Tell us what you keep doing the hard way. Most of the things on this shelf started as somebody's message.</p>
+        </div>
+        <a class="btn btn--primary" href="contact.html">Send a message</a>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="index.html" aria-label="beehta.com, home">
+            <img src="assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>A home for small web apps. Each one does a single job, and one account covers all of them.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="index.html">Apps</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="terms.html#terms">Terms of use</a>
+          <a href="terms.html#privacy">Privacy</a>
+          <a href="terms.html#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> beehta.com</span>
+        <button type="button" id="resetTiles">Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+  <div class="tile-hint" id="tile-hint" hidden>
+    <p>The squares behind this page can be moved. Drag one onto another, or tap two, and they swap.</p>
+    <button type="button" data-dismiss>Got it</button>
+  </div>
+
+</div>
+
+</body>
+</html>
