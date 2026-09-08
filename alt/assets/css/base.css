@@ -1,0 +1,524 @@
+/* ============================================================
+   BASE.CSS
+   beehta.com catalogue
+
+   Tokens, reset, the tile background, header, footer and the
+   handful of components every page shares. Page specific rules
+   live in pages.css.
+
+   The look here is deliberately not the sub-domain look. Square
+   corners everywhere, because the logo is two butted tiles and
+   the background is a field of them. Colour comes from the tiles,
+   so the furniture stays quiet.
+============================================================ */
+
+:root {
+  /* surfaces */
+  --paper: #f5f2ea;
+  --card: #fffdf8;
+  --card-veil: rgba(255, 253, 248, 0.94);
+
+  /* ink ramp, warm greys so nothing reads blue next to the pastels */
+  --ink: #201e1d;
+  --ink-2: #4a4643;
+  --ink-3: #6f6a65;
+  --ink-4: #9b948d;
+  --rule: #ded7c9;
+  --rule-strong: #c9c0b0;
+
+  /* the one loud colour, taken straight from the logo */
+  --red: #ec3013;
+  --red-deep: #ae1800;
+
+  /* type */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* rhythm */
+  --shell: 1180px;
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0, 0.1, 1);
+
+  /* a hard offset shadow, not a soft glow */
+  --lift: 4px 4px 0 rgba(32, 30, 29, 0.09);
+  --lift-lg: 8px 8px 0 rgba(32, 30, 29, 0.1);
+}
+
+/* ------------------------------------------------------------
+   Reset
+------------------------------------------------------------ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+/* Several things here are display:flex or display:grid, and those
+   win against the [hidden] attribute's own display:none. Anything
+   toggled with el.hidden needs this to actually disappear. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* the tile field is fixed behind everything, so the body must not
+     paint over it. The paper colour lives on the tile layer instead. */
+  background-color: var(--paper);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+p { margin: 0; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+a { color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Keyboard users get a way past the header and past the tile field. */
+.skip-link {
+  position: absolute;
+  left: 0; top: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.7rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* ------------------------------------------------------------
+   The tile field
+
+   This is the page background: fixed to the viewport, filling
+   every pixel, behind all content. Tiles are swapped by drag and
+   drop or by tapping two of them, and the arrangement is kept in
+   localStorage so it survives a reload.
+------------------------------------------------------------ */
+
+#tile-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition:
+    transform var(--dur) var(--ease),
+    filter var(--dur) var(--ease),
+    outline-color 100ms linear;
+}
+
+@media (hover: hover) {
+  .tile:hover { filter: brightness(0.965); z-index: 2; }
+}
+
+.tile:active { cursor: grabbing; }
+.tile:focus-visible { outline-color: var(--ink); z-index: 4; }
+
+.tile.is-picked {
+  outline: 2px solid var(--ink);
+  filter: brightness(0.96);
+  z-index: 3;
+}
+.tile.is-picked::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(32, 30, 29, 0.45);
+}
+
+.tile.is-dragging { opacity: 0.35; transform: scale(0.94); z-index: 10; }
+.tile.is-target { outline: 2px dashed var(--ink); z-index: 3; }
+
+.tile.just-swapped { animation: tile-settle 320ms var(--ease); }
+@keyframes tile-settle {
+  0% { transform: scale(0.9); }
+  65% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+/* A short, quiet hint about the background. It shows once per
+   browser and the dismiss button hides it for good. */
+/* Anchored to the right so it sits beside the reading column
+   rather than on top of it. On a phone there is no beside, so it
+   spans the width instead. */
+.tile-hint {
+  position: fixed;
+  right: 1.15rem;
+  bottom: 1.15rem;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: min(360px, calc(100vw - 2.3rem));
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.6rem 0.7rem 0.6rem 1rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  box-shadow: var(--lift);
+}
+.tile-hint[hidden] { display: none; }
+.tile-hint p { margin: 0; }
+.tile-hint button {
+  flex: none;
+  border: 1px solid rgba(245, 242, 234, 0.35);
+  background: none;
+  color: inherit;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tile-hint button:hover { background: rgba(245, 242, 234, 0.14); }
+
+@media (max-width: 560px) {
+  .tile-hint { left: 1.15rem; right: 1.15rem; max-width: none; }
+}
+
+/* ------------------------------------------------------------
+   Content layer
+
+   Sits above the tiles. Pointer events are off by default so
+   empty space always lets a click or a drag reach the tile
+   underneath. Real surfaces switch them back on.
+------------------------------------------------------------ */
+
+.page { position: relative; z-index: 1; pointer-events: none; }
+
+.page .site-header,
+.page .site-footer,
+.page .panel,
+.page .tabstrip,
+.page .tile-hint,
+.page a,
+.page button,
+.page input,
+.page textarea,
+.page select { pointer-events: auto; }
+
+/* Text keeps its own events so it stays selectable and a click on
+   a heading does not fall through and shuffle a tile. Only the
+   gaps between things reach the background. */
+.page :is(h1, h2, h3, h4, p, li, label, img, .kicker) { pointer-events: auto; }
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* ------------------------------------------------------------
+   Panels
+
+   One card shape used everywhere. Square corners, hairline rule,
+   a hard offset shadow rather than a blur.
+------------------------------------------------------------ */
+
+/* Opaque on purpose. An earlier pass frosted these over the tile
+   field, which looked well in a still and cost a full-screen blur
+   on every scroll frame, on top of a hundred-odd fixed tiles. The
+   colour belongs in the gaps between panels, not behind the text. */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift-lg);
+}
+
+.panel--flat { box-shadow: none; }
+.panel--veil { background: var(--card-veil); }
+
+/* ------------------------------------------------------------
+   Header
+------------------------------------------------------------ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(245, 242, 234, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 62px;
+}
+
+/* The brand rules are explicit that the mark and the wordmark are
+   never shown together: one stands in for the other. So the header
+   carries the hexagon alone and the footer carries the name. The
+   name still reaches the reader early through the page title, the
+   hero copy and the catalogue heading. */
+.logo { display: inline-flex; align-items: center; flex: none; }
+.logo--mark img { height: 30px; width: auto; }
+.logo--word img { height: 24px; width: auto; }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-left: auto;
+}
+
+.site-nav a {
+  position: relative;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 0.35rem 0;
+  transition: color var(--dur) var(--ease);
+}
+.site-nav a:hover { color: var(--ink); }
+
+.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+.site-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--red);
+}
+
+/* The nav collapses into a scrolling strip rather than a hamburger.
+   Four links fit; a menu that hides four links is a menu for nothing. */
+@media (max-width: 640px) {
+  .header-inner { min-height: 56px; gap: 0.75rem; }
+  .logo--mark img { height: 26px; }
+  .site-nav {
+    gap: 1.05rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav a { font-size: 0.86rem; white-space: nowrap; }
+}
+
+/* ------------------------------------------------------------
+   Buttons
+------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--ink);
+  background: none;
+  padding: 0.62rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.btn--primary { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.16); }
+.btn--primary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(32, 30, 29, 0.18); }
+.btn--primary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(32, 30, 29, 0.16); }
+
+.btn--ghost { background: var(--card); color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+
+.btn--red { background: var(--red); border-color: var(--red); color: #fff; }
+.btn--red:hover { background: var(--red-deep); border-color: var(--red-deep); }
+
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ------------------------------------------------------------
+   Small shared bits
+------------------------------------------------------------ */
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.kicker--red { color: var(--red-deep); }
+
+.rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
+
+.prose p { margin-top: 0.9rem; color: var(--ink-2); }
+.prose p:first-child { margin-top: 0; }
+.prose h2 { margin-top: 2.4rem; font-size: 1.3rem; }
+.prose h3 { margin-top: 1.7rem; font-size: 1.02rem; font-weight: 700; }
+.prose ul { margin: 0.9rem 0 0; padding-left: 1.1rem; color: var(--ink-2); }
+.prose li { margin-bottom: 0.45rem; }
+.prose a { color: var(--red-deep); text-underline-offset: 3px; }
+
+/* Placeholder copy the owner still has to write. Marked so it is
+   impossible to ship by accident without noticing. */
+.draft {
+  border-left: 3px solid var(--red);
+  background: rgba(236, 48, 19, 0.05);
+  padding: 0.75rem 1rem;
+  margin-top: 1.2rem;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+}
+.draft strong { color: var(--red-deep); }
+
+/* ------------------------------------------------------------
+   Footer
+------------------------------------------------------------ */
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(3rem, 7vw, 5.5rem);
+  background: var(--ink);
+  color: rgba(245, 242, 234, 0.86);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  gap: 2.5rem;
+  padding: clamp(2.25rem, 5vw, 3.25rem) 0 2rem;
+}
+
+.footer-brand p {
+  margin-top: 1rem;
+  max-width: 34ch;
+  font-size: 0.9rem;
+  color: rgba(245, 242, 234, 0.6);
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 234, 0.5);
+  margin-bottom: 0.95rem;
+}
+
+.footer-col a,
+.footer-col button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  color: rgba(245, 242, 234, 0.82);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+.footer-col a:hover,
+.footer-col button:hover { color: #fff; }
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 1.25rem 0 1.6rem;
+  border-top: 1px solid rgba(245, 242, 234, 0.14);
+  font-size: 0.8rem;
+  color: rgba(245, 242, 234, 0.5);
+}
+
+/* Resetting the background is a page utility, not a destination, so
+   it sits down here rather than pretending to be a nav link. */
+.footer-bottom button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.footer-bottom button:hover { color: #fff; }
+
+@media (max-width: 760px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+/* ------------------------------------------------------------
+   Page transition
+
+   The router swaps the contents of <main> instead of loading a
+   new document, so the header, footer and tile field never blink.
+   This is the only movement that swap makes.
+------------------------------------------------------------ */
+
+#main { transition: opacity 120ms linear; }
+#main.is-leaving { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

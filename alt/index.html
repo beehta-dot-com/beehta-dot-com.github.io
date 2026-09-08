@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>beehta.com | Small web apps, one at a time</title>
+<meta name="description" content="A small catalogue of web apps that each do one thing. Try one here before you sign up for anything.">
+
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="stylesheet" href="assets/demos/logins/logins.css">
+
+<script defer src="assets/js/data.js"></script>
+<script defer src="assets/js/tiles.js"></script>
+<script defer src="assets/demos/logins/logins.js"></script>
+<script defer src="assets/js/explorer.js"></script>
+<script defer src="assets/js/contact.js"></script>
+<script defer src="assets/js/shell.js"></script>
+<script defer src="assets/js/router.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="index.html" aria-label="beehta.com, home">
+        <img src="assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html">Apps</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="home">
+
+    <section class="hero shell">
+      <div class="panel hero-card">
+        <span class="kicker">A small catalogue</span>
+        <h1>Small web apps that do <em>one thing</em>, then get out of the way.</h1>
+        <p class="hero-lede">beehta.com is a home for them. Each app lives on its own address and solves a single problem, and one account covers the lot. Try one here before you sign up for anything.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#apps">See the apps</a>
+          <a class="btn btn--ghost" href="about.html">About beehta.com</a>
+        </div>
+        <!-- Filled in from data.js so the counts cannot go stale. -->
+        <p class="hero-meta" id="heroMeta"></p>
+      </div>
+    </section>
+
+    <section class="explorer shell" id="apps">
+
+      <div class="explorer-head">
+        <h2>Everything on beehta.com</h2>
+        <p class="explorer-lede">Each preview is a small stand-in you can poke at, not the app itself. Nothing you type into one is saved or sent anywhere.</p>
+      </div>
+
+      <div class="explorer-tools">
+        <label class="search">
+          <span class="sr-only">Search the apps</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path>
+          </svg>
+          <input type="search" id="appSearch" placeholder="Search the apps" autocomplete="off">
+        </label>
+        <!-- Category filters unhide themselves once the catalogue
+             passes TOOLS_FROM in data.js. -->
+        <div class="filters" id="appFilters" role="group" aria-label="Filter by category" hidden></div>
+        <span class="result-count" id="resultCount" role="status"></span>
+      </div>
+
+      <!-- On narrow screens the list below becomes this strip. -->
+      <div class="tabstrip" id="tabstrip" role="tablist" aria-label="Apps"></div>
+
+      <div class="explorer-grid">
+        <!-- The slot holds no flow content of its own, so the row is
+             sized by the preview beside it and never by the length
+             of the list. See .app-list-slot in pages.css. -->
+        <div class="app-list-slot">
+          <div class="panel app-list-panel">
+            <div class="app-list" id="appList" role="tablist" aria-label="Apps"></div>
+            <p class="list-foot" id="listFoot"></p>
+          </div>
+        </div>
+        <div class="panel preview" id="preview" role="tabpanel" tabindex="0" aria-label="Preview"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="index.html" aria-label="beehta.com, home">
+            <img src="assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>A home for small web apps. Each one does a single job, and one account covers all of them.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="index.html">Apps</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="terms.html#terms">Terms of use</a>
+          <a href="terms.html#privacy">Privacy</a>
+          <a href="terms.html#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> beehta.com</span>
+        <button type="button" id="resetTiles">Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+  <div class="tile-hint" id="tile-hint" hidden>
+    <p>The squares behind this page can be moved. Drag one onto another, or tap two, and they swap.</p>
+    <button type="button" data-dismiss>Got it</button>
+  </div>
+
+</div>
+
+</body>
+</html>
