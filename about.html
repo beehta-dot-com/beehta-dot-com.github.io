@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About | beehta.com</title>
+<meta name="description" content="What beehta.com is, how the apps fit together, and what it deliberately does not do.">
+
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="stylesheet" href="assets/demos/logins/logins.css">
+
+<script defer src="assets/js/data.js"></script>
+<script defer src="assets/js/tiles.js"></script>
+<script defer src="assets/demos/logins/logins.js"></script>
+<script defer src="assets/js/explorer.js"></script>
+<script defer src="assets/js/contact.js"></script>
+<script defer src="assets/js/shell.js"></script>
+<script defer src="assets/js/router.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="index.html" aria-label="beehta.com, home">
+        <img src="assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html">Apps</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="about">
+
+    <section class="page-head shell">
+      <span class="kicker">About</span>
+      <h1>One place, several small tools.</h1>
+      <p>beehta.com is not a product. It is a shelf. Each thing on it is a separate web app with a narrow job, and this is where they are listed.</p>
+    </section>
+
+    <section class="shell">
+      <div class="about-grid">
+        <div class="panel about-card">
+          <div class="num">01</div>
+          <h3>Small on purpose</h3>
+          <p>An app that fits in your head beats one that needs a tour.</p>
+        </div>
+        <div class="panel about-card">
+          <div class="num">02</div>
+          <h3>Plain words</h3>
+          <p>If a message needs a glossary, the message is wrong.</p>
+        </div>
+        <div class="panel about-card">
+          <div class="num">03</div>
+          <h3>Quiet by default</h3>
+          <p>Nothing here will email you unless you asked it to.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell doc-single">
+      <div class="panel doc-body prose">
+
+        <div class="draft">
+          <strong>Draft copy.</strong> This page was written from the project notes so it is not empty. Read it, change what is wrong, and delete this box when you are happy with it.
+        </div>
+
+        <h2>What this is</h2>
+        <p>Most software grows until it does everything badly. The idea here is the opposite: build one small thing that does its job properly, put it on its own address, and leave it alone. When a second thing is needed it becomes a second app, not a new tab inside the first.</p>
+        <p>beehta.com itself holds nothing. It is a catalogue. The apps live on their own addresses and this page points at them.</p>
+
+        <h2>One account, all of them</h2>
+        <p>You sign in once, in one place, and that covers every app on the shelf. No app asks for a password of its own and none of them keeps its own list of users. There is a single sign-in page and everything else borrows from it.</p>
+        <p>So adding a new app does not mean another account to remember, and closing your account closes it everywhere at once.</p>
+
+        <h2>Try before you sign up</h2>
+        <p>Every entry in the catalogue has a small working preview. It is a stand-in, not the real app: fewer features, no saving, nothing sent anywhere. It is there so you can tell in ten seconds whether the thing is any use to you, without handing over an email address first.</p>
+
+        <h2>What it does not do</h2>
+        <ul>
+          <li>No adverts, anywhere.</li>
+          <li>No selling or sharing of what you put into an app.</li>
+          <li>No pushing you towards a paid tier you did not ask about.</li>
+          <li>No feature that exists only to make a chart go up.</li>
+        </ul>
+        <div class="draft">
+          <strong>Check these before publishing.</strong> Those four are promises. Keep only the ones you are certain every app will honour, and see <a href="terms.html#privacy">Privacy</a> for what actually gets collected.
+        </div>
+
+        <h2>The background</h2>
+        <p>The coloured squares behind this page are made from the colours of the apps in the catalogue. They can be moved: drag one onto another, or tap one and then a second, and the two swap places. Your arrangement is kept in your own browser and nowhere else, so it is there next time and nobody else sees it. There is a link at the bottom of every page to put it back.</p>
+
+        <h2>Who makes it</h2>
+        <div class="draft">
+          <strong>Yet to write.</strong> A short paragraph here: who you are, why you started building these, and how often to expect new ones. Two or three sentences is plenty.
+        </div>
+
+        <h2>Something to say</h2>
+        <p>Bugs, ideas for the next app, or a question about any of this: <a href="contact.html">the contact page</a> comes straight to us and does not need an account.</p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="index.html" aria-label="beehta.com, home">
+            <img src="assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>A home for small web apps. Each one does a single job, and one account covers all of them.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="index.html">Apps</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="terms.html#terms">Terms of use</a>
+          <a href="terms.html#privacy">Privacy</a>
+          <a href="terms.html#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> beehta.com</span>
+        <button type="button" id="resetTiles">Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+  <div class="tile-hint" id="tile-hint" hidden>
+    <p>The squares behind this page can be moved. Drag one onto another, or tap two, and they swap.</p>
+    <button type="button" data-dismiss>Got it</button>
+  </div>
+
+</div>
+
+</body>
+</html>

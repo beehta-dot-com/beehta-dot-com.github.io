@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | beehta.com</title>
+<meta name="description" content="That address does not exist on beehta.com.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="/assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/pages.css">
+<link rel="stylesheet" href="/assets/demos/logins/logins.css">
+
+<script defer src="/assets/js/data.js"></script>
+<script defer src="/assets/js/tiles.js"></script>
+<script defer src="/assets/demos/logins/logins.js"></script>
+<script defer src="/assets/js/explorer.js"></script>
+<script defer src="/assets/js/contact.js"></script>
+<script defer src="/assets/js/shell.js"></script>
+<script defer src="/assets/js/router.js"></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to the content</a>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="/index.html" aria-label="beehta.com, home">
+        <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/index.html">Apps</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="notfound">
+    <section class="notfound shell">
+      <div class="panel">
+        <div class="code">404</div>
+        <h1>There is nothing at that address.</h1>
+        <p>Either the link was wrong, or something that used to be here has moved. The catalogue is the best place to start again.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="/index.html">Back to the apps</a>
+          <a class="btn btn--ghost" href="/contact.html">Tell us about the broken link</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="/index.html" aria-label="beehta.com, home">
+            <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>A home for small web apps. Each one does a single job, and one account covers all of them.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Site</h4>
+          <a href="/index.html">Apps</a>
+          <a href="/about.html">About</a>
+          <a href="/contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/terms.html#terms">Terms of use</a>
+          <a href="/terms.html#privacy">Privacy</a>
+          <a href="/terms.html#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> beehta.com</span>
+        <button type="button" id="resetTiles">Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+  <div class="tile-hint" id="tile-hint" hidden>
+    <p>The squares behind this page can be moved. Drag one onto another, or tap two, and they swap.</p>
+    <button type="button" data-dismiss>Got it</button>
+  </div>
+
+</div>
+
+</body>
+</html>

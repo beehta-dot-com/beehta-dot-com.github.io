@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — beehta.com</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/contact.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback" async defer></script>
+</head>
+<body class="contact-page">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html"><span class="brand-beehta">beehta</span><span class="brand-dot">.com</span></a>
+      <nav class="desktop-nav"><a href="index.html#apps"><small>01</small><span>Applications</span></a><a href="index.html#about"><small>02</small><span>About beehta</span></a><a href="contact.html"><small>03</small><span>Contact</span></a></nav>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+    <div class="mobile-nav" aria-hidden="true">
+      <a href="index.html#apps">Apps</a><a href="index.html#about">About</a><a href="contact.html">Contact</a>
+    </div>
+  </header>
+
+  <main class="contact-main">
+    <div class="contact-intro">
+      <p class="eyebrow">Get in touch</p>
+      <h1>Have something<br><em>to say?</em></h1>
+      <p>Questions, feedback, bug reports or an idea for an app. Send a message and we'll take a look.</p>
+    </div>
+
+    <div class="contact-layout">
+      <aside class="contact-aside">
+        <div class="aside-number">01</div>
+        <h2>Keep it useful.</h2>
+        <p>Tell us what went wrong, what could be better, or what you would like to see here.</p>
+        <div class="aside-rule"></div>
+        <p class="aside-small">Typical reply within 24 hours.</p>
+      </aside>
+
+      <section class="contact-card">
+        <div id="successState" class="success-state" hidden>
+          <div class="success-mark">✓</div>
+          <p class="eyebrow">Message received</p>
+          <h2>Thanks for getting in touch.</h2>
+          <p>We'll get back to you as soon as we can.</p>
+          <a href="index.html">← Back to apps</a>
+        </div>
+
+        <form id="contactForm" method="POST" autocomplete="off">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="box">
+          <input type="hidden" name="_subject" id="emailSubject" value="New message from beehta.com">
+          <input type="hidden" name="_next" id="nextUrl" value="">
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="honeypot">
+
+          <div class="form-grid">
+            <label>
+              <span>Your name <b>*</b></span>
+              <input type="text" name="name" required placeholder="Jane Smith" autocomplete="name">
+            </label>
+            <label>
+              <span>Your email <b>*</b></span>
+              <input type="email" name="email" required placeholder="jane@example.com" autocomplete="email">
+            </label>
+          </div>
+
+          <label>
+            <span>Subject <b>*</b></span>
+            <select name="subject" id="fieldSubject" required>
+              <option value="" disabled selected>Select a topic...</option>
+              <option>App Feedback</option>
+              <option>Bug Report</option>
+              <option>Feature Request</option>
+              <option>Business Enquiry</option>
+              <option>General Question</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Message <b>*</b></span>
+            <textarea name="message" rows="7" required placeholder="Tell us how we can help..."></textarea>
+          </label>
+
+          <div class="turnstile-block">
+            <span>Human verification</span>
+            <div id="turnstileWidget"></div>
+          </div>
+
+          <button class="contact-submit" id="submitBtn" type="submit" disabled>Send message <span>→</span></button>
+          <p id="submitHint" class="submit-hint">Complete the verification to enable sending.</p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="brand" href="index.html"><span class="brand-beehta">beehta</span><span class="brand-dot">.com</span></a>
+      </div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a><a href="cookies.html">Cookie Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-bottom"><span>© <span id="footerYear"></span> beehta.com</span><span>Built for useful things.</span></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/contact.js"></script>
+</body>
+</html>

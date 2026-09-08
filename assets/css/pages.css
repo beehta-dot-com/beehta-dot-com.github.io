@@ -1,0 +1,427 @@
+/* ------------------------------------------------------------
+   The catalogue, stacked
+
+   Every app on the page at once, one below the other, and each one
+   in a block of its own tinted with that app's colour. No search,
+   no selection: the whole shelf is visible by scrolling.
+------------------------------------------------------------ */
+
+.page-pad {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2vw, 1.35rem);
+  padding-block: clamp(2rem, 6vw, 3.5rem) clamp(2.5rem, 6vw, 4rem);
+}
+
+/* --- a block --- */
+
+.block { padding: clamp(1.5rem, 4vw, 2.5rem); }
+.block > h2 { margin-top: 0.7rem; font-size: clamp(1.2rem, 2.6vw, 1.6rem); }
+.block-lede {
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  font-size: 0.95rem;
+  color: var(--ink-3);
+}
+
+.block--hero h1 {
+  margin-top: 0.85rem;
+  max-width: 20ch;
+  font-size: clamp(1.9rem, 4.6vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+.block--hero .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.7rem;
+}
+
+/* --- the three facts --- */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.35rem);
+}
+.fact { padding: clamp(1.25rem, 3vw, 1.75rem); }
+.fact-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--red-deep);
+}
+.fact h2 { margin-top: 0.7rem; font-size: 1.02rem; }
+.fact p { margin-top: 0.45rem; font-size: 0.89rem; color: var(--ink-3); }
+
+/* --- the filter block --- */
+
+.tools-head { display: flex; align-items: baseline; gap: 0.7rem; }
+.tools-head h2 { font-size: clamp(1.2rem, 2.6vw, 1.6rem); }
+.cat-count { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-4); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; }
+.filter {
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.45rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all var(--dur) var(--ease);
+}
+.filter:hover { border-color: var(--ink); color: var(--ink); }
+.filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* --- one app, one block ---
+
+   Every entry carries its own colour as --app, and the gradient
+   is what tells one block from the next at a glance. The wash is
+   built in explorer.js because the colours live in data.js. */
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2vw, 1.35rem);
+}
+
+/* One column at every width: the details sit above a preview that
+   runs the full width of the block. A demo has more room that way
+   than it ever had in half a column. */
+.entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  padding: clamp(1.5rem, 3.5vw, 2.25rem);
+  background:
+    linear-gradient(135deg, var(--wash, transparent) 0%, transparent 58%),
+    var(--card);
+}
+
+.entry-top {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+/* Every finished app gets a way in, right beside its name. */
+.entry-open { flex: none; margin-left: auto; }
+
+.entry-icon {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: var(--app, var(--rule));
+  border: 1px solid rgba(32, 30, 29, 0.14);
+  color: var(--ink);
+}
+
+.entry-titles h3 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+.ver { font-family: var(--font-mono); font-size: 0.76rem; font-weight: 400; color: var(--ink-4); }
+.badge {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+  border: 1px solid currentColor;
+  padding: 0.1rem 0.35rem;
+}
+.entry-tagline { margin-top: 0.15rem; font-size: 0.85rem; color: var(--ink-3); }
+
+.entry-summary {
+  margin-top: 1rem;
+  max-width: 68ch;
+  font-size: 0.94rem;
+  color: var(--ink-2);
+}
+
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1rem;
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(32, 30, 29, 0.1);
+  font-size: 0.78rem;
+  color: var(--ink-4);
+}
+.meta-cat { font-weight: 600; color: var(--ink-2); }
+
+.meta-status { display: inline-flex; align-items: center; gap: 0.35rem; }
+.meta-status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.meta-status.is-live { color: #3f7d4e; }
+.meta-status.is-beta { color: #a8721c; }
+.meta-status.is-soon { color: var(--ink-4); }
+
+.meta-domain { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-3); }
+.meta-updated { font-style: italic; }
+
+/* --- the preview beside it --- */
+
+.entry-preview {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  min-height: 280px;
+}
+
+.pv-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  background: rgba(32, 30, 29, 0.035);
+}
+.pv-bar i { width: 7px; height: 7px; border: 1px solid var(--ink-4); }
+.pv-bar span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-3); }
+
+.pv-body { flex: 1; min-height: 0; padding: 0.9rem; }
+
+.pv-empty {
+  height: 100%;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+}
+.pv-empty .entry-icon { width: 46px; height: 46px; }
+.pv-empty p { font-size: 0.86rem; color: var(--ink-3); }
+
+.preview-note {
+  flex: none;
+  padding: 0.7rem 0.9rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.entries-empty {
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--ink-3);
+}
+
+/* --- how it works --- */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.steps li { padding-top: 1rem; border-top: 2px solid var(--ink); }
+.step-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--red-deep); }
+.steps h3 { margin-top: 0.6rem; font-size: 1rem; }
+.steps p { margin-top: 0.5rem; font-size: 0.89rem; color: var(--ink-3); }
+
+/* --- closing --- */
+
+.block--cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+.block--cta h2 { font-size: clamp(1.2rem, 2.6vw, 1.6rem); }
+.block--cta .block-lede { margin-top: 0.6rem; }
+
+/* --- back to the top ---
+
+   Built by shell.js, so it turns up on every page without five
+   copies of the same markup. */
+
+.to-top {
+  position: fixed;
+  right: 1.15rem;
+  bottom: 1.15rem;
+  z-index: 35;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility var(--dur);
+  box-shadow: var(--lift);
+}
+.to-top.is-on { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--red); border-color: var(--red); }
+
+/* Keep the one-time background tip clear of that button. */
+.tile-hint { right: calc(1.15rem + 44px + 0.6rem); }
+@media (max-width: 560px) {
+  .tile-hint { right: 1.15rem; bottom: calc(1.15rem + 44px + 0.6rem); }
+}
+
+@media (max-width: 560px) {
+  /* No room to sit the button beside the name at this width. */
+  .entry-open { width: 100%; margin-left: 0; }
+}
+
+/* ------------------------------------------------------------
+   Interior pages (about, contact, terms)
+------------------------------------------------------------ */
+
+.page-head { padding-block: clamp(2.25rem, 6vw, 4rem) 1.5rem; }
+.page-head h1 {
+  margin-top: 0.7rem;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+}
+.page-head p {
+  margin-top: 0.9rem;
+  max-width: 56ch;
+  font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+  color: var(--ink-2);
+}
+
+.doc {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  padding-bottom: 1rem;
+}
+
+.doc-nav { padding: 1rem; position: sticky; top: 78px; }
+.doc-nav h4 { margin-bottom: 0.7rem; }
+.doc-nav a {
+  display: block;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+}
+.doc-nav a:last-child { border-bottom: 0; }
+.doc-nav a:hover { color: var(--red-deep); }
+
+/* about: one column, no side nav */
+.doc-single { padding-bottom: 1rem; }
+.doc-single .doc-body { max-width: 800px; }
+
+.doc-body { padding: clamp(1.25rem, 3.5vw, 2.25rem); }
+.doc-date { font-size: 0.85rem; color: var(--ink-3); }
+.doc-date strong { color: var(--red-deep); font-weight: 600; }
+.doc-body section + section { margin-top: 2.75rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
+.doc-body section > h2:first-child { margin-top: 0; }
+
+@media (max-width: 780px) {
+  .doc { grid-template-columns: minmax(0, 1fr); }
+  .doc-nav { position: static; }
+}
+
+/* --- about --- */
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.about-card { padding: 1.35rem; }
+.about-card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; }
+.about-card p { font-size: 0.9rem; color: var(--ink-3); }
+.about-card .num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--red-deep);
+  margin-bottom: 0.7rem;
+}
+
+/* --- contact --- */
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 1.25rem;
+  align-items: start;
+  padding-bottom: 1rem;
+}
+@media (max-width: 860px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+
+.form { padding: clamp(1.25rem, 3.5vw, 2rem); }
+.field { margin-bottom: 1.15rem; }
+.field label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.field .hint { font-weight: 400; color: var(--ink-4); }
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.62rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.94rem;
+  color: var(--ink);
+}
+.field textarea { min-height: 150px; resize: vertical; }
+.field input:focus,
+.field textarea:focus,
+.field select:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(32, 30, 29, 0.08); }
+.field.has-error input,
+.field.has-error textarea { border-color: var(--red); }
+.field .error { display: none; margin-top: 0.3rem; font-size: 0.8rem; color: var(--red-deep); }
+.field.has-error .error { display: block; }
+
+.form-note { margin-top: 1rem; font-size: 0.82rem; color: var(--ink-3); }
+
+.form-status { margin-top: 1rem; padding: 0.85rem 1rem; font-size: 0.9rem; border-left: 3px solid; }
+.form-status[hidden] { display: none; }
+.form-status.is-ok { border-color: #3f7d4e; background: rgba(63, 125, 78, 0.07); }
+.form-status.is-bad { border-color: var(--red); background: rgba(236, 48, 19, 0.06); }
+
+.contact-aside { display: flex; flex-direction: column; gap: 1rem; }
+.contact-aside .draft { margin-top: 0; }
+.aside-card { padding: 1.35rem; }
+.aside-card h3 { font-size: 0.98rem; margin-bottom: 0.5rem; }
+.aside-card p { font-size: 0.88rem; color: var(--ink-3); }
+
+/* ------------------------------------------------------------
+   404
+------------------------------------------------------------ */
+
+.notfound { padding-block: clamp(3rem, 9vw, 6rem); }
+.notfound .panel { max-width: 560px; padding: clamp(1.75rem, 4vw, 2.75rem); }
+.notfound .code {
+  font-family: var(--font-mono);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--red);
+}
+.notfound h1 { margin-top: 1rem; font-size: clamp(1.5rem, 4vw, 2rem); }
+.notfound p { margin-top: 0.9rem; color: var(--ink-2); max-width: 46ch; }
+.notfound .hero-actions { margin-top: 1.6rem; }

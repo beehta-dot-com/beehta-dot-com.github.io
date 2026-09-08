@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="beehta.com — a collection of useful web applications.">
+  <title>beehta.com — Useful web applications</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="beehta.com home">
+        <span class="brand-beehta">beehta</span><span class="brand-dot">.com</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#apps"><small>01</small><span>Applications</span></a>
+        <a href="#about"><small>02</small><span>About beehta</span></a>
+        <a href="contact.html"><small>03</small><span>Contact</span></a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-nav" aria-hidden="true">
+      <a href="#apps">Apps</a>
+      <a href="#about">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="about">
+      <div class="hero-copy">
+        <p class="eyebrow">A small collection of useful things</p>
+        <h1>Web apps without<br><em>the unnecessary stuff.</em></h1>
+        <p class="hero-text">
+          beehta.com is a home for simple web applications built for specific jobs.
+          Browse the collection, pick an app and try it before opening the full thing.
+        </p>
+        <a class="hero-link" href="#apps">Browse applications <span aria-hidden="true">View list</span></a>
+      </div>
+      <div class="hero-note" aria-hidden="true">
+        <span class="note-number">01</span>
+        <span class="note-line"></span>
+        <span class="note-label">USEFUL<br>BY DESIGN</span>
+      </div>
+    </section>
+
+    <section class="explorer" id="apps">
+      <div class="explorer-tools">
+        <label class="search-box">
+          <span class="sr-only">Search applications</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+          <input id="searchInput" type="search" placeholder="Search applications..." autocomplete="off">
+        </label>
+        <div class="categories" id="categoryFilters" role="group" aria-label="Application categories"></div>
+      </div>
+
+      <div class="explorer-grid">
+        <aside class="app-list-panel">
+          <div class="panel-heading">
+            <span>Applications</span>
+            <span id="appCount">0</span>
+          </div>
+          <div class="app-list" id="appList" tabindex="0" aria-label="Applications"></div>
+          <div class="list-footer">Select an application to preview it</div>
+        </aside>
+
+        <section class="demo-panel" aria-label="Application demo">
+          <div class="demo-heading">
+            <div>
+              <p class="demo-kicker">Live preview</p>
+              <h2 id="demoTitle">Select an application</h2>
+            </div>
+            <a id="openDemo" class="open-demo" href="#" target="_blank" rel="noopener" hidden>
+              Open application
+            </a>
+          </div>
+
+          <div class="mobile-app-nav" id="mobileAppNav" hidden>
+            <button id="prevApp" type="button" aria-label="Previous application">Previous</button>
+            <div>
+              <strong id="mobileAppName"></strong>
+              <span id="mobileAppPosition"></span>
+            </div>
+            <button id="nextApp" type="button" aria-label="Next application">Next</button>
+          </div>
+
+          <div class="demo-window" id="demoWindow">
+            <div class="window-bar">
+              <span class="window-dots"><i></i><i></i><i></i></span>
+              <span id="demoUrl" class="window-url">Choose an app</span>
+            </div>
+            <div class="demo-content" id="demoContent">
+              <div class="empty-demo">
+                <span class="empty-index">00</span>
+                <h3>Choose something from the list.</h3>
+                <p>The selected application will appear here.</p>
+              </div>
+            </div>
+          </div>
+          <p class="demo-description" id="demoDescription"></p>
+        </section>
+      </div>
+    </section>
+
+    <section class="closing-note">
+      <p class="eyebrow">Why beehta?</p>
+      <h2>Small tools can still<br><em>be thoughtfully made.</em></h2>
+      <p>Each application has a narrow purpose. No account maze, no giant product tour, just the thing you came looking for.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <span class="brand-beehta">beehta</span><span class="brand-dot">.com</span>
+        </a>
+        <p>A collection of useful web applications.</p>
+      </div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="footerYear"></span> beehta.com</span>
+        <span>Built for useful things.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
