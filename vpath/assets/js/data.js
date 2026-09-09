@@ -9,27 +9,26 @@
    ------------------------------------------------------------
    FIELDS
    ------------------------------------------------------------
-   id        short, unique, no spaces. Used in the URL hash so a
-             single app can be linked to, and as its subdomain.
-   name      shown as the entry heading.
-   category  free text. Anything used here becomes a filter, and
-             is shown as the small label above the name.
-   summary   what problem this app solves, in a sentence or two.
-             Written for somebody who has never heard of it.
-   colour    the app's colour. Also feeds the tile background.
-   status    "live" ready to use, listed under Available now
-             "soon" listed under Coming soon, with no preview
-   url       where "Open" goes. Omit for a "soon" app.
-   demo      id of a preview registered in assets/demos/. Omit and
-             the entry is listed without one.
-   note      one line under the preview. Optional.
+   id          short, unique, no spaces. Used in the URL hash so
+               a preview can be linked to directly.
+   name        shown in the list, the tab strip and the preview.
+   category    free text. Anything used here shows up as a filter
+               once the catalogue passes TOOLS_FROM entries.
+   summary     one line, shown under the name in the list.
+   colour      the app's colour. Also feeds the tile background,
+               so the page is literally made of these.
+   status      "live"  the app exists and can be opened
+               "soon"  listed, but nothing to open yet
+   url         where "Open" goes. Omit for a "soon" app.
+   demo        id of a demo registered in assets/demos/. Omit and
+               the preview shows the coming-soon placeholder.
+   note        one line under the preview. Optional.
    ------------------------------------------------------------
 ============================================================ */
 
-/* The search box and the category filters appear once the
-   catalogue is long enough to need them. Below this, the whole
-   shelf fits on one screen of scrolling and a filter row is
-   furniture. */
+/* Search and category filters stay hidden until the catalogue is
+   big enough to need them. A filter row above five items is
+   furniture, not help. */
 var TOOLS_FROM = 7;
 
 var APPS = [
@@ -37,7 +36,7 @@ var APPS = [
     id: "logins",
     name: "Logins",
     category: "Personal",
-    summary: "Keep your online accounts organised in one place. Store account details, group related services, and quickly find what you need.",
+    summary: "A card board for keeping track of the accounts you have and how they connect to each other.",
     colour: "#e8d3c0",
     status: "live",
     url: "https://logins.beehta.com",
@@ -46,20 +45,19 @@ var APPS = [
   },
 
   /* ----------------------------------------------------------
-     NOT BUILT YET
+     PLACEHOLDERS
 
      The four below do not exist. The names and descriptions are
-     invented so the shelf has something to show, and are meant
-     to be rewritten or deleted. They are listed under Coming
-     soon and carry no preview, because there is nothing to
-     preview.
+     invented so the page has something to show, and are meant to
+     be rewritten or deleted. Each one keeps its slot in the list
+     and shows the coming-soon panel instead of a demo.
   ---------------------------------------------------------- */
 
   {
     id: "notes",
     name: "Notes",
     category: "Personal",
-    summary: "A deliberately simple place for notes, snippets, and things you do not want to lose.",
+    summary: "Plain text notes with folders and fast search, for people who type quicker than they click.",
     colour: "#efe3c4",
     status: "soon"
   },
@@ -67,7 +65,7 @@ var APPS = [
     id: "split",
     name: "Split",
     category: "Money",
-    summary: "Split a dinner, a trip, rent, or any shared expense without doing the maths yourself.",
+    summary: "Work out who owes what after a shared trip, a shared flat, or a shared dinner.",
     colour: "#d7e2ce",
     status: "soon"
   },
@@ -75,7 +73,7 @@ var APPS = [
     id: "convert",
     name: "Convert",
     category: "Utilities",
-    summary: "Convert units, currencies, and common formats from one place. No account required.",
+    summary: "Units, currencies and file formats from a single input box. No adverts, no sign up.",
     colour: "#d2dfe8",
     status: "soon"
   },
@@ -83,7 +81,7 @@ var APPS = [
     id: "shelf",
     name: "Shelf",
     category: "Personal",
-    summary: "Keep track of books, films, and other things you own, have lent out, or want to get to someday.",
+    summary: "A list of the books, films and things you own, lent out, or mean to get round to.",
     colour: "#e0d8e6",
     status: "soon"
   }

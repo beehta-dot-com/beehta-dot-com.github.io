@@ -517,6 +517,13 @@ a { color: var(--ink); }
   margin-top: 1.9rem;
 }
 
+.hero-meta {
+  margin-top: 1.9rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.86rem;
+  color: var(--ink-3);
+}
 
 /* Two classes, and declared after `.section > .panel`, so it wins
    in the version that has that rule and works without it in the

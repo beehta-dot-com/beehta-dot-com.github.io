@@ -1,21 +1,20 @@
 /* ============================================================
    EXPLORER.JS
-   The catalogue on the home page  (hybrid layout)
+   The catalogue on the home page  (directory layout)
 
-   Two layouts from one set of data, chosen by width:
+   The apps are the point of this page, so they are not hidden
+   behind a selection. Every app that exists gets a block of its
+   own with its preview beside it, and everything still being
+   built is listed separately and compactly, because there is
+   nothing to preview and a row of empty squares says nothing.
 
-     wide    a list of apps beside a single preview panel, the
-             same master-detail arrangement as the site/ version
-     narrow  every app in a block of its own, stacked, with its
-             preview running the full width of the screen
+   Two lists, one set of data:
 
-   They are different enough in structure that showing and hiding
-   one of them would mean building both, and building both would
-   mean mounting every demo twice. So only one exists at a time
-   and the whole catalogue is redrawn when the window crosses the
-   breakpoint. Whatever app was selected survives the switch.
+     #available    status "live", with a working preview
+     #comingSoon   everything else, name and one line only
 
-   A demo registers itself on window.BeehtaDemos before this runs.
+   A preview registers itself on window.BeehtaDemos before this
+   runs.
 ============================================================ */
 
 window.BeehtaDemos = window.BeehtaDemos || {};
@@ -30,29 +29,23 @@ window.beehtaPages.home = function (root) {
   var apps = window.APPS || [];
   var toolsFrom = window.TOOLS_FROM || 7;
 
-  var catalogueEl = root.querySelector("#catalogue");
+  var availableEl = root.querySelector("#available");
+  var soonEl = root.querySelector("#comingSoon");
+  var availableHead = root.querySelector("#availableHead");
+  var soonHead = root.querySelector("#comingSoonHead");
+  var countEl = root.querySelector("#appCount");
+  var toolsEl = root.querySelector("#directoryTools");
   var searchEl = root.querySelector("#appSearch");
   var filtersEl = root.querySelector("#appFilters");
-  var countEl = root.querySelector("#resultCount");
-  var heroEl = root.querySelector("#heroMeta");
+  var emptyEl = root.querySelector("#directoryEmpty");
 
-  if (!catalogueEl) return;
-
-  // Matches the breakpoint in pages.css. Kept in one place here
-  // because the layout is chosen in script, not by a media query.
-  var wide = window.matchMedia("(min-width: 900px)");
+  if (!availableEl || !soonEl) return;
 
   var category = "All";
   var term = "";
-  var selected = apps.length ? apps[0].id : null;
 
-  // id -> teardown, for the demos currently built
+  // id -> teardown, for the previews already built
   var mounted = Object.create(null);
-
-  // Which layout is actually on the page. Compared against the
-  // media query on every resize, because a missed change event
-  // would otherwise leave the wrong layout up for good.
-  var renderedWide = null;
 
   /* ---------- helpers ---------- */
 
@@ -64,45 +57,22 @@ window.beehtaPages.home = function (root) {
   }
 
   function domainOf(app) { return app.id + ".beehta.com"; }
+  function isLive(app) { return app.status === "live"; }
 
-  function statusOf(app) {
-    if (app.status === "live") return { cls: "is-live", label: "Active" };
-    if (app.status === "beta") return { cls: "is-beta", label: "Beta" };
-    return { cls: "is-soon", label: "Coming soon" };
-  }
-
-  function swatch(app, cls) {
-    var box = el("span", cls || "app-swatch");
-    box.style.backgroundColor = app.colour;
-    box.setAttribute("aria-hidden", "true");
-    return box;
-  }
-
-  function openLink(app, cls) {
-    if (app.status === "soon" || !app.url) return null;
-    var a = el("a", cls, "Open " + app.name);
-    a.href = app.url;
-    a.target = "_blank";
-    a.rel = "noopener";
-    return a;
-  }
-
-  function visible() {
+  function matches(app) {
+    if (category !== "All" && app.category !== category) return false;
     var needle = term.trim().toLowerCase();
-    return apps.filter(function (app) {
-      if (category !== "All" && app.category !== category) return false;
-      if (!needle) return true;
-      return (app.name + " " + app.summary + " " + app.category)
-        .toLowerCase().indexOf(needle) !== -1;
-    });
+    if (!needle) return true;
+    return (app.name + " " + app.summary + " " + app.category)
+      .toLowerCase().indexOf(needle) !== -1;
   }
 
-  /* ---------- demos ----------
+  /* ---------- previews, built when they come near ----------
 
      Deliberately not done with an IntersectionObserver. That
      callback is async and in some contexts never fires at all,
-     which would leave previews permanently blank rather than
-     merely late. */
+     which would leave every preview permanently blank rather
+     than merely late. */
 
   var NEAR = 400;
   var watching = false;
@@ -121,7 +91,7 @@ window.beehtaPages.home = function (root) {
   }
 
   function pendingBodies() {
-    return catalogueEl.querySelectorAll(".hy-body[data-demo]:not([data-demo=''])");
+    return availableEl.querySelectorAll(".pv-stage[data-demo]:not([data-demo=''])");
   }
 
   function mountNearby() {
@@ -131,7 +101,7 @@ window.beehtaPages.home = function (root) {
 
     for (var i = 0; i < bodies.length; i++) {
       var body = bodies[i];
-      var id = body.closest(".hy-entry").dataset.app;
+      var id = body.closest(".app-block").dataset.app;
       if (mounted[id]) continue;
 
       var box = body.getBoundingClientRect();
@@ -165,255 +135,127 @@ window.beehtaPages.home = function (root) {
     window.removeEventListener("resize", onScroll);
   }
 
-  /* Chrome bar for a preview: an address field and a badge, so it
-     is obvious the panel below is a screen inside a screen. */
-  function chrome(app) {
-    var bar = el("div", "pv-chrome");
-    bar.setAttribute("aria-hidden", "true");
-    bar.appendChild(el("span", "pv-addr", domainOf(app) + "/demo"));
-    bar.appendChild(el("span", "pv-badge", "Demo"));
-    return bar;
-  }
+  /* ---------- an available app ---------- */
 
-  /* ---------- the coming-soon panel, shared by both layouts ---------- */
+  function availableBlock(app) {
+    var block = el("article", "app-block");
+    block.id = "app-" + app.id;
+    block.dataset.app = app.id;
+    block.style.setProperty("--app", app.colour);
 
-  function comingSoon(app) {
-    var box = el("div", "hy-empty");
-    box.appendChild(swatch(app, "app-swatch app-swatch--lg"));
-    box.appendChild(el("p", null, app.status === "live"
-      ? "No preview for this one yet."
-      : "Not built yet."));
-    return box;
-  }
+    var inner = el("div", "app-block-inner");
 
-  /* ================= wide: list beside one preview ================= */
+    /* --- what it is --- */
+    var detail = el("div", "panel block app-detail");
 
-  function renderWide(shown) {
-    var grid = el("div", "shell explorer-grid");
+    detail.appendChild(el("p", "app-cat", app.category));
 
-    /* --- the list --- */
-    var slot = el("div", "app-list-slot");
-    var panel = el("div", "panel app-list-panel");
-    var list = el("div", "app-list");
-    list.setAttribute("role", "tablist");
-    list.setAttribute("aria-label", "Apps");
+    var head = el("div", "app-head");
+    head.appendChild(el("h3", null, app.name));
+    head.appendChild(el("span", "app-status is-live", "Available"));
+    detail.appendChild(head);
 
-    shown.forEach(function (app) {
-      var item = el("button", "app-item");
-      item.type = "button";
-      item.setAttribute("role", "tab");
-      item.setAttribute("aria-selected", String(app.id === selected));
+    detail.appendChild(el("p", "app-summary", app.summary));
 
-      var name = el("span", "app-item-name");
-      name.appendChild(document.createTextNode(app.name));
-      if (app.status !== "live") name.appendChild(el("span", "tag", "Soon"));
+    if (app.url) {
+      var open = el("a", "btn btn--primary app-open", "Open " + app.name);
+      open.href = app.url;
+      open.target = "_blank";
+      open.rel = "noopener";
+      detail.appendChild(open);
+    }
 
-      var body = document.createElement("span");
-      body.appendChild(name);
-      body.appendChild(el("span", "app-item-desc", app.summary));
-
-      item.appendChild(swatch(app));
-      item.appendChild(body);
-      item.addEventListener("click", function () {
-        if (app.id === selected) return;
-        selected = app.id;
-        draw();
-      });
-      list.appendChild(item);
-    });
-
-    panel.appendChild(list);
-    panel.appendChild(el("p", "list-foot",
-      shown.length > 1 ? "Pick one to see it working." : ""));
-    slot.appendChild(panel);
-    grid.appendChild(slot);
+    detail.appendChild(el("p", "app-domain", domainOf(app)));
+    inner.appendChild(detail);
 
     /* --- the preview --- */
-    var preview = el("div", "panel preview");
-    preview.setAttribute("role", "tabpanel");
-    preview.setAttribute("aria-label", "Preview");
-    preview.tabIndex = 0;
+    var preview = el("div", "app-preview");
 
-    var app = shown.filter(function (a) { return a.id === selected; })[0];
+    var chrome = el("div", "pv-chrome");
+    chrome.setAttribute("aria-hidden", "true");
+    chrome.appendChild(el("span", "pv-addr", domainOf(app)));
+    chrome.appendChild(el("span", "pv-badge", "Preview"));
+    preview.appendChild(chrome);
 
-    if (!app) {
-      preview.appendChild(el("div", "empty", term.trim()
-        ? "Nothing matches that. Try a different word."
-        : "Nothing to show here."));
-      grid.appendChild(preview);
-      catalogueEl.appendChild(grid);
-      return;
-    }
-
-    var head = el("div", "preview-head");
-    var titles = document.createElement("div");
-    titles.appendChild(el("span", "kicker",
-      app.status === "live" ? "Try it here" : "In the works"));
-    titles.appendChild(el("h3", null, app.name));
-    head.appendChild(titles);
-
-    var open = openLink(app, "btn btn--primary");
-    if (open) head.appendChild(open);
-    preview.appendChild(head);
-
-    preview.appendChild(chrome(app));
-
-    var stage = el("div", "preview-stage");
+    var stage = el("div", "pv-stage");
+    stage.dataset.demo = app.demo || "";
     preview.appendChild(stage);
 
-    if (app.demo && window.BeehtaDemos[app.demo]) mountInto(stage, app);
-    else stage.appendChild(comingSoon(app));
-
-    if (app.note) preview.appendChild(el("p", "preview-note", app.note));
-
-    grid.appendChild(preview);
-    catalogueEl.appendChild(grid);
-  }
-
-  /* ================= narrow: a block each, full-width previews ================= */
-
-  function renderNarrow(shown) {
-    if (!shown.length) {
-      var wrap = el("div", "shell");
-      wrap.appendChild(el("p", "panel block hy-none", term.trim()
-        ? "Nothing matches that. Try a different word."
-        : "Nothing in that category yet."));
-      catalogueEl.appendChild(wrap);
-      return;
+    if (!(app.demo && window.BeehtaDemos[app.demo])) {
+      var none = el("div", "pv-none");
+      none.appendChild(el("p", null, "No preview for this one yet."));
+      stage.appendChild(none);
     }
 
-    var entries = el("div", "hy-entries");
+    if (app.note) preview.appendChild(el("p", "pv-note", app.note));
 
-    shown.forEach(function (app) {
-      var entry = el("article", "hy-entry");
-      entry.id = "app-" + app.id;
-      entry.dataset.app = app.id;
+    inner.appendChild(preview);
+    block.appendChild(inner);
+    return block;
+  }
 
-      /* --- the description, padded like the rest of the page --- */
-      var pad = el("div", "shell");
-      var info = el("div", "panel hy-info");
+  /* ---------- an app that is not built yet ---------- */
 
-      var top = el("div", "hy-top");
-      top.appendChild(swatch(app));
+  function soonCard(app) {
+    var card = el("article", "panel soon-card");
+    card.id = "app-" + app.id;
 
-      var titles = document.createElement("div");
-      var h3 = el("h3");
-      h3.appendChild(document.createTextNode(app.name));
-      if (app.status !== "live") h3.appendChild(el("span", "tag", "Soon"));
-      titles.appendChild(h3);
-      top.appendChild(titles);
+    var mark = el("span", "soon-swatch");
+    mark.style.backgroundColor = app.colour;
+    mark.setAttribute("aria-hidden", "true");
+    card.appendChild(mark);
 
-      var open = openLink(app, "btn btn--ghost hy-open");
-      if (open) top.appendChild(open);
-      info.appendChild(top);
+    var body = document.createElement("div");
+    body.appendChild(el("p", "app-cat", app.category));
+    body.appendChild(el("h3", null, app.name));
+    body.appendChild(el("p", "soon-summary", app.summary));
+    card.appendChild(body);
 
-      info.appendChild(el("p", "hy-summary", app.summary));
-
-      var st = statusOf(app);
-      var meta = el("p", "hy-meta");
-      meta.appendChild(el("span", "meta-cat", app.category));
-      meta.appendChild(el("span", "meta-status " + st.cls, st.label));
-      meta.appendChild(el("span", "meta-domain", domainOf(app)));
-      info.appendChild(meta);
-
-      pad.appendChild(info);
-      entry.appendChild(pad);
-
-      /* --- the preview, edge to edge ---
-         Outside the padded wrapper on purpose: this is the one
-         thing on the page that gets the whole screen width. */
-      var preview = el("div", "hy-preview");
-
-      preview.appendChild(chrome(app));
-
-      var body = el("div", "hy-body");
-      body.dataset.demo = app.demo || "";
-      preview.appendChild(body);
-
-      // A demo is filled in once the block comes near the screen.
-      // Anything without one gets its panel now and keeps it.
-      if (!(app.demo && window.BeehtaDemos[app.demo])) {
-        body.appendChild(comingSoon(app));
-      }
-
-      if (app.note) preview.appendChild(el("p", "hy-note", app.note));
-
-      entry.appendChild(preview);
-      entries.appendChild(entry);
-    });
-
-    catalogueEl.appendChild(entries);
-    startWatching();
+    return card;
   }
 
   /* ---------- draw ---------- */
 
   function draw() {
     unmountAll();
-    catalogueEl.textContent = "";
+    availableEl.textContent = "";
+    soonEl.textContent = "";
 
-    var shown = visible();
+    var shown = apps.filter(matches);
+    var live = shown.filter(isLive);
+    var soon = shown.filter(function (a) { return !isLive(a); });
 
-    // If a filter or a search hid the selected app, move to the
-    // first one still standing rather than showing nothing.
-    if (shown.length && !shown.some(function (a) { return a.id === selected; })) {
-      selected = shown[0].id;
-    }
+    live.forEach(function (app) { availableEl.appendChild(availableBlock(app)); });
+    soon.forEach(function (app) { soonEl.appendChild(soonCard(app)); });
 
-    renderedWide = wide.matches;
-    if (renderedWide) renderWide(shown);
-    else renderNarrow(shown);
+    // A heading with nothing under it is worse than no heading.
+    if (availableHead) availableHead.hidden = !live.length;
+    if (soonHead) soonHead.hidden = !soon.length;
+    availableEl.hidden = !live.length;
+    soonEl.hidden = !soon.length;
 
-    if (countEl) {
-      countEl.textContent = (shown.length === apps.length)
-        ? apps.length + (apps.length === 1 ? " app" : " apps")
-        : shown.length + " of " + apps.length;
-    }
+    if (emptyEl) emptyEl.hidden = shown.length > 0;
+
+    drawCount(shown);
+    startWatching();
   }
 
-  /* ---------- the hero's standing line ----------
-     Derived, not typed into the HTML, so it cannot go stale the
-     next time an app is added to data.js. */
+  /* The count says what the shelf holds, not just how many rows
+     came back, so it stays useful as the catalogue grows. */
+  function drawCount(shown) {
+    if (!countEl) return;
 
-  function drawHeroMeta() {
-    if (!heroEl) return;
-    var live = apps.filter(function (a) { return a.status === "live"; }).length;
-    var soon = apps.length - live;
+    var total = apps.length;
+    var live = apps.filter(isLive).length;
+    var soon = total - live;
 
-    var parts = [];
-    if (live) parts.push(live + (live === 1 ? " app open" : " apps open"));
-    if (soon) parts.push(soon + " more on the way");
-    parts.push("the background is yours to rearrange");
-    heroEl.textContent = parts.join(", ") + ".";
-  }
+    var parts = [total + (total === 1 ? " app" : " apps")];
+    if (live) parts.push(live + " available");
+    if (soon) parts.push(soon + " coming soon");
 
-  function drawUpNext() {
-    var host = root.querySelector("#upNext");
-    if (!host) return;
-
-    var soon = apps.filter(function (a) { return a.status !== "live"; });
-    host.textContent = "";
-
-    if (!soon.length) {
-      host.appendChild(el("p", null, "Nothing queued at the moment. Everything on the shelf is open."));
-      return;
-    }
-
-    soon.forEach(function (app) {
-      var row = document.createElement("article");
-      var mark = el("span", "swatch");
-      mark.style.backgroundColor = app.colour;
-      mark.setAttribute("aria-hidden", "true");
-
-      var body = document.createElement("div");
-      body.appendChild(el("h3", null, app.name));
-      body.appendChild(el("p", "upnext-cat", app.category));
-      body.appendChild(el("p", null, app.summary));
-
-      row.appendChild(mark);
-      row.appendChild(body);
-      host.appendChild(row);
-    });
+    var text = parts.join(" · ");
+    if (shown.length !== total) text = "Showing " + shown.length + " of " + text;
+    countEl.textContent = text;
   }
 
   function drawFilters() {
@@ -440,53 +282,24 @@ window.beehtaPages.home = function (root) {
 
   /* ---------- wiring ---------- */
 
-  if (filtersEl) {
+  if (toolsEl) {
     if (apps.length >= toolsFrom) {
-      filtersEl.hidden = false;
+      toolsEl.hidden = false;
       drawFilters();
     } else {
-      filtersEl.hidden = true;
+      toolsEl.hidden = true;
     }
   }
 
   function onSearch(e) { term = e.target.value; draw(); }
   if (searchEl) searchEl.addEventListener("input", onSearch);
 
-  /* Crossing the breakpoint swaps the whole catalogue over.
-
-     Two ways in, on purpose. The change event is the quick one,
-     but it does not always arrive: emulated viewports and some
-     window managers resize without firing it, and a single missed
-     event would leave the wrong layout on screen permanently. So
-     a throttled resize handler compares what is drawn against
-     what should be drawn and puts it right. */
-
-  function onBreakpoint() { draw(); }
-  if (wide.addEventListener) wide.addEventListener("change", onBreakpoint);
-  else wide.addListener(onBreakpoint);           // older Safari
-
-  var layoutQueued = false;
-
-  function onResize() {
-    if (layoutQueued) return;
-    layoutQueued = true;
-    setTimeout(function () {
-      layoutQueued = false;
-      if (renderedWide !== wide.matches) draw();
-    }, 150);
-  }
-  window.addEventListener("resize", onResize);
-
-  drawHeroMeta();
-  drawUpNext();
   draw();
 
-  // A block can be linked to directly: beehta.com/#logins
+  // An app can be linked to directly: beehta.com/#logins
   var fromHash = location.hash.slice(1);
-  if (fromHash && apps.some(function (a) { return a.id === fromHash; })) {
-    selected = fromHash;
-    draw();
-    var target = document.getElementById("app-" + fromHash);
+  if (fromHash) {
+    var target = root.querySelector("#app-" + (window.CSS && CSS.escape ? CSS.escape(fromHash) : fromHash));
     if (target) target.scrollIntoView();
   }
 
@@ -494,8 +307,5 @@ window.beehtaPages.home = function (root) {
   return function () {
     unmountAll();
     if (searchEl) searchEl.removeEventListener("input", onSearch);
-    if (wide.removeEventListener) wide.removeEventListener("change", onBreakpoint);
-    else wide.removeListener(onBreakpoint);
-    window.removeEventListener("resize", onResize);
   };
 };
