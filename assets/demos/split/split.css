@@ -1,0 +1,29 @@
+/* ============================================================
+   SPLIT DEMO
+
+   What is particular to this one. The shared look is in
+   _kit/kit.css.
+============================================================ */
+
+.td-people { display: grid; gap: 0.4rem; }
+.td-person {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5.5rem auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+/* Grid children default to min-width:auto, which lets a long value
+   push the row wider than its column instead of shrinking. */
+.td-name, .td-extra, .td-what, .td-when { min-width: 0; }
+
+.td-drop {
+  border: 1px solid var(--td-line-2);
+  background: #fff;
+  padding: 0.42rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.74rem;
+  color: var(--td-ink-2);
+  cursor: pointer;
+}
+.td-drop:hover:not([disabled]) { border-color: #c0574a; color: #c0574a; }
+.td-drop[disabled] { opacity: 0.35; cursor: not-allowed; }

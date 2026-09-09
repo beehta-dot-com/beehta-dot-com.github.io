@@ -1,0 +1,811 @@
+/* ============================================================
+   BASE.CSS
+   beehta.com catalogue
+
+   Tokens, reset, the tile background, header, footer, the motion
+   vocabulary, and the handful of components every page shares.
+   Page specific rules live in pages.css.
+
+   The look here is deliberately not the sub-domain look. Square
+   corners everywhere, because the logo is two butted tiles and
+   the background is a field of them. Colour comes from the tiles,
+   so the furniture stays quiet.
+============================================================ */
+
+:root {
+  /* surfaces */
+  --paper: #f5f2ea;
+  --card: #fffdf8;
+  --card-veil: rgba(255, 253, 248, 0.94);
+
+  /* ink ramp, warm greys so nothing reads blue next to the pastels */
+  --ink: #201e1d;
+  --ink-2: #4a4643;
+  --ink-3: #6f6a65;
+  --ink-4: #9b948d;
+  --rule: #ded7c9;
+  --rule-strong: #c9c0b0;
+
+  /* The inside of a card, where blocks are laid on it. Deeper than
+     the paper so that a white block sitting on it has somewhere to
+     sit; the card itself stays the lightest surface on the page. */
+  --well: #ebe5d7;
+
+  /* The same three ideas on a dark card: a ground, a well to lay
+     blocks on, and two weights of rule. */
+  --ink-well: #171615;
+  --ink-line: rgba(245, 242, 234, 0.14);
+  --ink-line-2: rgba(245, 242, 234, 0.22);
+
+  /* the one loud colour, taken straight from the logo */
+  --red: #ec3013;
+  --red-deep: #ae1800;
+
+  /* type */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* rhythm */
+  --shell: 1180px;
+  --gutter: clamp(1.15rem, 4vw, 3rem);
+
+  /* One gap, used between every section on every page. Anything
+     that wants to sit closer to its neighbour is part of that
+     neighbour and belongs inside the same panel. */
+  --section-gap: clamp(3.5rem, 9.5vh, 7rem);
+  --section-top: clamp(3.25rem, 9vh, 6.5rem);
+
+  /* motion
+     --dur    a state change under the pointer
+     --dur-2  something rearranging itself
+     --dur-3  something arriving on the page */
+  --dur: 160ms;
+  --dur-2: 320ms;
+  --dur-3: 620ms;
+  --ease: cubic-bezier(0.2, 0, 0.1, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* a hard offset shadow, not a soft glow */
+  --lift: 4px 4px 0 rgba(32, 30, 29, 0.09);
+  --lift-lg: 8px 8px 0 rgba(32, 30, 29, 0.1);
+}
+
+/* ------------------------------------------------------------
+   Reset
+------------------------------------------------------------ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+/* Several things here are display:flex or display:grid, and those
+   win against the [hidden] attribute's own display:none. Anything
+   toggled with el.hidden needs this to actually disappear. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* the tile field is fixed behind everything, so the body must not
+     paint over it. The paper colour lives on the tile layer instead. */
+  background-color: var(--paper);
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+p { margin: 0; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+a { color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------
+   The tile field
+
+   This is the page background: fixed to the viewport, filling
+   every pixel, behind all content. Tiles are swapped by drag and
+   drop or by tapping two of them, and the arrangement is kept in
+   localStorage so it survives a reload.
+------------------------------------------------------------ */
+
+#tile-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition:
+    transform var(--dur) var(--ease),
+    filter var(--dur) var(--ease),
+    outline-color 100ms linear;
+}
+
+@media (hover: hover) {
+  .tile:hover { filter: brightness(0.965); z-index: 2; }
+}
+
+.tile:focus-visible { outline-color: var(--ink); z-index: 4; }
+
+.tile.is-picked {
+  outline: 2px solid var(--ink);
+  filter: brightness(0.96);
+  z-index: 3;
+}
+.tile.is-picked::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(32, 30, 29, 0.45);
+}
+
+.tile.is-dragging { opacity: 0.35; transform: scale(0.94); z-index: 10; }
+.tile.is-target { outline: 2px dashed var(--ink); z-index: 3; }
+
+.tile.just-swapped { animation: tile-settle 320ms var(--ease); }
+@keyframes tile-settle {
+  0% { transform: scale(0.9); }
+  65% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+/* ------------------------------------------------------------
+   Content layer
+
+   Sits above the tiles. Pointer events are off by default so
+   empty space always lets a click or a drag reach the tile
+   underneath. Real surfaces switch them back on.
+------------------------------------------------------------ */
+
+.page { position: relative; z-index: 1; pointer-events: none; }
+
+.page .site-header,
+.page .site-footer,
+.page .panel,
+.page .cat-preview,
+.page a,
+.page button,
+.page input,
+.page textarea,
+.page select { pointer-events: auto; }
+
+/* Text keeps its own events so it stays selectable and a click on
+   a heading does not fall through and shuffle a tile. Only the
+   gaps between things reach the background. */
+.page :is(h1, h2, h3, h4, p, li, label, img, .kicker) { pointer-events: auto; }
+
+.shell {
+  max-width: var(--shell);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+/* ------------------------------------------------------------
+   Section rhythm
+
+   One gap between sections, everywhere, on every page. Earlier
+   versions set padding on some kinds of section and margins on
+   others, and the page ended up with three different gaps in it
+   depending on which two things happened to be adjacent.
+
+   So no section carries vertical padding of its own. The space
+   lives in one rule, between siblings, and every page inherits
+   the same rhythm whatever it is made of.
+------------------------------------------------------------ */
+
+/* A block formatting context, so the first child's margin makes
+   space inside main instead of collapsing out of it. */
+#main { display: flow-root; }
+
+main > * { margin-top: var(--section-gap); padding-block: 0; }
+main > *:first-child { margin-top: var(--section-top); }
+main { padding-bottom: var(--section-gap); }
+
+/* Content is centred in its own block rather than pinned to the
+   top, so a short section does not read as a tall empty box.
+   A floor, not a target: it keeps a short block from looking
+   cramped between two long ones, and anything taller simply
+   grows past it. */
+.section > .panel {
+  min-height: min(52vh, 440px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Anchors land below the sticky header, not behind it. */
+[id] { scroll-margin-top: 80px; }
+
+/* ------------------------------------------------------------
+   Panels
+
+   One card shape used everywhere. Square corners, hairline rule,
+   a hard offset shadow rather than a blur.
+------------------------------------------------------------ */
+
+/* Opaque on purpose. An earlier pass frosted these over the tile
+   field, which looked well in a still and cost a full-screen blur
+   on every scroll frame, on top of a hundred-odd fixed tiles. The
+   colour belongs in the gaps between panels, not behind the text. */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift-lg);
+}
+
+/* ------------------------------------------------------------
+   Glass
+
+   The one place the tile field is allowed to show through the
+   furniture rather than only around it. Used on the panel that
+   introduces a page or a list, so the colour behind the site is
+   part of the introduction, and nowhere else: an earlier pass
+   frosted every panel and paid for a full-screen blur on every
+   scroll frame over a hundred fixed tiles.
+
+   Corners stay square. The logo is two butted tiles and so is the
+   background; rounding these would make them the only round thing
+   on the site.
+------------------------------------------------------------ */
+
+.panel.glass {
+  background: rgba(255, 253, 248, 0.30);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 14px 38px rgba(32, 30, 29, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+}
+
+/* The kicker sits on the lightest part of the veil, so it is
+   darkened a step to hold its contrast against the tiles. */
+.panel.glass .kicker { color: var(--ink-2); }
+.panel.glass .block-lede,
+.panel.glass p { color: var(--ink); }
+
+/* Without the blur the veil alone is not enough to read against a
+   field of colour, so it becomes an almost solid card instead. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel.glass { background: var(--card-veil); }
+}
+
+/* ------------------------------------------------------------
+   Header
+------------------------------------------------------------ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(245, 242, 234, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule-strong);
+  transition: box-shadow var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
+}
+
+/* Once there is page behind it, the bar tightens and lifts off the
+   content, so it stops reading as part of the hero. */
+.site-header.is-scrolled {
+  background: rgba(245, 242, 234, 0.97);
+  box-shadow: 0 10px 26px rgba(32, 30, 29, 0.07);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 62px;
+  transition: min-height var(--dur-2) var(--ease);
+}
+.site-header.is-scrolled .header-inner { min-height: 54px; }
+
+/* The brand rules are explicit that the mark and the wordmark are
+   never shown together: one stands in for the other. So the header
+   carries the hexagon alone and the footer carries the name. The
+   name still reaches the reader early through the page title, the
+   hero copy and the catalogue heading. */
+.logo { display: inline-flex; align-items: center; flex: none; }
+.logo--mark img {
+  height: 30px;
+  width: auto;
+  transition: height var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.site-header.is-scrolled .logo--mark img { height: 26px; }
+.logo--mark:hover img { transform: rotate(-4deg); }
+.logo--word img { height: 24px; width: auto; }
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-left: auto;
+}
+
+.site-nav a {
+  position: relative;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  padding: 0.35rem 0;
+  transition: color var(--dur) var(--ease);
+}
+.site-nav a:hover { color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+
+/* One rule drawn under every link, scaled to nothing until it is
+   wanted, so hovering wipes it in rather than snapping it on. */
+.site-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.site-nav a:hover::after,
+.site-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+/* The nav collapses into a scrolling strip rather than a hamburger.
+   Three links fit; a menu that hides three links is a menu for
+   nothing. */
+@media (max-width: 640px) {
+  .header-inner { min-height: 56px; gap: 0.75rem; }
+  .site-header.is-scrolled .header-inner { min-height: 50px; }
+  .logo--mark img { height: 26px; }
+  .site-nav {
+    gap: 1.05rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .site-nav::-webkit-scrollbar { display: none; }
+  .site-nav a { font-size: 0.86rem; white-space: nowrap; }
+}
+
+/* ------------------------------------------------------------
+   Buttons
+------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--ink);
+  background: none;
+  padding: 0.62rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.btn--primary { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.16); }
+.btn--primary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(32, 30, 29, 0.18); }
+.btn--primary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(32, 30, 29, 0.16); }
+
+.btn--ghost { background: var(--card); color: var(--ink); box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.1); }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(32, 30, 29, 0.14); }
+.btn--ghost:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(32, 30, 29, 0.1); }
+
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* ------------------------------------------------------------
+   The wordmark, set inline
+
+   The brand is a drawn thing, not a word, so where a sentence or a
+   heading names it the mark is placed rather than typed. Sized in
+   em so it takes the size of whatever line it lands in, and given
+   real alt text so it is still a name to a screen reader.
+------------------------------------------------------------ */
+
+/* The lockup has its own margin baked into the file, so the drawn
+   letters end up a good deal smaller than the box. These heights
+   are set against the letters, not against the box. */
+.wordmark {
+  display: inline-block;
+  width: auto;
+  height: 1.05em;
+  vertical-align: baseline;
+  transform: translateY(0.16em);
+}
+h1 .wordmark, h2 .wordmark { height: 0.95em; transform: translateY(0.14em); }
+.footer-copy .wordmark { height: 1.5em; transform: translateY(0.4em); }
+
+/* ------------------------------------------------------------
+   Small shared bits
+------------------------------------------------------------ */
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.prose p { margin-top: 0.9rem; color: var(--ink-2); }
+.prose p:first-child { margin-top: 0; }
+.prose h2 { margin-top: 2.4rem; font-size: 1.3rem; }
+.prose h3 { margin-top: 1.7rem; font-size: 1.02rem; font-weight: 700; }
+.prose ul { margin: 0.9rem 0 0; padding-left: 1.1rem; color: var(--ink-2); }
+.prose li { margin-bottom: 0.45rem; }
+.prose a { color: var(--red-deep); text-underline-offset: 3px; }
+
+/* Placeholder copy the owner still has to write. Marked so it is
+   impossible to ship by accident without noticing. */
+.draft {
+  border-left: 3px solid var(--red);
+  background: rgba(236, 48, 19, 0.05);
+  padding: 0.75rem 1rem;
+  margin-top: 1.2rem;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+}
+.draft strong { color: var(--red-deep); }
+
+/* ------------------------------------------------------------
+   Footer
+------------------------------------------------------------ */
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--section-gap);
+  background: var(--ink);
+  color: rgba(245, 242, 234, 0.86);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: 2.5rem;
+  padding: clamp(2.25rem, 5vw, 3.25rem) 0 2rem;
+}
+
+.footer-brand p {
+  margin-top: 1rem;
+  max-width: 34ch;
+  font-size: 0.9rem;
+  color: rgba(245, 242, 234, 0.6);
+}
+
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(245, 242, 234, 0.5);
+  margin-bottom: 0.95rem;
+}
+
+.footer-col a,
+.footer-col button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font-size: 0.9rem;
+  color: rgba(245, 242, 234, 0.82);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.footer-col a:hover,
+.footer-col button:hover { color: #fff; transform: translateX(3px); }
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 1.25rem 0 1.6rem;
+  border-top: 1px solid rgba(245, 242, 234, 0.14);
+  font-size: 0.8rem;
+  color: rgba(245, 242, 234, 0.5);
+}
+
+/* The reset control belongs at the right-hand end. The floating
+   back-to-top button parks in that same corner, so the row is held
+   clear of it by the width of the button plus its inset, and the
+   two never meet. */
+@media (min-width: 761px) {
+  .footer-bottom { padding-right: 7.5rem; }
+}
+
+/* Resetting the background is a page utility, not a destination, so
+   it sits down here rather than pretending to be a nav link. */
+.footer-bottom button {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.footer-bottom button:hover { color: #fff; }
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+/* ------------------------------------------------------------
+   Blocks
+------------------------------------------------------------ */
+
+.block { padding: clamp(1.5rem, 4vw, 3rem); }
+.block > h2,
+.split-head > h2 { margin-top: 0.8rem; font-size: clamp(1.3rem, 3vw, 2rem); }
+.block > *:first-child { margin-top: 0; }
+
+.block-lede {
+  margin-top: 1rem;
+  max-width: 62ch;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: var(--ink-2);
+}
+.block-lede + .block-lede { margin-top: 0.8rem; }
+
+.block--hero h1 {
+  margin-top: 0.9rem;
+  max-width: 18ch;
+  font-size: clamp(2rem, 5.4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.032em;
+}
+.block--hero h1 em {
+  font-style: normal;
+  box-shadow: inset 0 -0.16em 0 rgba(236, 48, 19, 0.28);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.9rem;
+}
+
+/* --- numbered steps --- */
+
+/* Three, or one. auto-fit gives two and an orphan at the widths
+   in between, which reads as a mistake rather than as a wrap. */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3.5vw, 2.5rem);
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.steps li { position: relative; padding-top: 1.1rem; }
+/* The rule over each step is drawn rather than bordered, so it can
+   sweep in with the step instead of appearing whole. */
+.steps li::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-3) var(--ease-out) var(--d, 0ms);
+}
+.is-in .steps li::before { transform: scaleX(1); }
+.step-num { font-family: var(--font-mono); font-size: 0.74rem; color: var(--red-deep); }
+.steps h3 { margin-top: 0.65rem; font-size: 1.05rem; }
+.steps p { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-3); }
+
+@media (max-width: 1040px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+
+/* ------------------------------------------------------------
+   Motion
+
+   Three ideas, and nothing else moves.
+
+     1  a panel arrives from slightly below as it comes into view
+     2  the things inside it follow, one after another
+     3  the rule under a heading sweeps out once the panel is there
+
+   All of it is added by shell.js rather than written into the
+   markup, so with JavaScript switched off nothing is ever hidden
+   and the page reads normally.
+
+   The one thing exempt from all of it is the preview panel. There
+   is a working app behind that glass and animating its frame reads
+   as the app failing rather than as the page being alive.
+------------------------------------------------------------ */
+
+/* The shelf card holds the preview, and a transform on an ancestor
+   would make position:fixed mean that ancestor rather than the
+   viewport, which is what full screen relies on. So that one card
+   arrives by fading alone. */
+.panel.shelf.reveal { transform: none; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--dur-3) var(--ease-out) var(--d, 0ms),
+    transform var(--dur-3) var(--ease-out) var(--d, 0ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+/* Children that come in behind their panel. shell.js numbers them
+   and the delay falls out of the number. */
+.stagger { opacity: 0; transform: translateY(14px); }
+.is-in .stagger {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--dur-3) var(--ease-out) var(--d, 0ms),
+    transform var(--dur-3) var(--ease-out) var(--d, 0ms);
+}
+
+/* The rule under a section heading. Zero width until the panel has
+   arrived, then it draws itself. */
+.panel > h2,
+.split-head > h2 { position: relative; }
+.panel > h2::after,
+.split-head > h2::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 3px;
+  margin-top: 0.75rem;
+  background: var(--red);
+  transition: width 720ms var(--ease-out) 200ms;
+}
+.panel.is-in > h2::after,
+.panel.is-in .split-head > h2::after { width: 3.25rem; }
+
+/* The hero does not wait to be scrolled to, so it is a keyframe
+   rather than a reveal: it plays on arrival, and it plays again
+   after the router swaps a new page in. */
+.block--hero .split-head > *,
+.block--hero .split-body > * { animation: rise var(--dur-3) var(--ease-out) both; }
+.block--hero .split-head > *:nth-child(1) { animation-delay: 40ms; }
+.block--hero .split-head > *:nth-child(2) { animation-delay: 130ms; }
+.block--hero .split-body > *:nth-child(1) { animation-delay: 220ms; }
+.block--hero .split-body > *:nth-child(2) { animation-delay: 300ms; }
+.block--hero .split-body > *:nth-child(3) { animation-delay: 380ms; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------
+   Back to the top
+
+   Built by shell.js, so it turns up on every page without a copy
+   of the same markup in each one. A word rather than an arrow
+   glyph: it says what it does and needs no legend.
+------------------------------------------------------------ */
+
+.to-top {
+  position: fixed;
+  /* Off the corner, but not so far in that it sits on top of the
+     column of text it is floating over. */
+  right: clamp(1.15rem, 3.25vw, 2.75rem);
+  bottom: clamp(1.5rem, 4vh, 2.5rem);
+  z-index: 35;
+  padding: 0.62rem 0.95rem;
+  border: 1px solid var(--red);
+  background: var(--red);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.94);
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out),
+    background-color var(--dur) var(--ease),
+    visibility var(--dur-2);
+  box-shadow: var(--lift);
+}
+.to-top.is-on { opacity: 1; visibility: visible; transform: none; }
+
+/* .page carries z-index 1, which traps every layer inside it, so a
+   full-screen preview at z-index 60 is still inside that one layer
+   and this button, a sibling of .page, floats over the lot. It has
+   nothing to do while a preview fills the window anyway. */
+html.has-full .to-top { display: none; }
+.to-top:hover { background: var(--red-deep); border-color: var(--red-deep); }
+
+/* ------------------------------------------------------------
+   Page transition
+
+   The router swaps the contents of <main> instead of loading a
+   new document, so the header, footer and tile field never blink.
+------------------------------------------------------------ */
+
+#main { transition: opacity 120ms linear; }
+#main.is-leaving { opacity: 0; }
+
+/* ------------------------------------------------------------
+   Less movement, when it has been asked for
+
+   Everything above is decoration. None of it carries meaning that
+   is lost by switching it off, so all of it goes.
+------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, .stagger { opacity: 1; transform: none; }
+  .panel > h2::after,
+  .split-head > h2::after { width: 3.25rem; }
+  .steps li::before { transform: scaleX(1); }
+}

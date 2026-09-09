@@ -1,0 +1,23 @@
+/* ============================================================
+   AVERAGE DEMO
+
+   What is particular to this one. The shared look is in
+   _kit/kit.css.
+============================================================ */
+
+.td-bars { margin-top: 1rem; display: grid; gap: 0.4rem; }
+.td-bar {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 4rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+.td-bar-label { font-size: 0.75rem; color: var(--td-ink-2); }
+.td-bar-track { display: block; height: 0.7rem; background: var(--td-fill); border: 1px solid var(--td-line); }
+.td-bar-fill { display: block; height: 100%; }
+.td-bar-value {
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

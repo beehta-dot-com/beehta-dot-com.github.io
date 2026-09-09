@@ -1,0 +1,67 @@
+/* ============================================================
+   ITINERARY DEMO
+
+   What is particular to this one. The shared look is in
+   _kit/kit.css.
+============================================================ */
+
+.td-days { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.td-day {
+  border: 1px solid var(--td-line-2);
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--td-ink-2);
+  cursor: pointer;
+  transition: background-color 140ms linear, color 140ms linear;
+}
+.td-day:hover { background: var(--td-fill); }
+.td-day[aria-pressed="true"] {
+  background: var(--td-ink);
+  border-color: var(--td-ink);
+  color: #fff;
+}
+
+.td-stops { margin: 0.85rem 0 0; padding: 0; list-style: none; }
+.td-stop {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--td-line);
+}
+.td-time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  color: var(--td-ink-3);
+}
+.td-what-text { font-size: 0.83rem; }
+.td-stop-tools { display: flex; gap: 0.25rem; }
+.td-tool {
+  border: 1px solid transparent;
+  background: none;
+  padding: 0.15rem 0.35rem;
+  font-family: inherit;
+  font-size: 0.7rem;
+  color: var(--td-ink-3);
+  cursor: pointer;
+  transition: border-color 140ms linear, color 140ms linear;
+}
+.td-tool:hover:not([disabled]) { border-color: var(--td-line-2); color: var(--td-ink); }
+.td-tool[disabled] { opacity: 0.3; cursor: not-allowed; }
+
+.td-empty {
+  padding: 0.9rem 0;
+  font-size: 0.8rem;
+  color: var(--td-ink-3);
+}
+
+.td-addrow {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}

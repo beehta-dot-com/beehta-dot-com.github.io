@@ -1,0 +1,1289 @@
+/* ============================================================
+   PAGES.CSS
+   beehta.com, the catalogue
+
+   The shelf holds two kinds of thing and expects to hold twenty
+   of them, so the home page is a directory rather than a stack:
+   a list you scan down the left, one entry open on the right.
+
+   On a narrow screen the list is too tall to be a list, so the
+   same selection is driven by a pager at the top: the entry's
+   name, "3 / 6" under it, and a step either side. Both are in the
+   DOM at once and this file decides which is on show.
+
+   Shared furniture, section rhythm and the motion vocabulary are
+   in base.css.
+============================================================ */
+
+/* ------------------------------------------------------------
+   The split block
+
+   A panel the width of the page with one column of text in it
+   leaves half the panel empty. Widening the text is worse: past
+   about seventy characters a line stops being readable.
+
+   So the panel keeps the full width and the text is set in two
+   columns instead of one. The heading holds the left, the copy
+   holds the right, and anything that wants the whole width says
+   so. Nothing is narrowed, nothing runs long, and no panel on
+   the site is a different width from its neighbour.
+
+   Below 860px there is not enough room for two columns of text,
+   so it becomes one and reads top to bottom.
+------------------------------------------------------------ */
+
+.block--split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  column-gap: clamp(1.75rem, 5vw, 4.5rem);
+  row-gap: clamp(1.25rem, 3vw, 2.25rem);
+  align-content: center;
+}
+/* Two classes, so it beats the flex column that `.section > .panel`
+   sets on every other panel in a section. */
+.panel.block--split { display: grid; }
+
+.split-head > *:first-child,
+.split-body > *:first-child { margin-top: 0; }
+
+/* Steps, lists and anything else that is better wide than tall. */
+.split-full { grid-column: 1 / -1; }
+
+.split-body .block-lede { max-width: 62ch; }
+
+@media (max-width: 860px) {
+  .block--split { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The hero's headline is the largest thing on the site, so it is
+   given the column rather than a character count. */
+.block--hero.block--split h1 { max-width: none; }
+
+/* ------------------------------------------------------------
+   A shelf card
+
+   A heading, the controls that belong to it, and the thing they
+   describe are one section, so they are one card divided by
+   rules rather than three cards with gaps between them. Used by
+   Available now and by Coming soon.
+------------------------------------------------------------ */
+
+.section > .panel.shelf {
+  min-height: 0;
+  display: block;
+}
+
+.shelf-head {
+  padding: clamp(1.35rem, 3.2vw, 2.5rem);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.shelf-head h2 { margin-top: 0.8rem; font-size: clamp(1.3rem, 3vw, 2rem); }
+.shelf-head h2 em { font-style: normal; color: var(--red); }
+
+/* Shown only where there is room for two columns of text side by
+   side, which is the same width at which the split above gives up.
+   Below that it goes: what it says is set out in full on the about
+   page, so a narrow screen loses nothing by going from the hero
+   straight to the shelf. */
+@media (max-width: 860px) {
+  .only-wide { display: none; }
+}
+
+/* ------------------------------------------------------------
+   The catalogue
+
+   Everything below lives inside the Available now card, so none
+   of it carries a card of its own. The rules between the strips
+   do the dividing that the gaps used to.
+------------------------------------------------------------ */
+
+/* --- search and filters, above the thing they filter --- */
+
+.cat-tools {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.3fr) auto minmax(150px, 0.7fr);
+  align-items: center;
+  gap: 0.6rem 0.8rem;
+  padding: clamp(0.8rem, 2vw, 1.15rem) clamp(1.35rem, 3.2vw, 2.5rem);
+  background: var(--well);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* White, on a ground that is not, and with the mark in it. On the
+   paper strip it used to sit on it was the same colour as the strip
+   and read as a gap rather than as a place to type. */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  padding: 0 0.75rem;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.search:hover { border-color: var(--ink-4); }
+.search-ico {
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  transition: stroke var(--dur) var(--ease);
+}
+.search:focus-within .search-ico { stroke: var(--ink); }
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: 0.55rem 0;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+.search input:focus { outline: none; }
+.search:focus-within { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(32, 30, 29, 0.07); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.filter {
+  position: relative;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.48rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+.filter:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-1px); }
+.filter:active { transform: translateY(0); }
+
+/* The chosen filter is marked by weight and a rule, not by a black
+   fill. The only black fill on an entry is the button that opens
+   it, and nothing else should be able to be mistaken for one. */
+.filter[aria-pressed="true"] {
+  background: var(--paper);
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 var(--red);
+}
+
+.catfilter { display: block; min-width: 0; }
+.catfilter select {
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.5rem 0.6rem;
+  font-family: inherit;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+.catfilter select:focus { outline: none; border-color: var(--ink); }
+
+.cat-count {
+  grid-column: 1 / -1;
+  padding-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+.cat-count.is-fresh { animation: fade-up 420ms var(--ease-out) both; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 899px) {
+  .cat-tools { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- the two columns --- */
+
+/* Laid on the well, so the list and the open entry read as two
+   blocks on a surface rather than as two outlines drawn on the
+   same white the card is already made of. */
+.cat-body {
+  display: grid;
+  grid-template-columns: minmax(0, 270px) minmax(0, 1fr);
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+  background: var(--well);
+  align-items: stretch;
+}
+
+/* The list has no height of its own. Its contents are taken out
+   of flow, so the row is sized by the column beside it and the
+   list scrolls inside whatever that turns out to be. The page
+   therefore does not get longer as the shelf does. */
+.cat-list-panel {
+  position: relative;
+  overflow: hidden;
+  min-height: 22rem;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift);
+}
+.cat-list-slot {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  /* No overscroll-behavior. Containing it traps the wheel, and the
+     page stops moving while the pointer is over the list. */
+}
+
+.cat-list { margin: 0; padding: 0; list-style: none; }
+.cat-item + .cat-item { border-top: 1px solid var(--rule); }
+
+.cat-row {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0.85rem 1rem 0.85rem 1.15rem;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+  animation: row-in var(--dur-2) var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* The entry's own colour, as a bar down the edge of its row. Short
+   until the row is wanted, then full height. */
+.cat-row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--app, var(--rule-strong));
+  transform: scaleY(0.3);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.cat-row:hover { background: rgba(32, 30, 29, 0.035); }
+.cat-row:hover::before { transform: scaleY(0.7); }
+.cat-row[aria-pressed="true"] { background: rgba(32, 30, 29, 0.06); }
+.cat-row[aria-pressed="true"]::before { transform: scaleY(1); }
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.row-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+.row-name { margin-right: auto; }
+.row-name { font-size: 0.97rem; font-weight: 600; }
+.row-cat { display: block; margin-top: 0.15rem; font-size: 0.78rem; color: var(--ink-4); }
+
+/* ------------------------------------------------------------
+   Page or app
+
+   A page and an app are different promises, and this chip is
+   where the difference is said. It is a label, not a control, so
+   it is outlined rather than filled: on this page a black fill
+   means one thing only, and that is the button that opens the
+   entry.
+------------------------------------------------------------ */
+
+.row-kind,
+.det-kind {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid;
+}
+.row-kind { font-size: 0.62rem; padding: 0.08rem 0.35rem; }
+
+/* The difference between the two is the whole point of the label,
+   so it is carried by colour as well as by the word. Neither is a
+   dark fill: on this page a dark fill means a button. */
+.is-page {
+  color: #4d6a3f;
+  background: #eef3e6;
+  border-color: #c2d3b2;
+}
+.is-app {
+  color: #3f5b74;
+  background: #e8eff5;
+  border-color: #b4c7d6;
+}
+
+/* Added inside the last month. Only ever in the list: on the open
+   entry it would be describing the thing you are already reading. */
+.row-new {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--red);
+  padding: 0.08rem 0.35rem;
+}
+
+/* --- the pager, narrow screens only --- */
+
+.cat-pager { display: none; }
+
+.pg-step {
+  flex: none;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.pg-step:hover:not([disabled]) { background: var(--paper); border-color: var(--ink); color: var(--ink); }
+.pg-step[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+.pg-now { flex: 1; min-width: 0; text-align: center; }
+.pg-now.is-fresh { animation: fade-up var(--dur-2) var(--ease-out) both; }
+.pg-name {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pg-count {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------
+   The open entry
+
+   The description and the preview are one thing, so they are one
+   panel. As two stacked cards the preview read as a separate
+   advertisement sitting under the entry rather than as the entry
+   itself.
+------------------------------------------------------------ */
+
+
+
+/* A band across the panel, under the address bar and above the
+   app. It sits above the app rather than over it: an overlay hid
+   the top of whatever was running underneath, and the app is
+   entitled to a scroll of its own that nothing interferes with. */
+.pv-detail {
+  flex: none;
+  padding: clamp(0.85rem, 1.8vw, 1.15rem) clamp(1rem, 2.2vw, 1.4rem);
+  background: var(--card);
+  border-bottom: 1px solid var(--rule-strong);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+/* Swapped, not faded away and back. The app underneath does
+   neither: a live app that dissolves looks like a failure. */
+.pv-detail.is-out { opacity: 0; transform: translateY(-6px); }
+
+.det-meta { display: flex; align-items: center; gap: 0.6rem; }
+.det-cat {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* The name of the thing, under its labels. It went once, on the
+   grounds that the list and the address bar were already saying
+   it; but the eye lands here, not there. */
+.det-name {
+  margin-top: 0.35rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  letter-spacing: -0.025em;
+}
+
+/* The dates at one end, the way in at the other. */
+.det-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-top: 0.7rem;
+}
+
+/* The one filled control on the entry, at the foot of what it is
+   a description of, in the one loud colour the site owns. It is
+   also the only thing on the page that is that colour, so it never
+   has to compete for the eye. */
+.det-open {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--red);
+  color: #fff;
+  border: 1px solid var(--red);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 rgba(174, 24, 0, 0.28);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.det-open:hover {
+  background: var(--red-deep);
+  border-color: var(--red-deep);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 rgba(174, 24, 0, 0.3);
+}
+.det-open:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(174, 24, 0, 0.28); }
+.det-open svg {
+  width: 0.82em;
+  height: 0.82em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.det-summary {
+  margin-top: 0.5rem;
+  max-width: 80ch;
+  font-size: 0.94rem;
+  color: var(--ink-2);
+}
+
+/* When it arrived and when it last changed, on one quiet line. */
+.det-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.75rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-4);
+}
+.det-dates > span + span { position: relative; padding-left: 0.85rem; }
+.det-dates > span + span::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 3px; height: 3px;
+  background: var(--rule-strong);
+  transform: translateY(-50%);
+}
+
+/* --- the preview ---
+
+   Square, scrolls inside itself, dressed as a browser window so it
+   reads as a piece of software rather than as another panel of the
+   marketing page.
+
+   Nothing in here animates. Everything else on this site arrives
+   from somewhere; this sits still, because there is a working app
+   behind the glass and a frame that moves reads as the app itself
+   misbehaving. */
+
+.cat-preview {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift);
+}
+
+/* Everything below the address bar: the description, then the app
+   with whatever room is left. */
+.pv-body {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  aspect-ratio: 1 / 1;
+  min-height: 14rem;
+}
+
+.pv-chrome {
+  position: relative;   /* so the tooltip below it paints over the rest */
+  z-index: 5;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.55rem;
+  background: #e6e0d4;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* --- the way out of a small square --- */
+
+.pv-full {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 1px solid var(--rule-strong);
+  background: #fffdf8;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.pv-full:hover { border-color: var(--ink); color: var(--ink); }
+
+.pv-ico {
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* One mark or the other, never both. */
+.pv-ico--in { display: none; }
+.pv-full[aria-pressed="true"] .pv-ico--out { display: none; }
+.pv-full[aria-pressed="true"] .pv-ico--in { display: block; }
+
+/* The tooltip says what the control does, because a drawn mark on
+   its own never quite does. Shown on hover and on keyboard focus,
+   which is where a native title would have shown it. */
+.pv-full::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  right: -0.25rem;
+  padding: 0.32rem 0.55rem;
+  background: #100f0e;
+  color: #f5f2ea;
+  border: 1px solid rgba(245, 242, 234, 0.28);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.pv-full:hover::after,
+.pv-full:focus-visible::after { opacity: 1; transform: none; }
+
+/* A field, not a caption: inset, with a padlock in it and the
+   address in a monospace face, the way a browser sets one. */
+.pv-addr {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #fffdf8;
+  border: 1px solid var(--rule-strong);
+  padding: 0.3rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-2);
+}
+.pv-url {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pv-lock {
+  flex: none;
+  width: 0.72rem;
+  height: 0.72rem;
+  fill: none;
+  stroke: #3f7d4e;
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+/* Scrolls when the app inside is taller than the square, and
+   chains out to the page at its ends.
+
+   The bar is drawn rather than left to the platform, because on a
+   square this small a scrollbar that only appears while you are
+   already dragging tells you nothing. No overscroll-behavior here
+   either: containing it traps the wheel and the page stops moving
+   while the pointer is over a preview. */
+/* Takes whatever the description leaves. The square lives on the
+   area under the address bar rather than on the whole block:
+   measured around the bar, a square would leave the app itself a
+   letterbox.
+
+   Its scroll is its own. Nothing outside it moves it, and nothing
+   outside it is drawn on top of it. */
+.pv-stage {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-strong) transparent;
+  padding: clamp(1.05rem, 2.4vw, 1.5rem) clamp(0.8rem, 2vw, 1.15rem) clamp(0.9rem, 2vw, 1.25rem);
+  background: #fff;
+}
+.pv-stage::-webkit-scrollbar { width: 11px; }
+.pv-stage::-webkit-scrollbar-track { background: #f7f4ee; }
+.pv-stage::-webkit-scrollbar-thumb {
+  background: var(--rule-strong);
+  border: 3px solid #f7f4ee;
+}
+.pv-stage::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+
+/* ------------------------------------------------------------
+   Full screen
+
+   A fixed overlay rather than the Fullscreen API, which is refused
+   without a gesture it recognises and blocked outright in an
+   embedded frame. Nothing on the chain above .cat-preview carries
+   a transform, so fixed here really does mean the viewport.
+------------------------------------------------------------ */
+
+.cat-preview.is-full {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  aspect-ratio: auto;
+  border: 0;
+  box-shadow: none;
+}
+.cat-preview.is-full .pv-body {
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+.cat-preview.is-full .pv-stage {
+  padding: clamp(1rem, 3vw, 2.25rem);
+  /* Nothing behind it to chain to, so the scroll stops here. */
+  overscroll-behavior-y: contain;
+}
+.cat-preview.is-full .pv-chrome { padding-inline: clamp(0.9rem, 3vw, 1.75rem); }
+/* The band still spans the window, but a line of text the width of
+   a cinema screen is unreadable, so what is in it keeps a measure
+   and sits in the middle. */
+.cat-preview.is-full .pv-detail > * {
+  max-width: 62rem;
+  margin-inline: auto;
+}
+.cat-preview.is-full .pv-detail .det-summary { max-width: 62rem; }
+
+/* The page behind must not scroll under it. */
+html.has-full, html.has-full body { overflow: hidden; }
+
+.pv-none {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--ink-3);
+}
+
+/* --- nothing matched --- */
+
+.cat-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(1.15rem, 3vw, 1.75rem) clamp(1.35rem, 3.2vw, 2.5rem);
+  background: var(--well);
+  font-size: 0.95rem;
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------
+   Narrow
+
+   The list becomes the pager and the entry sits under it. The
+   entry keeps the same gutter as every other panel: an earlier
+   pass ran it to the edges of the window, which made it the only
+   thing on the page that did.
+------------------------------------------------------------ */
+
+@media (max-width: 899px) {
+  /* No margin here. The tools strip and the body are two parts of
+     one card now, and a gap between them shows the card through as
+     a white band. */
+  .cat-body { display: block; }
+  .cat-list-panel { display: none; }
+
+  .cat-pager {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--card);
+    border: 1px solid var(--rule-strong);
+    position: sticky;
+    top: 56px;
+    z-index: 20;
+  }
+
+  .cat-main { margin-top: 0.85rem; }
+
+  /* On a phone the dialog is as wide as the app and its text wraps
+     four or five lines deep, so a square would leave the app about
+     a third of its own window. It gets a tall box instead, and the
+     dialog is set tighter, so there is a usable app under it. */
+  .pv-body { aspect-ratio: 5 / 8; }
+  .pv-detail { padding: 0.75rem 0.8rem; }
+  .det-summary { margin-top: 0.4rem; font-size: 0.88rem; }
+  .det-foot { margin-top: 0.6rem; }
+}
+
+@media (max-width: 430px) {
+  .pv-chrome { gap: 0.35rem; }
+}
+
+/* ------------------------------------------------------------
+   Coming soon
+
+   A card each, no pager and no preview. Nothing exists to show,
+   and a row of empty squares would only take the room the working
+   entries have earned.
+------------------------------------------------------------ */
+
+.soon-wrap {
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+  background: var(--well);
+}
+
+.soon-count {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+/* Four, then two, then one. Eight entries divide evenly into all
+   three, so no row is ever left half full. */
+.soon-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+}
+@media (max-width: 1040px) { .soon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .soon-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* White blocks laid on the well inside the card, the same way the
+   list and the open entry are. */
+.soon-card {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  padding: clamp(1.15rem, 3vw, 1.5rem);
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift);
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+}
+.is-in .soon-card {
+  animation: rise var(--dur-3) var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+.soon-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(32, 30, 29, 0.11); }
+
+.soon-swatch { width: 8px; min-height: 100%; }
+.soon-meta { display: flex; align-items: center; gap: 0.55rem; }
+.soon-cat {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.soon-card h3 { margin-top: 0.55rem; font-size: 1.08rem; }
+.soon-summary { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
+
+
+/* ------------------------------------------------------------
+   The dark shelf
+
+   Available now takes the ink palette and a smoked-glass ground,
+   so the tile field shows through the shelf rather than only
+   around it. The app inside the preview stays white, because it is
+   somebody else's software and not part of this page's furniture.
+   The effect is a dark browser with a light page in it, which is
+   what it is.
+
+   Where the veil may sit is not a matter of taste. backdrop-filter
+   makes an element the containing block for any position:fixed
+   inside it, exactly as transform does, and the preview goes
+   position:fixed to fill the window. Put the veil on .cat-body and
+   full screen resolves against that box instead of the viewport:
+   measured, when it did, 1082x395 in the middle of the page.
+
+   So the region behind the list is veiled through a pseudo element
+   of .cat-body. A pseudo element is a child, not an ancestor, so
+   it changes nothing about where the preview thinks it is.
+------------------------------------------------------------ */
+
+.panel.shelf--dark {
+  background: none;
+  border-color: rgba(32, 30, 29, 0.55);
+  color: var(--paper);
+}
+
+.shelf--dark .shelf-head {
+  background: var(--ink);
+  border-bottom-color: var(--ink-line);
+}
+.shelf--dark .kicker { color: rgba(245, 242, 234, 0.5); }
+.shelf--dark .block-lede { color: rgba(245, 242, 234, 0.72); }
+
+/* --- the two veiled areas --- */
+
+.shelf--dark .cat-tools,
+.shelf--dark .cat-empty {
+  background: rgba(28, 26, 25, 0.72);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+}
+.shelf--dark .cat-tools { border-bottom-color: var(--ink-line); }
+
+.shelf--dark .cat-body { position: relative; background: none; }
+.shelf--dark .cat-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 26, 25, 0.72);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+}
+
+/* Both of these are positioned, with no z-index, so they paint
+   after the veil above simply by coming later in the markup. No
+   stacking context is created, which matters: one here would trap
+   the full-screen preview inside this row. */
+.shelf--dark .cat-main { position: relative; }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .shelf .cat-tools,
+  .shelf .cat-empty,
+  .shelf .cat-body::before { background: var(--ink-well); }
+}
+
+/* --- the controls --- */
+
+.shelf--dark .search,
+.shelf--dark .filter,
+.shelf--dark .catfilter select {
+  background: var(--ink);
+  border-color: var(--ink-line-2);
+  color: rgba(245, 242, 234, 0.82);
+}
+.shelf--dark .search input { color: var(--paper); }
+.shelf--dark .search input::placeholder { color: rgba(245, 242, 234, 0.42); }
+.shelf--dark .search-ico { stroke: rgba(245, 242, 234, 0.45); }
+.shelf--dark .search:hover,
+.shelf--dark .filter:hover { border-color: rgba(245, 242, 234, 0.55); color: var(--paper); }
+.shelf--dark .search:focus-within {
+  border-color: var(--paper);
+  box-shadow: 0 0 0 3px rgba(245, 242, 234, 0.1);
+}
+.shelf--dark .search:focus-within .search-ico { stroke: var(--paper); }
+.shelf--dark .catfilter select:focus { border-color: var(--paper); }
+
+.shelf--dark .filter[aria-pressed="true"] {
+  background: #2e2b29;
+  border-color: var(--paper);
+  color: var(--paper);
+}
+.shelf--dark .cat-count { color: rgba(245, 242, 234, 0.55); }
+
+/* --- the list --- */
+
+.shelf--dark .cat-list-panel,
+.shelf--dark .cat-pager {
+  background: var(--ink);
+  border-color: var(--ink-line-2);
+  box-shadow: none;
+}
+.shelf--dark .cat-item + .cat-item { border-top-color: var(--ink-line); }
+.shelf--dark .cat-row { color: var(--paper); }
+.shelf--dark .cat-row:hover { background: rgba(245, 242, 234, 0.06); }
+.shelf--dark .cat-row[aria-pressed="true"] { background: rgba(245, 242, 234, 0.11); }
+.shelf--dark .row-cat { color: rgba(245, 242, 234, 0.48); }
+
+/* Same two hues as on a light ground, mixed for a dark one. */
+.shelf--dark .is-page {
+  color: #b6d29f;
+  background: rgba(126, 165, 92, 0.16);
+  border-color: rgba(150, 190, 120, 0.42);
+}
+.shelf--dark .is-app {
+  color: #a8c8e2;
+  background: rgba(90, 142, 185, 0.18);
+  border-color: rgba(130, 175, 210, 0.45);
+}
+
+/* --- the pager --- */
+
+.shelf--dark .pg-step {
+  background: #2e2b29;
+  border-color: var(--ink-line-2);
+  color: rgba(245, 242, 234, 0.82);
+}
+.shelf--dark .pg-step:hover:not([disabled]) {
+  background: var(--paper);
+  border-color: var(--paper);
+  color: var(--ink);
+}
+.shelf--dark .pg-name { color: var(--paper); }
+.shelf--dark .pg-count { color: rgba(245, 242, 234, 0.5); }
+
+/* --- the window --- */
+
+/* Lifted off the veil with a lighter edge and a real shadow, so it
+   reads as a window rather than as another dark area of the same
+   dark card. */
+.shelf--dark .cat-preview {
+  background: var(--ink);
+  border-color: rgba(245, 242, 234, 0.34);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+}
+.cat-preview.is-full {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* The toolbar is the lightest part of the window and the field is
+   the darkest, which is the way round a browser does it. */
+.shelf--dark .pv-chrome {
+  background: #3c3835;
+  border-bottom-color: rgba(0, 0, 0, 0.45);
+}
+.shelf--dark .pv-addr {
+  background: #161514;
+  border-color: rgba(0, 0, 0, 0.55);
+  color: rgba(245, 242, 234, 0.9);
+}
+.shelf--dark .pv-lock { stroke: #7fc493; }
+.shelf--dark .pv-full {
+  background: var(--ink);
+  border-color: var(--ink-line-2);
+  color: rgba(245, 242, 234, 0.78);
+}
+.shelf--dark .pv-full:hover { border-color: var(--paper); color: var(--paper); }
+
+.shelf--dark .pv-detail {
+  background: #2a2725;
+  border-bottom-color: var(--ink-line-2);
+}
+.shelf--dark .det-cat,
+.shelf--dark .det-dates { color: rgba(245, 242, 234, 0.48); }
+.shelf--dark .det-summary { color: rgba(245, 242, 234, 0.82); }
+.shelf--dark .det-dates > span + span::before { background: rgba(245, 242, 234, 0.3); }
+
+/* The red carries on a dark ground as well as on a light one, so
+   the button is the same button here. Only its shadow changes. */
+.shelf--dark .det-open { box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4); }
+.shelf--dark .det-open:hover { box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.45); }
+.shelf--dark .det-open:active { box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4); }
+
+/* --- nothing matched --- */
+
+.shelf--dark .cat-empty { color: rgba(245, 242, 234, 0.78); }
+.shelf--dark .cat-empty .btn--ghost {
+  background: none;
+  border-color: rgba(245, 242, 234, 0.45);
+  color: var(--paper);
+  box-shadow: none;
+}
+.shelf--dark .cat-empty .btn--ghost:hover { background: var(--paper); color: var(--ink); }
+
+/* ------------------------------------------------------------
+   The closing row of a block
+
+   Used where a section ends in an invitation: the four promises
+   and the line asking for the next idea are one thought, so they
+   are one block with a rule between them rather than two cards.
+------------------------------------------------------------ */
+
+.cta-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-top: clamp(1.35rem, 3vw, 2rem);
+  border-top: 2px solid var(--ink);
+}
+.cta-inline h3 { font-size: clamp(1.1rem, 2.2vw, 1.4rem); }
+.cta-inline p {
+  margin-top: 0.5rem;
+  max-width: 62ch;
+  font-size: 0.94rem;
+  color: var(--ink-3);
+}
+
+/* ------------------------------------------------------------
+   Section surfaces
+
+   The tile field behind the page is already carrying the colour,
+   so the panels stay in the paper family. An earlier pass tinted
+   them blue, green and orange, and three cold pastels in front of
+   a field of cold pastels read as a clash rather than as variety.
+
+   Two warm tints and one black. The black is what gives the page
+   its one moment of contrast, so there is exactly one of it.
+------------------------------------------------------------ */
+
+.block--dark {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.block--dark .kicker { color: rgba(245, 242, 234, 0.55); }
+.block--dark .block-lede { color: rgba(245, 242, 234, 0.72); }
+.block--dark .steps li::before { background: var(--paper); }
+.block--dark .step-num { color: #ff7a5f; }
+.block--dark .steps h3 { color: var(--paper); }
+.block--dark .steps p { color: rgba(245, 242, 234, 0.66); }
+/* No space between the two class names: .statement is on the same
+   element as .block--dark, not inside it, so a descendant selector
+   here matches nothing at all. Written as a descendant it left
+   these lines dark grey on black, taking their colour from
+   `.statement .statement-note` further down the file. */
+.block--dark.statement em { color: #ff7a5f; }
+.block--dark.statement .statement-note { color: rgba(245, 242, 234, 0.72); }
+
+.panel.statement { padding-block: clamp(2.5rem, 8vw, 4.5rem); }
+.statement-lines {
+  font-size: clamp(1.5rem, 4.4vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+}
+.statement .line { display: block; }
+.statement em { font-style: normal; color: var(--red); }
+.statement .statement-note {
+  max-width: 52ch;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.statement .statement-note + .statement-note { margin-top: 0.95rem; }
+
+.plainlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(1.35rem, 3vw, 2.25rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.plainlist li { padding-top: 1rem; border-top: 1px solid var(--rule-strong); }
+.plainlist h3 { font-size: 1.02rem; }
+.plainlist p { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
+
+/* Two columns of prose, for the section that explains the two
+   kinds of thing on the shelf. */
+.twoup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(1.35rem, 3vw, 2.5rem);
+}
+.twoup > div { padding-top: 1rem; border-top: 2px solid currentColor; }
+.twoup h3 { font-size: 1.08rem; }
+.twoup .twoup-kind {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-deep);
+}
+.twoup p { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-3); }
+.twoup ul { margin: 0.7rem 0 0; padding-left: 1.05rem; font-size: 0.88rem; color: var(--ink-3); }
+.twoup li { margin-bottom: 0.3rem; }
+
+/* ------------------------------------------------------------
+   Interior pages (about, contact, terms)
+
+   Every panel on these pages is the width of the page, exactly
+   like the panels on the home page. Where a panel holds only a
+   paragraph it uses the split above, so the width is filled by
+   structure rather than by a longer line.
+------------------------------------------------------------ */
+
+.page-head h1 { margin-top: 0.7rem; font-size: clamp(1.8rem, 5vw, 2.8rem); }
+.page-head .split-body p {
+  max-width: 60ch;
+  font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+  color: var(--ink-2);
+}
+.page-head .split-body p + p { margin-top: 0.8rem; }
+
+/* A long document with a contents column beside it. Used by both
+   the terms page and the about page, so neither is a lone narrow
+   column of text on a wide page. */
+.doc {
+  display: grid;
+  grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  align-items: start;
+}
+
+.doc-nav { padding: 1.25rem; position: sticky; top: 78px; }
+.doc-nav h4 { margin-bottom: 0.7rem; }
+.doc-nav a {
+  display: block;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
+}
+.doc-nav a:last-child { border-bottom: 0; }
+.doc-nav a:hover { color: var(--red-deep); padding-left: 0.3rem; }
+
+.doc-body { padding: clamp(1.35rem, 3.5vw, 2.5rem); }
+/* The panel is the width of the page; the line inside it is not. */
+.doc-body .prose-column { max-width: 74ch; }
+.doc-body section + section { margin-top: 2.75rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
+.doc-body section > h2:first-child { margin-top: 0; }
+.doc-date { font-size: 0.85rem; color: var(--ink-3); }
+.doc-date strong { color: var(--red-deep); font-weight: 600; }
+
+@media (max-width: 860px) {
+  .doc { grid-template-columns: minmax(0, 1fr); }
+  .doc-nav { position: static; }
+}
+
+/* Four, then two by two, then one. Never three across with a
+   fourth sitting on its own underneath, which is what auto-fit
+   gives you at the widths in between. */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 1040px) { .about-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .about-grid { grid-template-columns: minmax(0, 1fr); } }
+.about-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+}
+.about-card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(32, 30, 29, 0.1); }
+.about-card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; min-height: 2.3em; }
+.about-card p { font-size: 0.9rem; color: var(--ink-3); }
+.about-card .num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--red-deep);
+  margin-bottom: 0.7rem;
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  align-items: start;
+}
+@media (max-width: 860px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+
+.contact-aside { display: flex; flex-direction: column; gap: 1rem; }
+.contact-aside .draft { margin-top: 0; }
+.aside-card { padding: 1.35rem; }
+.aside-card h3 { font-size: 0.98rem; margin-bottom: 0.5rem; }
+.aside-card p { font-size: 0.88rem; color: var(--ink-3); }
+
+/* The form is a column of fields, which would leave the right of
+   its panel empty, so the fields that are short share a row. */
+.form { padding: clamp(1.35rem, 3.5vw, 2.5rem); }
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 1.15rem;
+}
+.field { margin-bottom: 1.15rem; }
+.field label { display: block; margin-bottom: 0.35rem; font-size: 0.86rem; font-weight: 600; }
+.field .hint { font-weight: 400; color: var(--ink-4); }
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.62rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.94rem;
+  color: var(--ink);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.field textarea { min-height: 190px; resize: vertical; }
+.field input:focus,
+.field textarea:focus,
+.field select:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(32, 30, 29, 0.08); }
+.field.has-error input,
+.field.has-error textarea { border-color: var(--red); }
+.field .error { display: none; margin-top: 0.3rem; font-size: 0.8rem; color: var(--red-deep); }
+.field.has-error .error { display: block; }
+
+.form-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.form-note { max-width: 46ch; font-size: 0.82rem; color: var(--ink-3); }
+
+.form-status { margin-top: 1rem; padding: 0.85rem 1rem; font-size: 0.9rem; border-left: 3px solid; animation: fade-up var(--dur-2) var(--ease-out) both; }
+.form-status[hidden] { display: none; }
+.form-status.is-ok { border-color: #3f7d4e; background: rgba(63, 125, 78, 0.07); }
+.form-status.is-bad { border-color: var(--red); background: rgba(236, 48, 19, 0.06); }
+
+/* ------------------------------------------------------------
+   404
+------------------------------------------------------------ */
+
+.notfound .panel { padding: clamp(1.75rem, 4vw, 3rem); }
+.notfound .code {
+  font-family: var(--font-mono);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--red);
+}
+.notfound h1 { margin-top: 1rem; font-size: clamp(1.5rem, 4vw, 2.2rem); }
+.notfound p { color: var(--ink-2); max-width: 52ch; }

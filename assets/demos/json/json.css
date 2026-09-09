@@ -1,0 +1,27 @@
+/* ============================================================
+   JSON DEMO
+
+   What is particular to this one. The shared look is in
+   _kit/kit.css.
+============================================================ */
+
+.td-area {
+  min-height: 8.5rem;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+.td-status {
+  margin: 0.7rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-left: 3px solid var(--td-line-2);
+  background: var(--td-fill);
+  font-size: 0.78rem;
+}
+.td-status.is-ok { border-color: #3f7d4e; color: #2f5d3a; }
+.td-status.is-bad { border-color: #c0574a; color: #9a3c30; }

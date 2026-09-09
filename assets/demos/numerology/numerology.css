@@ -1,0 +1,16 @@
+/* ============================================================
+   NUMEROLOGY DEMO
+
+   What is particular to this one. The shared look is in
+   _kit/kit.css.
+============================================================ */
+
+.td-result + .td-result { margin-top: 1.1rem; }
+.td-working {
+  margin: 0.5rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--td-ink-3);
+  word-break: break-word;
+}
