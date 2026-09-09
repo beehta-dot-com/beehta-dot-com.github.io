@@ -1,17 +1,33 @@
 /* ============================================================
    EXPLORER.JS
-   The catalogue on the home page  (directory layout)
+   The catalogue on the home page
 
-   The apps are the point of this page, so they are not hidden
-   behind a selection. Every app that exists gets a block of its
-   own with its preview beside it, and everything still being
-   built is listed separately and compactly, because there is
-   nothing to preview and a row of empty squares says nothing.
+   One selection, shown two ways, built once.
 
-   Two lists, one set of data:
+     wide    a list down the left, the selected entry and its
+             preview down the right. The list scrolls inside its
+             own panel so the page never grows with the shelf.
 
-     #available    status "live", with a working preview
-     #comingSoon   everything else, name and one line only
+     narrow  the same selection driven by a pager at the top:
+             the entry's name with "3 / 6" under it and a step
+             either side of it. The detail and the preview sit
+             below, and the preview takes the whole width of the
+             window.
+
+   Both are in the DOM at once and CSS decides which is on show.
+   That is deliberate. Re-rendering on a width change means
+   trusting matchMedia or resize to fire, and in more than one
+   embedded context neither of them does; a layout that is simply
+   always present cannot get stuck in the wrong one.
+
+   Search and the filters sit with the list, above it on a wide
+   screen and above the pager on a narrow one, so they are in
+   reach of the thing they are filtering.
+
+   Coming soon is a separate list further down the page: cards,
+   no pager, no previews. There is nothing to preview and a row of
+   empty squares would only take the room the working entries have
+   earned.
 
    A preview registers itself on window.BeehtaDemos before this
    runs.
@@ -19,33 +35,31 @@
 
 window.BeehtaDemos = window.BeehtaDemos || {};
 
-/* router.js owns this object but loads last, so every page
-   script that registers a hook has to be able to create it. */
+/* router.js owns this object but loads last, so every page script
+   that registers a hook has to be able to create it. */
 window.beehtaPages = window.beehtaPages || {};
 
 window.beehtaPages.home = function (root) {
   "use strict";
 
   var apps = window.APPS || [];
-  var toolsFrom = window.TOOLS_FROM || 7;
 
-  var availableEl = root.querySelector("#available");
+  var mountEl = root.querySelector("#catalogue");
   var soonEl = root.querySelector("#comingSoon");
-  var availableHead = root.querySelector("#availableHead");
   var soonHead = root.querySelector("#comingSoonHead");
-  var countEl = root.querySelector("#appCount");
-  var toolsEl = root.querySelector("#directoryTools");
-  var searchEl = root.querySelector("#appSearch");
-  var filtersEl = root.querySelector("#appFilters");
-  var emptyEl = root.querySelector("#directoryEmpty");
+  var soonBand = root.querySelector("#comingSoonBand");
+  if (!mountEl) return;
 
-  if (!availableEl || !soonEl) return;
+  /* ---------- state ---------- */
 
+  var kind = "all";        // all | page | app
   var category = "All";
   var term = "";
+  var current = null;      // id of the selected live entry
+  var teardown = null;     // teardown for the mounted preview
+  var timers = [];
 
-  // id -> teardown, for the previews already built
-  var mounted = Object.create(null);
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
 
   /* ---------- helpers ---------- */
 
@@ -58,254 +72,495 @@ window.beehtaPages.home = function (root) {
 
   function domainOf(app) { return app.id + ".beehta.com"; }
   function isLive(app) { return app.status === "live"; }
+  function byId(id) {
+    for (var i = 0; i < apps.length; i++) if (apps[i].id === id) return apps[i];
+    return null;
+  }
+
+  /* A page and an app are different promises, and the label is the
+     only place the page makes that difference visible. */
+  function kindLabel(app) { return app.kind === "app" ? "App" : "Page"; }
+  function kindNote(app) {
+    return app.kind === "app"
+      ? "A full web app. One account covers it and everything else on the shelf."
+      : "A single page. No account, nothing saved, nothing sent.";
+  }
 
   function matches(app) {
+    if (kind !== "all" && app.kind !== kind) return false;
     if (category !== "All" && app.category !== category) return false;
     var needle = term.trim().toLowerCase();
     if (!needle) return true;
-    return (app.name + " " + app.summary + " " + app.category)
+    return (app.name + " " + app.summary + " " + app.category + " " + kindLabel(app))
       .toLowerCase().indexOf(needle) !== -1;
   }
 
-  /* ---------- previews, built when they come near ----------
+  function liveShown() { return apps.filter(function (a) { return isLive(a) && matches(a); }); }
+  function soonShown() { return apps.filter(function (a) { return !isLive(a) && matches(a); }); }
 
-     Deliberately not done with an IntersectionObserver. That
-     callback is async and in some contexts never fires at all,
-     which would leave every preview permanently blank rather
-     than merely late. */
+  /* ============================================================
+     The furniture, built once
 
-  var NEAR = 400;
-  var watching = false;
-  var queued = false;
+     Everything below exists for the life of the page. Filtering
+     redraws the list and the pager; choosing an entry redraws the
+     detail. Neither rebuilds the frame.
+  ============================================================ */
 
-  function mountInto(host, app) {
-    if (mounted[app.id]) return;
-    var demo = app.demo && window.BeehtaDemos[app.demo];
-    if (!demo || typeof demo.mount !== "function") return;
-    mounted[app.id] = demo.mount(host) || function () { host.textContent = ""; };
+  var inner = el("div", "cat-inner");
+
+  /* ---------- search and filters ---------- */
+
+  var tools = el("div", "panel cat-tools");
+
+  var searchLabel = el("label", "search");
+  var searchHint = el("span", "sr-only", "Search the catalogue");
+  var search = el("input");
+  search.type = "search";
+  search.id = "appSearch";
+  search.placeholder = "Search";
+  search.autocomplete = "off";
+  searchLabel.appendChild(searchHint);
+  searchLabel.appendChild(search);
+  tools.appendChild(searchLabel);
+
+  var kindRow = el("div", "filters");
+  kindRow.setAttribute("role", "group");
+  kindRow.setAttribute("aria-label", "Filter by what it is");
+  tools.appendChild(kindRow);
+
+  var catWrap = el("label", "catfilter");
+  catWrap.appendChild(el("span", "sr-only", "Filter by category"));
+  var catSelect = el("select");
+  catWrap.appendChild(catSelect);
+  tools.appendChild(catWrap);
+
+  var count = el("p", "cat-count");
+  count.setAttribute("role", "status");
+  tools.appendChild(count);
+
+  inner.appendChild(tools);
+
+  /* ---------- the two-column body ---------- */
+
+  var body = el("div", "cat-body");
+
+  // left, wide screens only
+  var listPanel = el("div", "panel cat-list-panel");
+  var listSlot = el("div", "cat-list-slot");
+  var list = el("ul", "cat-list");
+  list.setAttribute("aria-label", "Everything available now");
+  listSlot.appendChild(list);
+  listPanel.appendChild(listSlot);
+  body.appendChild(listPanel);
+
+  // the pager, narrow screens only
+  var pager = el("div", "panel cat-pager");
+  var prevBtn = el("button", "pg-step", "Prev");
+  prevBtn.type = "button";
+  var nextBtn = el("button", "pg-step", "Next");
+  nextBtn.type = "button";
+  var pgNow = el("div", "pg-now");
+  var pgName = el("span", "pg-name");
+  var pgCount = el("span", "pg-count");
+  pgNow.appendChild(pgName);
+  pgNow.appendChild(pgCount);
+  pager.appendChild(prevBtn);
+  pager.appendChild(pgNow);
+  pager.appendChild(nextBtn);
+  body.appendChild(pager);
+
+  // right
+  var mainCol = el("div", "cat-main");
+
+  var detail = el("div", "panel cat-detail");
+  mainCol.appendChild(detail);
+
+  /* The preview is the one thing on this page that does not move,
+     fade or slide. It is a working app behind that glass and any
+     animation of the frame reads as the app itself misbehaving. */
+  var preview = el("div", "cat-preview");
+  var chrome = el("div", "pv-chrome");
+  chrome.setAttribute("aria-hidden", "true");
+  var addr = el("span", "pv-addr");
+  var badge = el("span", "pv-badge", "Preview");
+  chrome.appendChild(addr);
+  chrome.appendChild(badge);
+  var stage = el("div", "pv-stage");
+  var pvNote = el("p", "pv-note");
+  preview.appendChild(chrome);
+  preview.appendChild(stage);
+  preview.appendChild(pvNote);
+  mainCol.appendChild(preview);
+
+  body.appendChild(mainCol);
+  inner.appendChild(body);
+
+  // shown instead of the body when nothing matches
+  var empty = el("div", "panel cat-empty");
+  empty.hidden = true;
+  var emptyText = el("p", null, "Nothing on the shelf matches that.");
+  var emptyBtn = el("button", "btn btn--ghost", "Clear the filters");
+  emptyBtn.type = "button";
+  empty.appendChild(emptyText);
+  empty.appendChild(emptyBtn);
+  inner.appendChild(empty);
+
+  mountEl.appendChild(inner);
+
+  /* ============================================================
+     Drawing
+  ============================================================ */
+
+  function drawKinds() {
+    var options = [
+      { id: "all", label: "Everything" },
+      { id: "page", label: "Pages" },
+      { id: "app", label: "Apps" }
+    ];
+    kindRow.textContent = "";
+    options.forEach(function (opt) {
+      var btn = el("button", "filter", opt.label);
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", String(opt.id === kind));
+      btn.addEventListener("click", function () {
+        if (kind === opt.id) return;
+        kind = opt.id;
+        drawKinds();
+        drawAll();
+      });
+      kindRow.appendChild(btn);
+    });
   }
 
-  function unmountAll() {
-    stopWatching();
-    Object.keys(mounted).forEach(function (id) { mounted[id](); delete mounted[id]; });
+  function drawCategories() {
+    var seen = ["All"];
+    apps.forEach(function (app) {
+      if (seen.indexOf(app.category) === -1) seen.push(app.category);
+    });
+    catSelect.textContent = "";
+    seen.forEach(function (name) {
+      var opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name === "All" ? "All categories" : name;
+      catSelect.appendChild(opt);
+    });
+    catSelect.value = category;
   }
 
-  function pendingBodies() {
-    return availableEl.querySelectorAll(".pv-stage[data-demo]:not([data-demo=''])");
-  }
+  /* The count describes the shelf, not just the rows that came
+     back, so it stays useful as the catalogue grows. */
+  function drawCount(live, soon) {
+    var total = apps.length;
+    var allLive = apps.filter(isLive).length;
 
-  function mountNearby() {
-    queued = false;
-    var bodies = pendingBodies();
-    var left = 0;
-
-    for (var i = 0; i < bodies.length; i++) {
-      var body = bodies[i];
-      var id = body.closest(".app-block").dataset.app;
-      if (mounted[id]) continue;
-
-      var box = body.getBoundingClientRect();
-      if (box.top < window.innerHeight + NEAR && box.bottom > -NEAR) {
-        mountInto(body, apps.filter(function (a) { return a.id === id; })[0]);
-      } else {
-        left++;
-      }
+    var text;
+    if (live.length + soon.length === total) {
+      text = total + " apps and pages · " + allLive + " available · " +
+             (total - allLive) + " coming soon";
+    } else {
+      text = "Showing " + (live.length + soon.length) + " of " + total +
+             " · " + live.length + " available · " + soon.length + " coming soon";
     }
-    if (!left) stopWatching();
+    if (count.textContent === text) return;
+    count.textContent = text;
+    count.classList.remove("is-fresh");
+    void count.offsetWidth;          // restart the animation
+    count.classList.add("is-fresh");
   }
 
-  function onScroll() {
-    if (queued) return;
-    queued = true;
-    setTimeout(mountNearby, 100);
+  function drawList(live) {
+    list.textContent = "";
+
+    live.forEach(function (app, i) {
+      var item = el("li", "cat-item");
+
+      var btn = el("button", "cat-row");
+      btn.type = "button";
+      btn.dataset.app = app.id;
+      btn.setAttribute("aria-pressed", String(app.id === current));
+      btn.style.setProperty("--app", app.colour);
+      // The rows arrive in sequence rather than all at once, which
+      // makes a filter change read as the list rearranging itself
+      // instead of the whole panel blinking.
+      btn.style.setProperty("--d", (i * 34) + "ms");
+
+      var top = el("span", "row-top");
+      top.appendChild(el("span", "row-name", app.name));
+      top.appendChild(el("span", "row-kind", kindLabel(app)));
+      btn.appendChild(top);
+      btn.appendChild(el("span", "row-cat", app.category));
+
+      btn.addEventListener("click", function () { select(app.id); });
+      item.appendChild(btn);
+      list.appendChild(item);
+    });
   }
 
-  function startWatching() {
-    mountNearby();
-    if (watching || !pendingBodies().length) return;
-    watching = true;
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+  function drawSoon(soon) {
+    if (!soonEl) return;
+    soonEl.textContent = "";
+
+    soon.forEach(function (app, i) {
+      var card = el("article", "panel soon-card");
+      card.id = "soon-" + app.id;
+      card.style.setProperty("--d", (i * 45) + "ms");
+
+      var mark = el("span", "soon-swatch");
+      mark.style.backgroundColor = app.colour;
+      mark.setAttribute("aria-hidden", "true");
+      card.appendChild(mark);
+
+      var text = document.createElement("div");
+      var meta = el("p", "soon-meta");
+      meta.appendChild(el("span", "row-kind", kindLabel(app)));
+      meta.appendChild(el("span", "soon-cat", app.category));
+      text.appendChild(meta);
+      text.appendChild(el("h3", null, app.name));
+      text.appendChild(el("p", "soon-summary", app.summary));
+      card.appendChild(text);
+
+      soonEl.appendChild(card);
+    });
+
+    // A heading with nothing under it is worse than no heading,
+    // and an empty band still takes a full section gap, so the
+    // whole thing goes rather than just its contents.
+    if (soonBand) soonBand.hidden = !soon.length;
+    if (soonHead) soonHead.hidden = !soon.length;
+    soonEl.hidden = !soon.length;
   }
 
-  function stopWatching() {
-    if (!watching) return;
-    watching = false;
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onScroll);
+  function drawPager(live) {
+    var at = 0;
+    for (var i = 0; i < live.length; i++) if (live[i].id === current) at = i;
+
+    var name = live.length ? live[at].name : "";
+    var where = live.length ? (at + 1) + " / " + live.length : "";
+    if (pgName.textContent !== name || pgCount.textContent !== where) {
+      pgName.textContent = name;
+      pgCount.textContent = where;
+      pgNow.classList.remove("is-fresh");
+      void pgNow.offsetWidth;          // restart the animation
+      pgNow.classList.add("is-fresh");
+    }
+
+    prevBtn.disabled = live.length < 2;
+    nextBtn.disabled = live.length < 2;
+    pager.hidden = !live.length;
   }
 
-  /* ---------- an available app ---------- */
+  function drawDetail() {
+    var app = byId(current);
+    if (!app) return;
 
-  function availableBlock(app) {
-    var block = el("article", "app-block");
-    block.id = "app-" + app.id;
-    block.dataset.app = app.id;
-    block.style.setProperty("--app", app.colour);
+    detail.textContent = "";
 
-    var inner = el("div", "app-block-inner");
+    var meta = el("p", "det-meta");
+    meta.appendChild(el("span", "det-kind", kindLabel(app)));
+    meta.appendChild(el("span", "det-cat", app.category));
+    detail.appendChild(meta);
 
-    /* --- what it is --- */
-    var detail = el("div", "panel block app-detail");
-
-    detail.appendChild(el("p", "app-cat", app.category));
-
-    var head = el("div", "app-head");
+    var head = el("div", "det-head");
     head.appendChild(el("h3", null, app.name));
-    head.appendChild(el("span", "app-status is-live", "Available"));
+    head.appendChild(el("span", "det-status", "Available"));
     detail.appendChild(head);
 
-    detail.appendChild(el("p", "app-summary", app.summary));
+    detail.appendChild(el("p", "det-summary", app.summary));
+    detail.appendChild(el("p", "det-kindnote", kindNote(app)));
 
+    var actions = el("div", "det-actions");
     if (app.url) {
-      var open = el("a", "btn btn--primary app-open", "Open " + app.name);
+      var open = el("a", "btn btn--primary", "Open " + app.name);
       open.href = app.url;
       open.target = "_blank";
       open.rel = "noopener";
-      detail.appendChild(open);
+      actions.appendChild(open);
     }
+    actions.appendChild(el("span", "det-domain", domainOf(app)));
+    detail.appendChild(actions);
+  }
 
-    detail.appendChild(el("p", "app-domain", domainOf(app)));
-    inner.appendChild(detail);
+  function drawPreview() {
+    var app = byId(current);
+    if (!app) return;
 
-    /* --- the preview --- */
-    var preview = el("div", "app-preview");
+    if (typeof teardown === "function") teardown();
+    teardown = null;
+    stage.textContent = "";
+    stage.scrollTop = 0;
 
-    var chrome = el("div", "pv-chrome");
-    chrome.setAttribute("aria-hidden", "true");
-    chrome.appendChild(el("span", "pv-addr", domainOf(app)));
-    chrome.appendChild(el("span", "pv-badge", "Preview"));
-    preview.appendChild(chrome);
+    addr.textContent = domainOf(app);
 
-    var stage = el("div", "pv-stage");
-    stage.dataset.demo = app.demo || "";
-    preview.appendChild(stage);
-
-    if (!(app.demo && window.BeehtaDemos[app.demo])) {
+    var demo = app.demo && window.BeehtaDemos[app.demo];
+    if (demo && typeof demo.mount === "function") {
+      teardown = demo.mount(stage) || null;
+    } else {
       var none = el("div", "pv-none");
       none.appendChild(el("p", null, "No preview for this one yet."));
       stage.appendChild(none);
     }
 
-    if (app.note) preview.appendChild(el("p", "pv-note", app.note));
-
-    inner.appendChild(preview);
-    block.appendChild(inner);
-    return block;
+    pvNote.textContent = app.note || "";
+    pvNote.hidden = !app.note;
   }
 
-  /* ---------- an app that is not built yet ---------- */
+  /* ---------- selecting ---------- */
 
-  function soonCard(app) {
-    var card = el("article", "panel soon-card");
-    card.id = "app-" + app.id;
+  function select(id, quiet) {
+    if (id === current) return;
+    current = id;
 
-    var mark = el("span", "soon-swatch");
-    mark.style.backgroundColor = app.colour;
-    mark.setAttribute("aria-hidden", "true");
-    card.appendChild(mark);
+    var rows = list.querySelectorAll(".cat-row");
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].setAttribute("aria-pressed", String(rows[i].dataset.app === id));
+    }
 
-    var body = document.createElement("div");
-    body.appendChild(el("p", "app-cat", app.category));
-    body.appendChild(el("h3", null, app.name));
-    body.appendChild(el("p", "soon-summary", app.summary));
-    card.appendChild(body);
+    drawPager(liveShown());
 
-    return card;
+    // The detail crosses over; the preview underneath it does not.
+    // Fading a live app in and out looks like it is failing to load.
+    if (!detail.firstChild) {
+      // Nothing to cross over from. Crossing anyway leaves the
+      // panel empty and collapsed for the length of the fade.
+      drawDetail();
+    } else {
+      detail.classList.add("is-out");
+      later(function () {
+        drawDetail();
+        detail.classList.remove("is-out");
+      }, 130);
+    }
+
+    drawPreview();
+
+    if (!quiet) {
+      var url = location.pathname + "#" + id;
+      history.replaceState({}, "", url);
+    }
   }
 
-  /* ---------- draw ---------- */
-
-  function draw() {
-    unmountAll();
-    availableEl.textContent = "";
-    soonEl.textContent = "";
-
-    var shown = apps.filter(matches);
-    var live = shown.filter(isLive);
-    var soon = shown.filter(function (a) { return !isLive(a); });
-
-    live.forEach(function (app) { availableEl.appendChild(availableBlock(app)); });
-    soon.forEach(function (app) { soonEl.appendChild(soonCard(app)); });
-
-    // A heading with nothing under it is worse than no heading.
-    if (availableHead) availableHead.hidden = !live.length;
-    if (soonHead) soonHead.hidden = !soon.length;
-    availableEl.hidden = !live.length;
-    soonEl.hidden = !soon.length;
-
-    if (emptyEl) emptyEl.hidden = shown.length > 0;
-
-    drawCount(shown);
-    startWatching();
+  function step(by) {
+    var live = liveShown();
+    if (live.length < 2) return;
+    var at = 0;
+    for (var i = 0; i < live.length; i++) if (live[i].id === current) at = i;
+    var next = (at + by + live.length) % live.length;
+    select(live[next].id);
   }
 
-  /* The count says what the shelf holds, not just how many rows
-     came back, so it stays useful as the catalogue grows. */
-  function drawCount(shown) {
-    if (!countEl) return;
+  /* ---------- a full redraw, after a filter changes ---------- */
 
-    var total = apps.length;
-    var live = apps.filter(isLive).length;
-    var soon = total - live;
+  function drawAll() {
+    var live = liveShown();
+    var soon = soonShown();
 
-    var parts = [total + (total === 1 ? " app" : " apps")];
-    if (live) parts.push(live + " available");
-    if (soon) parts.push(soon + " coming soon");
+    drawCount(live, soon);
+    drawList(live);
+    drawSoon(soon);
 
-    var text = parts.join(" · ");
-    if (shown.length !== total) text = "Showing " + shown.length + " of " + text;
-    countEl.textContent = text;
-  }
+    var nothing = !live.length && !soon.length;
+    empty.hidden = !nothing;
 
-  function drawFilters() {
-    if (!filtersEl) return;
+    // With no live entry to show, the detail and the preview would
+    // be describing something the reader has just filtered out.
+    var noLive = !live.length;
+    body.hidden = nothing;
+    listPanel.hidden = noLive;
+    mainCol.hidden = noLive;
+    pager.hidden = noLive;
 
-    var seen = ["All"];
-    apps.forEach(function (app) {
-      if (seen.indexOf(app.category) === -1) seen.push(app.category);
-    });
+    if (noLive) {
+      if (typeof teardown === "function") teardown();
+      teardown = null;
+      stage.textContent = "";
+      current = null;
+      return;
+    }
 
-    filtersEl.textContent = "";
-    seen.forEach(function (name) {
-      var btn = el("button", "filter", name);
-      btn.type = "button";
-      btn.setAttribute("aria-pressed", String(name === category));
-      btn.addEventListener("click", function () {
-        category = name;
-        drawFilters();
-        draw();
-      });
-      filtersEl.appendChild(btn);
-    });
+    var stillThere = false;
+    for (var i = 0; i < live.length; i++) if (live[i].id === current) stillThere = true;
+    if (!stillThere) {
+      current = null;
+      select(live[0].id, true);
+    } else {
+      var rows = list.querySelectorAll(".cat-row");
+      for (var r = 0; r < rows.length; r++) {
+        rows[r].setAttribute("aria-pressed", String(rows[r].dataset.app === current));
+      }
+      drawPager(live);
+    }
   }
 
   /* ---------- wiring ---------- */
 
-  if (toolsEl) {
-    if (apps.length >= toolsFrom) {
-      toolsEl.hidden = false;
-      drawFilters();
-    } else {
-      toolsEl.hidden = true;
-    }
+  function onSearch(e) { term = e.target.value; drawAll(); }
+  function onCategory(e) { category = e.target.value; drawAll(); }
+  function onPrev() { step(-1); }
+  function onNext() { step(1); }
+  function onClear() {
+    kind = "all";
+    category = "All";
+    term = "";
+    search.value = "";
+    catSelect.value = "All";
+    drawKinds();
+    drawAll();
   }
 
-  function onSearch(e) { term = e.target.value; draw(); }
-  if (searchEl) searchEl.addEventListener("input", onSearch);
+  search.addEventListener("input", onSearch);
+  catSelect.addEventListener("change", onCategory);
+  prevBtn.addEventListener("click", onPrev);
+  nextBtn.addEventListener("click", onNext);
+  emptyBtn.addEventListener("click", onClear);
 
-  draw();
-
-  // An app can be linked to directly: beehta.com/#logins
-  var fromHash = location.hash.slice(1);
-  if (fromHash) {
-    var target = root.querySelector("#app-" + (window.CSS && CSS.escape ? CSS.escape(fromHash) : fromHash));
-    if (target) target.scrollIntoView();
+  /* The pager is a pair of buttons, so the arrow keys are not
+     wired to it by the browser. On a list you step through, they
+     are the obvious thing to reach for. */
+  function onKey(e) {
+    if (e.target === search || e.target === catSelect) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "ArrowLeft") { step(-1); }
+    else if (e.key === "ArrowRight") { step(1); }
+    else return;
+    e.preventDefault();
   }
+  pager.addEventListener("keydown", onKey);
+  listPanel.addEventListener("keydown", onKey);
+
+  drawKinds();
+  drawCategories();
+  drawAll();
+
+  /* An entry can be linked to directly: beehta.com/#itinerary */
+
+  function fromHash() {
+    var wanted = location.hash.slice(1);
+    if (!wanted) return;
+    var target = byId(wanted);
+    if (target && isLive(target)) { select(wanted, true); return; }
+    var section = root.querySelector("#" + (window.CSS && CSS.escape ? CSS.escape(wanted) : wanted));
+    if (section) section.scrollIntoView();
+  }
+
+  /* A hash on its own does not reload the document and the router
+     leaves it alone, so following such a link from this same page
+     would otherwise change the address and nothing else. */
+  window.addEventListener("hashchange", fromHash);
+
+  fromHash();
 
   /* The page hook contract: hand back a way to undo everything. */
   return function () {
-    unmountAll();
-    if (searchEl) searchEl.removeEventListener("input", onSearch);
+    if (typeof teardown === "function") teardown();
+    teardown = null;
+    timers.forEach(clearTimeout);
+    search.removeEventListener("input", onSearch);
+    catSelect.removeEventListener("change", onCategory);
+    prevBtn.removeEventListener("click", onPrev);
+    nextBtn.removeEventListener("click", onNext);
+    emptyBtn.removeEventListener("click", onClear);
+    pager.removeEventListener("keydown", onKey);
+    listPanel.removeEventListener("keydown", onKey);
+    window.removeEventListener("hashchange", fromHash);
   };
 };

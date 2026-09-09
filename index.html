@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>beehta.com | Small web apps, one at a time</title>
-<meta name="description" content="A collection of focused web apps for everyday problems. Try a preview here, or open the app when you need the real thing.">
+<title>beehta.com | Small pages and small apps, one job each</title>
+<meta name="description" content="A shelf of single-purpose pages and small web apps. Search it, filter it, and try any of them in the preview before you open anything.">
 
 <link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
@@ -14,10 +14,12 @@
 
 <link rel="stylesheet" href="/assets/css/base.css">
 <link rel="stylesheet" href="/assets/css/pages.css">
+<link rel="stylesheet" href="/assets/demos/tools/tools.css">
 <link rel="stylesheet" href="/assets/demos/logins/logins.css">
 
 <script defer src="/assets/js/data.js"></script>
 <script defer src="/assets/js/tiles.js"></script>
+<script defer src="/assets/demos/tools/tools.js"></script>
 <script defer src="/assets/demos/logins/logins.js"></script>
 <script defer src="/assets/js/explorer.js"></script>
 <script defer src="/assets/js/contact.js"></script>
@@ -38,7 +40,7 @@
         <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
       </a>
       <nav class="site-nav" aria-label="Main">
-        <a href="/">Apps</a>
+        <a href="/">Shelf</a>
         <a href="/about/">About</a>
         <a href="/contact/">Contact</a>
       </nav>
@@ -49,88 +51,109 @@
 
     <section class="section shell">
       <div class="panel block block--hero">
-        <span class="kicker">A small catalogue</span>
-        <h1>Small web apps that do <em>one thing</em>, then get out of the way.</h1>
-        <p class="block-lede">beehta.com is a collection of focused web apps for everyday problems. Open one, do what you came to do, and move on.</p>
-        <p class="block-lede">No giant platforms. No feature overload. Just useful little apps.</p>
+        <span class="kicker">Pages and apps</span>
+        <h1>Small pages for a quick answer. Small apps for <em>the rest</em>.</h1>
+        <p class="block-lede">Some things you need once: a number worked out, a file tidied, a plan laid down. Those are single pages here. You open one, get what you came for, and close the tab. Nothing to sign up for.</p>
+        <p class="block-lede">Other things you come back to for years, and those are proper apps with your work kept in them. Both live on this shelf, and the list below says which is which.</p>
         <div class="hero-actions">
-          <a class="btn btn--primary" href="#apps">Browse the apps</a>
+          <a class="btn btn--primary" href="#apps">Browse the shelf</a>
           <a class="btn btn--ghost" href="#how">How beehta.com works</a>
         </div>
       </div>
     </section>
 
-    <!-- The apps are the point of the page, so they come first and
-         take the most room. Everything else is after them. -->
-    <section class="section shell" id="apps">
-      <div class="panel block block--tools">
-        <h2>Everything on beehta.com</h2>
-        <p class="block-lede">Every app is built around one small job. Try the preview here, or open the app when you need the real thing.</p>
-        <p class="app-count" id="appCount" role="status"></p>
+    <!-- A heading and the list it introduces are one band, so the
+         space between them is smaller than the space between
+         sections. Every section gap on the site is the same one. -->
+    <div class="cat-band" id="apps">
+      <div class="shell cat-heading">
+        <div class="panel block block--head">
+          <span class="kicker">The shelf</span>
+          <h2>Available now</h2>
+          <p class="block-lede">Search it, filter it by kind or category, and try any of them in the preview beside the list. No account, and nothing you type into a preview is saved or sent anywhere.</p>
+        </div>
+      </div>
 
-        <!-- Search and filters unhide themselves once the catalogue
-             passes TOOLS_FROM in data.js. -->
-        <div class="directory-tools" id="directoryTools" hidden>
-          <label class="search">
-            <span class="sr-only">Search the apps</span>
-            <input type="search" id="appSearch" placeholder="Search the apps" autocomplete="off">
-          </label>
-          <div class="filters" id="appFilters" role="group" aria-label="Filter by category"></div>
+      <!-- Deliberately outside .shell. explorer.js fills this, and on
+           a narrow screen the preview inside it takes the whole width
+           of the window rather than the padded column. -->
+      <div id="catalogue"></div>
+    </div>
+
+    <div class="cat-band" id="comingSoonBand">
+      <div class="shell cat-heading" id="comingSoonHead">
+        <div class="panel block block--head">
+          <span class="kicker">Being built</span>
+          <h2 id="coming-soon">Coming soon</h2>
+          <p class="block-lede">Listed before they exist, so the shelf shows where it is going rather than only where it has been. No preview, because there is nothing yet to preview.</p>
+        </div>
+      </div>
+      <div class="shell soon-wrap">
+        <div class="soon-grid" id="comingSoon"></div>
+      </div>
+    </div>
+
+    <section class="section shell" id="kinds">
+      <div class="panel block block--sky">
+        <span class="kicker">Two kinds of thing</span>
+        <h2>Not everything needs to be an app.</h2>
+        <p class="block-lede">Most sites turn every small job into a product with a sign-up page in front of it. Half the things on this shelf do not need one, and the page says so rather than pretending otherwise.</p>
+        <div class="twoup">
+          <div>
+            <span class="twoup-kind">Page</span>
+            <h3>A single page that answers one question</h3>
+            <p>A calculator, a generator, an editor. It loads in one request, does its job, and forgets you the moment the tab closes.</p>
+            <ul>
+              <li>No account and no sign-in.</li>
+              <li>Nothing saved, and nothing sent to us.</li>
+              <li>Works with the tab offline once it has loaded.</li>
+            </ul>
+          </div>
+          <div>
+            <span class="twoup-kind">App</span>
+            <h3>A web app that keeps your work</h3>
+            <p>Something you come back to: a portfolio, a set of trips, a review cycle. It holds your data, so it needs an account, and it says so on the entry.</p>
+            <ul>
+              <li>One account covers every app on the shelf.</li>
+              <li>Your work stays inside the app you put it in.</li>
+              <li>Closing your account closes it everywhere at once.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <div class="shell list-head" id="availableHead">
-      <div class="panel block">
-        <h2 id="available-now">Available now</h2>
-        <p>Ready to use. Every one has a preview you can try without an account.</p>
-      </div>
-    </div>
-
-    <!-- Outside .shell: on a narrow screen the previews take the
-         whole width of the window, and the descriptions get the
-         padding back on their own. -->
-    <div id="available"></div>
-
-    <div class="shell list-head" id="comingSoonHead">
-      <div class="panel block">
-        <h2 id="coming-soon">Coming soon</h2>
-        <p>A few more focused apps are being built. No giant roadmap, just useful things, one at a time.</p>
-      </div>
-    </div>
-
-    <div class="shell">
-      <div class="soon-grid" id="comingSoon"></div>
-      <p class="panel block directory-empty" id="directoryEmpty" hidden>Nothing matches that. Try a different word.</p>
-    </div>
-
     <section class="section shell">
       <div class="panel block block--dark statement">
-        <p>One account.<br>One place to find them.<br><em>Nothing you did not ask for.</em></p>
-        <p class="statement-note">beehta.com keeps the apps separate while giving you one place to find them.</p>
+        <p>
+          <span class="line">Open it.</span>
+          <span class="line">Use it.</span>
+          <span class="line"><em>Close it.</em></span>
+        </p>
+        <p class="statement-note">That is the whole shape of a page on beehta.com. The apps ask for a little more, and only because they have to hold on to something for you.</p>
       </div>
     </section>
 
     <section class="section shell" id="how">
       <div class="panel block block--sage">
         <span class="kicker">How it works</span>
-        <h2>Pick an app. That is it.</h2>
-        <p class="block-lede">Most apps can be used straight away. Some keep your work, and those ask you to sign in once, in one place, for all of them.</p>
+        <h2>Pick one. That is it.</h2>
+        <p class="block-lede">There is no onboarding here, because for half the shelf there is nothing to onboard into.</p>
         <ol class="steps">
           <li>
             <span class="step-num">01</span>
-            <h3>Open</h3>
-            <p>Find something on the shelf that matches the thing you are trying to do.</p>
+            <h3>Find it</h3>
+            <p>Search the list or filter it down to pages, apps, or one category. The list stays where it is while you look through it.</p>
           </li>
           <li>
             <span class="step-num">02</span>
-            <h3>Try</h3>
-            <p>Use the preview first. It costs nothing and asks for nothing.</p>
+            <h3>Try it</h3>
+            <p>Every entry that exists has a working preview beside it. It costs nothing, asks for nothing, and tells you in ten seconds whether the thing is any use to you.</p>
           </li>
           <li>
             <span class="step-num">03</span>
-            <h3>Keep going</h3>
-            <p>Open the real app when you actually need it, and close it when you are done.</p>
+            <h3>Open it</h3>
+            <p>A page opens and works straight away. An app asks you to sign in once, in one place, and that same account covers everything else on the shelf.</p>
           </li>
         </ol>
       </div>
@@ -143,19 +166,19 @@
         <ul class="plainlist">
           <li>
             <h3>No ads</h3>
-            <p>The apps are not built around advertising.</p>
+            <p>Not on this page, and not inside anything listed on it.</p>
           </li>
           <li>
             <h3>No feature bloat</h3>
-            <p>Every feature needs a reason to exist.</p>
+            <p>Every feature needs a reason to exist. A page that grows a second job becomes a second page.</p>
           </li>
           <li>
             <h3>No unnecessary accounts</h3>
-            <p>If an app does not need your account, it will not ask for one.</p>
+            <p>If a thing does not need to know who you are, it will not ask. That is why half the shelf has no sign-in at all.</p>
           </li>
           <li>
             <h3>No dark patterns</h3>
-            <p>No artificial urgency, no engagement tricks, no clutter.</p>
+            <p>No artificial urgency, no engagement tricks, no upgrade prompt behind a button you did not press.</p>
           </li>
         </ul>
       </div>
@@ -165,9 +188,9 @@
       <div class="panel block block--cta">
         <div>
           <h2>Missing something?</h2>
-          <p class="block-lede">Tell us about a small problem you wish had a simple web app. Most of the things on this shelf started as somebody's message.</p>
+          <p class="block-lede">Tell us about a small problem you keep solving the hard way. Most of what is on this shelf started as somebody's message, and quite a few of them turned out to need only a page.</p>
         </div>
-        <a class="btn btn--primary" href="/contact/">Suggest an app</a>
+        <a class="btn btn--primary" href="/contact/">Suggest one</a>
       </div>
     </section>
 
@@ -180,12 +203,12 @@
           <a class="logo logo--word" href="/" aria-label="beehta.com, home">
             <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
           </a>
-          <p>Small web apps for small problems.</p>
+          <p>Small pages for a single answer. Small apps for the work that comes back.</p>
         </div>
         <div class="footer-col">
-          <h4>Apps</h4>
-          <a href="/#apps">All apps</a>
-          <a href="/#available">Available now</a>
+          <h4>The shelf</h4>
+          <a href="/#apps">Everything</a>
+          <a href="/#apps">Available now</a>
           <a href="/#coming-soon">Coming soon</a>
         </div>
         <div class="footer-col">

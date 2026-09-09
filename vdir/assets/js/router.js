@@ -112,12 +112,6 @@ window.beehtaPages = window.beehtaPages || {};
           startPage();
           main.classList.remove("is-leaving");
 
-          // The panels that just arrived have never been measured,
-          // and the ones that were being watched are gone.
-          if (window.beehtaShell && window.beehtaShell.animate) {
-            window.beehtaShell.animate();
-          }
-
           if (hash) {
             var anchor = document.getElementById(hash.slice(1));
             if (anchor) anchor.scrollIntoView();

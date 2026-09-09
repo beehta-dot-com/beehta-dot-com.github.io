@@ -1,0 +1,152 @@
+/* ============================================================
+   LOGINS DEMO
+
+   Self-contained. Every rule is under .logins-demo so this file
+   can be copied into logins.beehta.com's own landing repo without
+   colliding with anything there. No dependency on the catalogue's
+   stylesheets beyond the two colour variables it falls back on.
+============================================================ */
+
+.logins-demo {
+  --ld-ink: #201e1d;
+  --ld-soft: #6f6a65;
+  --ld-rule: #d9d2c6;
+  --ld-card: #fffdf8;
+  --ld-red: #ec3013;
+
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ld-ink);
+}
+
+/* --- toolbar --- */
+
+.logins-demo .ld-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.logins-demo .ld-views { display: flex; border: 1px solid var(--ld-ink); }
+
+.logins-demo .ld-views button {
+  border: 0;
+  background: none;
+  padding: 0.34rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ld-soft);
+  cursor: pointer;
+}
+.logins-demo .ld-views button + button { border-left: 1px solid var(--ld-ink); }
+.logins-demo .ld-views button[aria-pressed="true"] { background: var(--ld-ink); color: #fffdf8; }
+
+.logins-demo .ld-hint {
+  margin-left: auto;
+  font-size: 0.76rem;
+  color: var(--ld-soft);
+}
+
+/* --- card grid --- */
+
+.logins-demo .ld-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+
+.logins-demo .ld-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--ld-rule);
+  border-left-width: 4px;
+  background: var(--ld-card);
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  transition: border-color 140ms ease, opacity 140ms ease, transform 140ms ease;
+}
+.logins-demo .ld-card:hover { border-color: var(--ld-ink); }
+
+.logins-demo .ld-card[aria-pressed="true"] {
+  border-color: var(--ld-ink);
+  box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.12);
+  transform: translate(-1px, -1px);
+}
+
+/* A card the selected one is linked to. Dashed, not solid, so the
+   difference between "chosen" and "connected" is obvious. */
+.logins-demo .ld-card.is-linked { border-color: var(--ld-ink); border-style: dashed; border-left-style: solid; }
+.logins-demo .ld-card.is-faded { opacity: 0.38; }
+
+.logins-demo .ld-kind {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ld-soft);
+}
+.logins-demo .ld-name { margin-top: 0.15rem; font-size: 0.92rem; font-weight: 700; letter-spacing: -0.01em; }
+.logins-demo .ld-detail { margin-top: 0.1rem; font-size: 0.78rem; color: var(--ld-soft); }
+
+/* --- chains view --- */
+
+.logins-demo .ld-chain { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.logins-demo .ld-root {
+  border: 1px solid var(--ld-ink);
+  border-left: 4px solid var(--ld-ink);
+  background: var(--ld-card);
+  padding: 0.7rem 0.8rem;
+  box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.12);
+}
+
+.logins-demo .ld-branches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem 0 0 1.1rem;
+  list-style: none;
+  border-left: 1px solid var(--ld-rule);
+}
+
+.logins-demo .ld-branch { position: relative; }
+.logins-demo .ld-branch::before {
+  content: "";
+  position: absolute;
+  left: -1.1rem;
+  top: 1.1rem;
+  width: 0.85rem;
+  height: 1px;
+  background: var(--ld-rule);
+}
+
+.logins-demo .ld-none {
+  padding: 0.7rem 0.8rem;
+  border: 1px dashed var(--ld-rule);
+  font-size: 0.82rem;
+  color: var(--ld-soft);
+}
+
+.logins-demo .ld-summary {
+  margin-top: 0.85rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--ld-rule);
+  font-size: 0.82rem;
+  color: var(--ld-soft);
+}
+.logins-demo .ld-summary strong { color: var(--ld-ink); font-weight: 600; }
+
+/* Two columns still fit inside the preview panel on a 390px
+   phone, so only drop to one below that. */
+@media (max-width: 340px) {
+  .logins-demo .ld-grid,
+  .logins-demo .ld-branches { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .logins-demo .ld-hint { margin-left: 0; width: 100%; }
+}

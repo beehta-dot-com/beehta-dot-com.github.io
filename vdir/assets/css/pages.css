@@ -1,0 +1,475 @@
+/* ============================================================
+   PAGES.CSS
+   beehta.com, the directory
+
+   The apps come first and take the most room. Available ones get
+   a block each with a working preview; the ones still being built
+   get a small card, because there is nothing to preview and a row
+   of empty squares would say nothing.
+
+   Shared furniture, sections and blocks are in base.css.
+============================================================ */
+
+/* ------------------------------------------------------------
+   The heading above the catalogue
+------------------------------------------------------------ */
+
+.app-count {
+  margin-top: 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.directory-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  flex: 1 1 240px;
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  padding: 0 0.85rem;
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  padding: 0.62rem 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+.search input:focus { outline: none; }
+.search:focus-within { border-color: var(--ink); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.filter {
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all var(--dur) var(--ease);
+}
+.filter:hover { border-color: var(--ink); color: var(--ink); }
+.filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+/* ------------------------------------------------------------
+   Available now, and Coming soon: the two list headings
+------------------------------------------------------------ */
+
+/* On a panel like everything else. The tile field behind the page
+   is many colours at once, and body copy laid straight on it is
+   hard to read whatever the colours happen to be. */
+.list-head {
+  padding-block: clamp(2rem, 6vh, 3.25rem) clamp(0.9rem, 2.5vw, 1.4rem);
+}
+.list-head[hidden] { display: none; }
+.list-head .panel { padding: clamp(1.35rem, 3.5vw, 2rem); }
+.list-head h2 { font-size: clamp(1.35rem, 3vw, 2rem); }
+.list-head p {
+  margin-top: 0.6rem;
+  max-width: 58ch;
+  font-size: 0.95rem;
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------
+   An available app
+
+   The block itself spans the window. Its inner wrapper puts the
+   padded column back on a wide screen and lays the description
+   beside the preview; on a narrow one the wrapper stands down,
+   the description keeps the padding on its own, and the preview
+   takes the whole width of the screen. No negative margins and
+   no 100vw, either of which would fight the scrollbar.
+------------------------------------------------------------ */
+
+#available[hidden] { display: none; }
+.app-block + .app-block { margin-top: clamp(2.5rem, 7vw, 4rem); }
+
+.app-block-inner {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 3.5vw, 2.5rem);
+  align-items: start;
+}
+
+.app-detail { padding: clamp(1.35rem, 3.5vw, 2rem); }
+
+.app-cat {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.app-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.app-head h3 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -0.025em; }
+
+.app-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.app-status.is-live { color: #3f7d4e; }
+
+.app-summary {
+  margin-top: 0.9rem;
+  max-width: 46ch;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  color: var(--ink-2);
+}
+
+.app-open { margin-top: 1.5rem; }
+
+.app-domain {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-4);
+}
+
+/* --- the preview, dressed as a browser window --- */
+
+.app-preview {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--rule-strong);
+  box-shadow: var(--lift-lg);
+}
+
+.pv-chrome {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.6rem;
+  background: #e3ddd2;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.pv-addr {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #fffdf8;
+  border: 1px solid var(--rule-strong);
+  padding: 0.22rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-3);
+}
+
+.pv-badge {
+  flex: none;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.22rem 0.5rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Scrolls when the preview is taller than the square, and chains
+   out to the page at its ends. No overscroll-behavior here:
+   containing it traps the wheel and the page stops moving while
+   the pointer is over a preview. */
+.pv-stage {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: clamp(0.75rem, 2vw, 1.1rem);
+  background: #fff;
+}
+
+.pv-note {
+  flex: none;
+  padding: 0.65rem 0.9rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+
+.pv-none {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--ink-3);
+}
+
+@media (max-width: 899px) {
+  .app-block-inner {
+    display: block;
+    padding-inline: 0;
+    max-width: none;
+  }
+  .app-detail { margin-inline: var(--gutter); }
+  .app-preview {
+    margin-top: clamp(0.9rem, 3vw, 1.25rem);
+    border-inline: 0;
+    box-shadow: none;
+  }
+  .pv-chrome { padding-inline: var(--gutter); }
+  .app-summary { max-width: none; }
+}
+
+/* ------------------------------------------------------------
+   Coming soon
+
+   A card each, no preview. Nothing exists to show, and four
+   empty squares would only take up the room the working apps
+   have earned.
+------------------------------------------------------------ */
+
+.soon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+}
+.soon-grid[hidden] { display: none; }
+
+.soon-card {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  padding: clamp(1.25rem, 3vw, 1.6rem);
+}
+.soon-swatch { width: 8px; min-height: 100%; }
+.soon-card h3 { margin-top: 0.4rem; font-size: 1.08rem; }
+.soon-summary { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
+
+.directory-empty { text-align: center; font-size: 0.92rem; color: var(--ink-3); }
+
+/* ------------------------------------------------------------
+   Blocks that only this version has
+------------------------------------------------------------ */
+
+.block--sage { background: #e9efe3; }
+.block--clay { background: #f4e7db; }
+
+.block--dark {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+.block--dark .kicker { color: rgba(245, 242, 234, 0.55); }
+
+.section > .panel.statement { min-height: 0; }
+.panel.statement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-block: clamp(2.5rem, 8vw, 4.5rem);
+}
+.statement p {
+  font-size: clamp(1.5rem, 4.4vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  max-width: 20ch;
+}
+.statement em { font-style: normal; color: #ff7a5f; }
+.statement .statement-note {
+  margin-top: 1.5rem;
+  max-width: 46ch;
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.6;
+  color: rgba(245, 242, 234, 0.68);
+}
+
+.plainlist {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: clamp(1.35rem, 3vw, 2.25rem);
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.plainlist li { padding-top: 1rem; border-top: 1px solid var(--rule-strong); }
+.plainlist h3 { font-size: 1.02rem; }
+.plainlist p { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
+
+/* A little life on the things worth touching. */
+.about-card, .soon-card {
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.about-card:hover, .soon-card:hover { transform: translate(-2px, -2px); }
+
+/* ------------------------------------------------------------
+   Reveal on scroll
+
+   shell.js adds .reveal, so with JavaScript off nothing is
+   hidden and the page reads normally.
+------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 420ms var(--ease), transform 420ms var(--ease);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+}
+
+
+/* ------------------------------------------------------------
+   Interior pages (about, contact, terms)
+------------------------------------------------------------ */
+
+.page-head { padding-block: clamp(2.25rem, 6vw, 4rem) 1.5rem; }
+.page-head h1 { margin-top: 0.7rem; font-size: clamp(1.8rem, 5vw, 2.8rem); }
+.page-head p {
+  margin-top: 0.9rem;
+  max-width: 56ch;
+  font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+  color: var(--ink-2);
+}
+
+.doc {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  padding-bottom: 1rem;
+}
+
+.doc-nav { padding: 1rem; position: sticky; top: 78px; }
+.doc-nav h4 { margin-bottom: 0.7rem; }
+.doc-nav a {
+  display: block;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+}
+.doc-nav a:last-child { border-bottom: 0; }
+.doc-nav a:hover { color: var(--red-deep); }
+
+.doc-single { padding-bottom: 1rem; }
+.doc-single .doc-body { max-width: 800px; }
+
+.doc-body { padding: clamp(1.25rem, 3.5vw, 2.25rem); }
+.doc-body section + section { margin-top: 2.75rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
+.doc-body section > h2:first-child { margin-top: 0; }
+.doc-date { font-size: 0.85rem; color: var(--ink-3); }
+.doc-date strong { color: var(--red-deep); font-weight: 600; }
+
+@media (max-width: 780px) {
+  .doc { grid-template-columns: minmax(0, 1fr); }
+  .doc-nav { position: static; }
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.about-card { padding: 1.35rem; }
+.about-card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; }
+.about-card p { font-size: 0.9rem; color: var(--ink-3); }
+.about-card .num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--red-deep);
+  margin-bottom: 0.7rem;
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: 1.25rem;
+  align-items: start;
+  padding-bottom: 1rem;
+}
+@media (max-width: 860px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+
+.contact-aside { display: flex; flex-direction: column; gap: 1rem; }
+.contact-aside .draft { margin-top: 0; }
+.aside-card { padding: 1.35rem; }
+.aside-card h3 { font-size: 0.98rem; margin-bottom: 0.5rem; }
+.aside-card p { font-size: 0.88rem; color: var(--ink-3); }
+
+.form { padding: clamp(1.25rem, 3.5vw, 2rem); }
+.field { margin-bottom: 1.15rem; }
+.field label { display: block; margin-bottom: 0.35rem; font-size: 0.86rem; font-weight: 600; }
+.field .hint { font-weight: 400; color: var(--ink-4); }
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.62rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.94rem;
+  color: var(--ink);
+}
+.field textarea { min-height: 150px; resize: vertical; }
+.field input:focus,
+.field textarea:focus,
+.field select:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px rgba(32, 30, 29, 0.08); }
+.field.has-error input,
+.field.has-error textarea { border-color: var(--red); }
+.field .error { display: none; margin-top: 0.3rem; font-size: 0.8rem; color: var(--red-deep); }
+.field.has-error .error { display: block; }
+
+.form-note { margin-top: 1rem; font-size: 0.82rem; color: var(--ink-3); }
+
+.form-status { margin-top: 1rem; padding: 0.85rem 1rem; font-size: 0.9rem; border-left: 3px solid; }
+.form-status[hidden] { display: none; }
+.form-status.is-ok { border-color: #3f7d4e; background: rgba(63, 125, 78, 0.07); }
+.form-status.is-bad { border-color: var(--red); background: rgba(236, 48, 19, 0.06); }
+
+/* ------------------------------------------------------------
+   404
+------------------------------------------------------------ */
+
+.notfound { padding-block: clamp(3rem, 9vw, 6rem); }
+.notfound .panel { max-width: 560px; padding: clamp(1.75rem, 4vw, 2.75rem); }
+.notfound .code {
+  font-family: var(--font-mono);
+  font-size: 3.2rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--red);
+}
+.notfound h1 { margin-top: 1rem; font-size: clamp(1.5rem, 4vw, 2rem); }
+.notfound p { margin-top: 0.9rem; color: var(--ink-2); max-width: 46ch; }

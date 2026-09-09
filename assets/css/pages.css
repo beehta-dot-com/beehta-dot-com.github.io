@@ -1,159 +1,352 @@
 /* ============================================================
    PAGES.CSS
-   beehta.com, the directory
+   beehta.com, the catalogue
 
-   The apps come first and take the most room. Available ones get
-   a block each with a working preview; the ones still being built
-   get a small card, because there is nothing to preview and a row
-   of empty squares would say nothing.
+   The shelf holds two kinds of thing and expects to hold twenty
+   of them, so the home page is a directory rather than a stack:
+   a list you scan down the left, one entry open on the right.
 
-   Shared furniture, sections and blocks are in base.css.
+   On a narrow screen the list is too tall to be a list, so the
+   same selection is driven by a pager at the top: the entry's
+   name, "3 / 6" under it, and a step either side. Both are in the
+   DOM at once and this file decides which is on show.
+
+   Shared furniture, section rhythm and the motion vocabulary are
+   in base.css.
 ============================================================ */
 
 /* ------------------------------------------------------------
-   The heading above the catalogue
+   A band: a heading and the thing it introduces
+
+   Sections are separated by one gap, set once in base.css. A
+   heading and its list are not two sections, so they are one
+   band with their own smaller space inside it.
 ------------------------------------------------------------ */
 
-.app-count {
-  margin-top: 1.1rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--ink-3);
+.cat-band > * + * { margin-top: clamp(1rem, 2.2vw, 1.5rem); }
+
+/* A band's heading is an introduction, not a section in its own
+   right, so it is set a little tighter than a full block. */
+.block--head { padding: clamp(1.25rem, 3vw, 2rem); }
+.block--head .block-lede { max-width: 68ch; }
+
+/* ------------------------------------------------------------
+   The catalogue
+
+   #catalogue sits outside .shell so that on a narrow screen the
+   preview can take the whole width of the window. Its inner
+   wrapper puts the padded column back everywhere else. No
+   negative margins and no 100vw, either of which would fight
+   the scrollbar.
+------------------------------------------------------------ */
+
+.cat-inner {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-.directory-tools {
-  display: flex;
-  flex-wrap: wrap;
+/* --- search and filters, above the thing they filter --- */
+
+.cat-tools {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.3fr) auto minmax(150px, 0.7fr);
   align-items: center;
-  gap: 0.65rem;
-  margin-top: 1.5rem;
+  gap: 0.6rem 0.8rem;
+  padding: clamp(0.75rem, 2vw, 1.05rem);
+  animation: rise var(--dur-3) var(--ease-out) both 60ms;
 }
 
 .search {
   display: flex;
   align-items: center;
-  flex: 1 1 240px;
   min-width: 0;
-  background: var(--card);
+  background: var(--paper);
   border: 1px solid var(--rule-strong);
-  padding: 0 0.85rem;
+  padding: 0 0.8rem;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
 }
 .search input {
   flex: 1;
   min-width: 0;
   border: 0;
   background: none;
-  padding: 0.62rem 0;
+  padding: 0.55rem 0;
+  font-family: inherit;
   font-size: 0.92rem;
   color: var(--ink);
 }
 .search input:focus { outline: none; }
-.search:focus-within { border-color: var(--ink); }
+.search:focus-within { border-color: var(--ink); background: var(--card); }
 
-.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.filters { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
 .filter {
+  position: relative;
   border: 1px solid var(--rule-strong);
   background: var(--card);
-  padding: 0.5rem 0.85rem;
+  padding: 0.48rem 0.85rem;
   font-size: 0.84rem;
   font-weight: 500;
   color: var(--ink-2);
   cursor: pointer;
-  transition: all var(--dur) var(--ease);
+  transition:
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
 }
-.filter:hover { border-color: var(--ink); color: var(--ink); }
-.filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-
-/* ------------------------------------------------------------
-   Available now, and Coming soon: the two list headings
------------------------------------------------------------- */
-
-/* On a panel like everything else. The tile field behind the page
-   is many colours at once, and body copy laid straight on it is
-   hard to read whatever the colours happen to be. */
-.list-head {
-  padding-block: clamp(2rem, 6vh, 3.25rem) clamp(0.9rem, 2.5vw, 1.4rem);
+.filter:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-1px); }
+.filter:active { transform: translateY(0); }
+.filter[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
-.list-head[hidden] { display: none; }
-.list-head .panel { padding: clamp(1.35rem, 3.5vw, 2rem); }
-.list-head h2 { font-size: clamp(1.35rem, 3vw, 2rem); }
-.list-head p {
-  margin-top: 0.6rem;
-  max-width: 58ch;
-  font-size: 0.95rem;
+
+.catfilter { display: block; min-width: 0; }
+.catfilter select {
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.5rem 0.6rem;
+  font-family: inherit;
+  font-size: 0.86rem;
   color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+.catfilter select:focus { outline: none; border-color: var(--ink); }
+
+.cat-count {
+  grid-column: 1 / -1;
+  padding-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+.cat-count.is-fresh { animation: fade-up 420ms var(--ease-out) both; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
 }
 
-/* ------------------------------------------------------------
-   An available app
+@media (max-width: 899px) {
+  .cat-tools { grid-template-columns: minmax(0, 1fr); }
+}
 
-   The block itself spans the window. Its inner wrapper puts the
-   padded column back on a wide screen and lays the description
-   beside the preview; on a narrow one the wrapper stands down,
-   the description keeps the padding on its own, and the preview
-   takes the whole width of the screen. No negative margins and
-   no 100vw, either of which would fight the scrollbar.
------------------------------------------------------------- */
+/* --- the two columns --- */
 
-#available[hidden] { display: none; }
-.app-block + .app-block { margin-top: clamp(2.5rem, 7vw, 4rem); }
-
-.app-block-inner {
-  max-width: var(--shell);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+.cat-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: clamp(1.5rem, 3.5vw, 2.5rem);
-  align-items: start;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+  margin-top: clamp(0.9rem, 2vw, 1.25rem);
+  align-items: stretch;
 }
 
-.app-detail { padding: clamp(1.35rem, 3.5vw, 2rem); }
+/* The list has no height of its own. Its contents are taken out
+   of flow, so the row is sized by the column beside it and the
+   list scrolls inside whatever that turns out to be. The page
+   therefore does not get longer as the shelf does. */
+.cat-list-panel {
+  position: relative;
+  overflow: hidden;
+  min-height: 22rem;
+  animation: rise var(--dur-3) var(--ease-out) both 150ms;
+}
+.cat-list-slot {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  /* No overscroll-behavior. Containing it traps the wheel, and the
+     page stops moving while the pointer is over the list. */
+}
 
-.app-cat {
+.cat-list { margin: 0; padding: 0; list-style: none; }
+.cat-item + .cat-item { border-top: 1px solid var(--rule); }
+
+.cat-row {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 0.85rem 1rem 0.85rem 1.15rem;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+  animation: row-in var(--dur-2) var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* The entry's own colour, as a bar down the edge of its row. Short
+   until the row is wanted, then full height. */
+.cat-row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--app, var(--rule-strong));
+  transform: scaleY(0.3);
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.cat-row:hover { background: rgba(32, 30, 29, 0.035); }
+.cat-row:hover::before { transform: scaleY(0.7); }
+.cat-row[aria-pressed="true"] { background: rgba(32, 30, 29, 0.06); }
+.cat-row[aria-pressed="true"]::before { transform: scaleY(1); }
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+.row-name { font-size: 0.97rem; font-weight: 600; }
+.row-cat { display: block; margin-top: 0.15rem; font-size: 0.78rem; color: var(--ink-4); }
+
+/* A page and an app are different promises. This is where the
+   page says which one an entry is, and it says it everywhere an
+   entry is named. */
+.row-kind {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule-strong);
+  padding: 0.08rem 0.35rem;
+}
+
+/* --- the pager, narrow screens only --- */
+
+.cat-pager { display: none; }
+
+.pg-step {
+  flex: none;
+  border: 1px solid var(--rule-strong);
+  background: var(--card);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.pg-step:hover:not([disabled]) { background: var(--ink); color: var(--paper); }
+.pg-step[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+.pg-now { flex: 1; min-width: 0; text-align: center; }
+.pg-now.is-fresh { animation: fade-up var(--dur-2) var(--ease-out) both; }
+.pg-name {
+  display: block;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pg-count {
+  display: block;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+/* --- the open entry --- */
+
+.cat-main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 2vw, 1.25rem);
+  min-width: 0;
+}
+
+.cat-detail {
+  padding: clamp(1.15rem, 2.8vw, 1.75rem);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+/* Swapped, not faded away and back. The preview underneath it does
+   neither: a live app that dissolves looks like a failure. */
+.cat-detail.is-out { opacity: 0; transform: translateY(6px); }
+
+.det-meta { display: flex; align-items: center; gap: 0.6rem; }
+.det-kind {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 0.14rem 0.45rem;
+}
+.det-cat {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-4);
 }
 
-.app-head {
+.det-head {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 0.7rem;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
 }
-.app-head h3 { font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -0.025em; }
-
-.app-status {
-  font-size: 0.72rem;
+.det-head h3 { font-size: clamp(1.35rem, 2.8vw, 1.8rem); letter-spacing: -0.025em; }
+.det-status {
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #3f7d4e;
 }
-.app-status.is-live { color: #3f7d4e; }
 
-.app-summary {
-  margin-top: 0.9rem;
-  max-width: 46ch;
-  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+.det-summary {
+  margin-top: 0.8rem;
+  max-width: 62ch;
+  font-size: clamp(0.94rem, 1.3vw, 1.02rem);
   color: var(--ink-2);
 }
-
-.app-open { margin-top: 1.5rem; }
-
-.app-domain {
-  margin-top: 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+.det-kindnote {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
   color: var(--ink-4);
 }
 
-/* --- the preview, dressed as a browser window --- */
+.det-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+.det-domain { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-4); }
 
-.app-preview {
+/* --- the preview ---
+
+   Square, scrolls inside itself, dressed as a browser window so it
+   reads as a piece of software rather than as another panel of the
+   marketing page.
+
+   Nothing in here animates. Everything else on this site arrives
+   from somewhere; this sits still, because there is a working app
+   behind the glass and a frame that moves reads as the app itself
+   misbehaving. */
+
+.cat-preview {
   aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
@@ -198,21 +391,19 @@
   text-transform: uppercase;
 }
 
-/* Scrolls when the preview is taller than the square, and chains
-   out to the page at its ends. No overscroll-behavior here:
-   containing it traps the wheel and the page stops moving while
-   the pointer is over a preview. */
+/* Scrolls when the app inside is taller than the square, and
+   chains out to the page at its ends. */
 .pv-stage {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: clamp(0.75rem, 2vw, 1.1rem);
+  padding: clamp(0.8rem, 2vw, 1.15rem);
   background: #fff;
 }
 
 .pv-note {
   flex: none;
-  padding: 0.65rem 0.9rem;
+  padding: 0.6rem 0.9rem;
   border-top: 1px solid var(--rule);
   font-size: 0.78rem;
   color: var(--ink-3);
@@ -227,49 +418,96 @@
   color: var(--ink-3);
 }
 
+/* --- nothing matched --- */
+
+.cat-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(0.9rem, 2vw, 1.25rem);
+  padding: clamp(1.15rem, 3vw, 1.75rem);
+  font-size: 0.95rem;
+  color: var(--ink-2);
+}
+
+/* ------------------------------------------------------------
+   Narrow
+
+   The list becomes the pager, the detail and preview stack under
+   it, and the preview alone breaks out to the full width of the
+   window while everything else keeps its gutter.
+------------------------------------------------------------ */
+
 @media (max-width: 899px) {
-  .app-block-inner {
-    display: block;
-    padding-inline: 0;
-    max-width: none;
+  .cat-inner { max-width: none; padding-inline: 0; }
+  .cat-tools,
+  .cat-empty { margin-inline: var(--gutter); }
+
+  .cat-body { display: block; margin-top: clamp(0.8rem, 2.5vw, 1.1rem); }
+  .cat-list-panel { display: none; }
+
+  .cat-pager {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-inline: var(--gutter);
+    padding: 0.5rem 0.6rem;
+    position: sticky;
+    top: 56px;
+    z-index: 20;
+    animation: rise var(--dur-3) var(--ease-out) both 150ms;
   }
-  .app-detail { margin-inline: var(--gutter); }
-  .app-preview {
-    margin-top: clamp(0.9rem, 3vw, 1.25rem);
-    border-inline: 0;
-    box-shadow: none;
-  }
+
+  /* The detail and the preview belong to each other, so on a
+     narrow screen they sit tight together and the space goes
+     between one entry and the next instead. */
+  .cat-main { margin-top: 0.85rem; gap: 0.6rem; }
+  .cat-detail { margin-inline: var(--gutter); }
+  .cat-preview { border-inline: 0; box-shadow: none; }
   .pv-chrome { padding-inline: var(--gutter); }
-  .app-summary { max-width: none; }
 }
 
 /* ------------------------------------------------------------
    Coming soon
 
-   A card each, no preview. Nothing exists to show, and four
-   empty squares would only take up the room the working apps
-   have earned.
+   A card each, no pager and no preview. Nothing exists to show,
+   and a row of empty squares would only take the room the working
+   entries have earned.
 ------------------------------------------------------------ */
 
 .soon-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: clamp(0.9rem, 2vw, 1.25rem);
 }
-.soon-grid[hidden] { display: none; }
 
 .soon-card {
   display: grid;
   grid-template-columns: 8px minmax(0, 1fr);
   gap: 1rem;
   align-items: stretch;
-  padding: clamp(1.25rem, 3vw, 1.6rem);
+  padding: clamp(1.15rem, 3vw, 1.5rem);
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
 }
-.soon-swatch { width: 8px; min-height: 100%; }
-.soon-card h3 { margin-top: 0.4rem; font-size: 1.08rem; }
-.soon-summary { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
+.soon-wrap.is-in .soon-card {
+  animation: rise var(--dur-3) var(--ease-out) both;
+  animation-delay: var(--d, 0ms);
+}
+.soon-card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(32, 30, 29, 0.1); }
 
-.directory-empty { text-align: center; font-size: 0.92rem; color: var(--ink-3); }
+.soon-swatch { width: 8px; min-height: 100%; }
+.soon-meta { display: flex; align-items: center; gap: 0.55rem; }
+.soon-cat {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.soon-card h3 { margin-top: 0.55rem; font-size: 1.08rem; }
+.soon-summary { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
 
 /* ------------------------------------------------------------
    Blocks that only this version has
@@ -277,6 +515,7 @@
 
 .block--sage { background: #e9efe3; }
 .block--clay { background: #f4e7db; }
+.block--sky { background: #e3ecf3; }
 
 .block--dark {
   background: var(--ink);
@@ -298,12 +537,13 @@
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: -0.03em;
-  max-width: 20ch;
+  max-width: 22ch;
 }
+.statement .line { display: block; }
 .statement em { font-style: normal; color: #ff7a5f; }
 .statement .statement-note {
   margin-top: 1.5rem;
-  max-width: 46ch;
+  max-width: 52ch;
   font-size: 0.95rem;
   font-weight: 400;
   letter-spacing: 0;
@@ -323,36 +563,31 @@
 .plainlist h3 { font-size: 1.02rem; }
 .plainlist p { margin-top: 0.5rem; font-size: 0.9rem; color: var(--ink-3); }
 
-/* A little life on the things worth touching. */
-.about-card, .soon-card {
-  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+/* Two columns of prose, for the section that explains the two
+   kinds of thing on the shelf. */
+.twoup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(1.35rem, 3vw, 2.5rem);
+  margin-top: 2rem;
 }
-.about-card:hover, .soon-card:hover { transform: translate(-2px, -2px); }
-
-/* ------------------------------------------------------------
-   Reveal on scroll
-
-   shell.js adds .reveal, so with JavaScript off nothing is
-   hidden and the page reads normally.
------------------------------------------------------------- */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 420ms var(--ease), transform 420ms var(--ease);
+.twoup > div { padding-top: 1rem; border-top: 2px solid var(--ink); }
+.twoup h3 { font-size: 1.08rem; }
+.twoup .twoup-kind {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red-deep);
 }
-.reveal.is-in { opacity: 1; transform: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; }
-}
-
+.twoup p { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-3); }
+.twoup ul { margin: 0.7rem 0 0; padding-left: 1.05rem; font-size: 0.88rem; color: var(--ink-3); }
+.twoup li { margin-bottom: 0.3rem; }
 
 /* ------------------------------------------------------------
    Interior pages (about, contact, terms)
 ------------------------------------------------------------ */
 
-.page-head { padding-block: clamp(2.25rem, 6vw, 4rem) 1.5rem; }
 .page-head h1 { margin-top: 0.7rem; font-size: clamp(1.8rem, 5vw, 2.8rem); }
 .page-head p {
   margin-top: 0.9rem;
@@ -361,12 +596,16 @@
   color: var(--ink-2);
 }
 
+/* The header of an interior page is as wide as the text under it,
+   not as wide as the window. A short paragraph stretched across a
+   full-width panel leaves an empty half nobody can explain. */
+.page-head .panel { max-width: 780px; margin-inline: auto; }
+
 .doc {
   display: grid;
   grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
-  padding-bottom: 1rem;
 }
 
 .doc-nav { padding: 1rem; position: sticky; top: 78px; }
@@ -378,12 +617,12 @@
   color: var(--ink-2);
   text-decoration: none;
   border-bottom: 1px solid var(--rule);
+  transition: color var(--dur) var(--ease), padding-left var(--dur) var(--ease);
 }
 .doc-nav a:last-child { border-bottom: 0; }
-.doc-nav a:hover { color: var(--red-deep); }
+.doc-nav a:hover { color: var(--red-deep); padding-left: 0.3rem; }
 
-.doc-single { padding-bottom: 1rem; }
-.doc-single .doc-body { max-width: 800px; }
+.doc-single .doc-body { max-width: 800px; margin-inline: auto; }
 
 .doc-body { padding: clamp(1.25rem, 3.5vw, 2.25rem); }
 .doc-body section + section { margin-top: 2.75rem; padding-top: 2.25rem; border-top: 1px solid var(--rule); }
@@ -400,9 +639,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 1rem;
-  margin-top: 1.5rem;
 }
-.about-card { padding: 1.35rem; }
+.about-card {
+  padding: 1.35rem;
+  transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+}
+.about-card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(32, 30, 29, 0.1); }
 .about-card h3 { margin-bottom: 0.5rem; font-size: 1.02rem; }
 .about-card p { font-size: 0.9rem; color: var(--ink-3); }
 .about-card .num {
@@ -417,7 +659,6 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
   gap: 1.25rem;
   align-items: start;
-  padding-bottom: 1rem;
 }
 @media (max-width: 860px) { .contact { grid-template-columns: minmax(0, 1fr); } }
 
@@ -441,6 +682,7 @@
   font-family: inherit;
   font-size: 0.94rem;
   color: var(--ink);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .field textarea { min-height: 150px; resize: vertical; }
 .field input:focus,
@@ -453,7 +695,7 @@
 
 .form-note { margin-top: 1rem; font-size: 0.82rem; color: var(--ink-3); }
 
-.form-status { margin-top: 1rem; padding: 0.85rem 1rem; font-size: 0.9rem; border-left: 3px solid; }
+.form-status { margin-top: 1rem; padding: 0.85rem 1rem; font-size: 0.9rem; border-left: 3px solid; animation: fade-up var(--dur-2) var(--ease-out) both; }
 .form-status[hidden] { display: none; }
 .form-status.is-ok { border-color: #3f7d4e; background: rgba(63, 125, 78, 0.07); }
 .form-status.is-bad { border-color: var(--red); background: rgba(236, 48, 19, 0.06); }
@@ -462,7 +704,6 @@
    404
 ------------------------------------------------------------ */
 
-.notfound { padding-block: clamp(3rem, 9vw, 6rem); }
 .notfound .panel { max-width: 560px; padding: clamp(1.75rem, 4vw, 2.75rem); }
 .notfound .code {
   font-family: var(--font-mono);

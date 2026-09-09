@@ -2,9 +2,9 @@
    BASE.CSS
    beehta.com catalogue
 
-   Tokens, reset, the tile background, header, footer, the motion
-   vocabulary, and the handful of components every page shares.
-   Page specific rules live in pages.css.
+   Tokens, reset, the tile background, header, footer and the
+   handful of components every page shares. Page specific rules
+   live in pages.css.
 
    The look here is deliberately not the sub-domain look. Square
    corners everywhere, because the logo is two butted tiles and
@@ -37,22 +37,8 @@
   /* rhythm */
   --shell: 1180px;
   --gutter: clamp(1.15rem, 4vw, 3rem);
-
-  /* One gap, used between every section on every page. Anything
-     that wants to sit closer to its neighbour is part of that
-     neighbour and belongs inside the same panel. */
-  --section-gap: clamp(2.75rem, 7vh, 5rem);
-  --section-top: clamp(2rem, 5vh, 3.5rem);
-
-  /* motion
-     --dur    a state change under the pointer
-     --dur-2  something rearranging itself
-     --dur-3  something arriving on the page */
   --dur: 160ms;
-  --dur-2: 320ms;
-  --dur-3: 620ms;
   --ease: cubic-bezier(0.2, 0, 0.1, 1);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* a hard offset shadow, not a soft glow */
   --lift: 4px 4px 0 rgba(32, 30, 29, 0.09);
@@ -204,51 +190,10 @@ a { color: var(--ink); }
 
 .shell {
   max-width: var(--shell);
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
   padding-left: var(--gutter);
   padding-right: var(--gutter);
 }
-
-/* ------------------------------------------------------------
-   Section rhythm
-
-   One gap between sections, everywhere, on every page. Earlier
-   versions set padding on some kinds of section and margins on
-   others, and the page ended up with three different gaps in it
-   depending on which two things happened to be adjacent.
-
-   So no section carries vertical padding of its own. The space
-   lives in one rule, between siblings, and every page inherits
-   the same rhythm whatever it is made of.
------------------------------------------------------------- */
-
-/* A block formatting context, so the first child's margin makes
-   space inside main instead of collapsing out of it. */
-#main { display: flow-root; }
-
-main > * { margin-top: var(--section-gap); padding-block: 0; }
-main > *:first-child { margin-top: var(--section-top); }
-main { padding-bottom: var(--section-gap); }
-
-/* Content is centred in its own block rather than pinned to the
-   top, so a short section does not read as a tall empty box.
-   A floor, not a target: it keeps a short block from looking
-   cramped between two long ones, and anything taller simply
-   grows past it. */
-.section > .panel {
-  min-height: min(52vh, 440px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-/* The closing block is one line and one button. It is meant to be
-   compact, so it takes its own height. */
-.section > .panel.block--cta { min-height: 0; }
-
-/* Anchors land below the sticky header, not behind it. */
-[id] { scroll-margin-top: 80px; }
 
 /* ------------------------------------------------------------
    Panels
@@ -267,6 +212,7 @@ main { padding-bottom: var(--section-gap); }
   box-shadow: var(--lift-lg);
 }
 
+
 /* ------------------------------------------------------------
    Header
 ------------------------------------------------------------ */
@@ -279,14 +225,6 @@ main { padding-bottom: var(--section-gap); }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--rule-strong);
-  transition: box-shadow var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
-}
-
-/* Once there is page behind it, the bar tightens and lifts off the
-   content, so it stops reading as part of the hero. */
-.site-header.is-scrolled {
-  background: rgba(245, 242, 234, 0.97);
-  box-shadow: 0 10px 26px rgba(32, 30, 29, 0.07);
 }
 
 .header-inner {
@@ -294,9 +232,7 @@ main { padding-bottom: var(--section-gap); }
   align-items: center;
   gap: 1rem;
   min-height: 62px;
-  transition: min-height var(--dur-2) var(--ease);
 }
-.site-header.is-scrolled .header-inner { min-height: 54px; }
 
 /* The brand rules are explicit that the mark and the wordmark are
    never shown together: one stands in for the other. So the header
@@ -304,13 +240,7 @@ main { padding-bottom: var(--section-gap); }
    name still reaches the reader early through the page title, the
    hero copy and the catalogue heading. */
 .logo { display: inline-flex; align-items: center; flex: none; }
-.logo--mark img {
-  height: 30px;
-  width: auto;
-  transition: height var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-}
-.site-header.is-scrolled .logo--mark img { height: 26px; }
-.logo--mark:hover img { transform: rotate(-4deg); }
+.logo--mark img { height: 30px; width: auto; }
 .logo--word img { height: 24px; width: auto; }
 
 .site-nav {
@@ -330,29 +260,20 @@ main { padding-bottom: var(--section-gap); }
   transition: color var(--dur) var(--ease);
 }
 .site-nav a:hover { color: var(--ink); }
-.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 
-/* One rule drawn under every link, scaled to nothing until it is
-   wanted, so hovering wipes it in rather than snapping it on. */
-.site-nav a::after {
+.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+.site-nav a[aria-current="page"]::after {
   content: "";
   position: absolute;
   left: 0; right: 0; bottom: -1px;
   height: 2px;
   background: var(--red);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-2) var(--ease-out);
 }
-.site-nav a:hover::after,
-.site-nav a[aria-current="page"]::after { transform: scaleX(1); }
 
 /* The nav collapses into a scrolling strip rather than a hamburger.
-   Three links fit; a menu that hides three links is a menu for
-   nothing. */
+   Four links fit; a menu that hides four links is a menu for nothing. */
 @media (max-width: 640px) {
   .header-inner { min-height: 56px; gap: 0.75rem; }
-  .site-header.is-scrolled .header-inner { min-height: 50px; }
   .logo--mark img { height: 26px; }
   .site-nav {
     gap: 1.05rem;
@@ -392,9 +313,9 @@ main { padding-bottom: var(--section-gap); }
 .btn--primary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(32, 30, 29, 0.18); }
 .btn--primary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(32, 30, 29, 0.16); }
 
-.btn--ghost { background: var(--card); color: var(--ink); box-shadow: 3px 3px 0 rgba(32, 30, 29, 0.1); }
-.btn--ghost:hover { background: var(--ink); color: var(--paper); transform: translate(-1px, -1px); box-shadow: 5px 5px 0 rgba(32, 30, 29, 0.14); }
-.btn--ghost:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 rgba(32, 30, 29, 0.1); }
+.btn--ghost { background: var(--card); color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--paper); }
+
 
 .btn[disabled] { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
@@ -410,6 +331,8 @@ main { padding-bottom: var(--section-gap); }
   text-transform: uppercase;
   color: var(--ink-3);
 }
+
+
 
 .prose p { margin-top: 0.9rem; color: var(--ink-2); }
 .prose p:first-child { margin-top: 0; }
@@ -438,14 +361,14 @@ main { padding-bottom: var(--section-gap); }
 .site-footer {
   position: relative;
   z-index: 1;
-  margin-top: var(--section-gap);
+  margin-top: clamp(3rem, 7vw, 5.5rem);
   background: var(--ink);
   color: rgba(245, 242, 234, 0.86);
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
   gap: 2.5rem;
   padding: clamp(2.25rem, 5vw, 3.25rem) 0 2rem;
 }
@@ -480,10 +403,10 @@ main { padding-bottom: var(--section-gap); }
   color: rgba(245, 242, 234, 0.82);
   text-decoration: none;
   cursor: pointer;
-  transition: color var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition: color var(--dur) var(--ease);
 }
 .footer-col a:hover,
-.footer-col button:hover { color: #fff; transform: translateX(3px); }
+.footer-col button:hover { color: #fff; }
 
 .footer-bottom {
   display: flex;
@@ -511,10 +434,50 @@ main { padding-bottom: var(--section-gap); }
 }
 .footer-bottom button:hover { color: #fff; }
 
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
   .footer-brand { grid-column: 1 / -1; }
 }
+
+/* ------------------------------------------------------------
+   Sections
+
+   Generous vertical rhythm, and a floor under each block, so a
+   section roughly fills the screen and the reader takes one idea
+   at a time rather than four at once.
+------------------------------------------------------------ */
+
+.section { padding-block: clamp(2.25rem, 7vh, 4.5rem); }
+.section:first-child { padding-block-start: clamp(2.5rem, 8vh, 5rem); }
+
+/* Content is centred in its own block rather than pinned to the
+   top, so a short section does not read as a tall empty box. */
+/* A floor, not a target. It keeps a short block from looking
+   cramped between two long ones; anything taller than this simply
+   grows. Set too high it pads a heading and a button out to most
+   of a screen, which reads as a mistake rather than as space. */
+.section > .panel {
+  min-height: min(52vh, 440px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The closing block is one line and one button. It is meant to be
+   compact, so it takes its own height. */
+.section > .panel.block--cta { min-height: 0; }
+
+/* The catalogue's heading and controls introduce the grid below
+   them rather than standing as a section of their own, so they
+   keep their natural height instead of being padded out to most
+   of a screen. */
+.section > .panel.block--tools {
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+/* Anchors land below the sticky header, not behind it. */
+[id] { scroll-margin-top: 80px; }
 
 /* ------------------------------------------------------------
    Blocks
@@ -554,6 +517,7 @@ main { padding-bottom: var(--section-gap); }
   margin-top: 1.9rem;
 }
 
+
 /* Two classes, and declared after `.section > .panel`, so it wins
    in the version that has that rule and works without it in the
    version that does not. display included: setting a direction on
@@ -579,90 +543,10 @@ main { padding-bottom: var(--section-gap); }
   padding: 0;
   list-style: none;
 }
-.steps li { position: relative; padding-top: 1.1rem; }
-/* The rule over each step is drawn rather than bordered, so it can
-   sweep in with the step instead of appearing whole. */
-.steps li::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 2px;
-  background: var(--ink);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-3) var(--ease-out) var(--d, 0ms);
-}
-.is-in .steps li::before { transform: scaleX(1); }
+.steps li { padding-top: 1.1rem; border-top: 2px solid var(--ink); }
 .step-num { font-family: var(--font-mono); font-size: 0.74rem; color: var(--red-deep); }
 .steps h3 { margin-top: 0.65rem; font-size: 1.05rem; }
 .steps p { margin-top: 0.6rem; font-size: 0.92rem; color: var(--ink-3); }
-
-/* ------------------------------------------------------------
-   Motion
-
-   Three ideas, and nothing else moves.
-
-     1  a panel arrives from slightly below as it comes into view
-     2  the things inside it follow, one after another
-     3  the rule under a heading sweeps out once the panel is there
-
-   All of it is added by shell.js rather than written into the
-   markup, so with JavaScript switched off nothing is ever hidden
-   and the page reads normally.
-
-   The one thing exempt from all of it is the preview panel. There
-   is a working app behind that glass and animating its frame reads
-   as the app failing rather than as the page being alive.
------------------------------------------------------------- */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity var(--dur-3) var(--ease-out) var(--d, 0ms),
-    transform var(--dur-3) var(--ease-out) var(--d, 0ms);
-}
-.reveal.is-in { opacity: 1; transform: none; }
-
-/* Children that come in behind their panel. shell.js numbers them
-   and the delay falls out of the number. */
-.stagger { opacity: 0; transform: translateY(14px); }
-.is-in .stagger {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity var(--dur-3) var(--ease-out) var(--d, 0ms),
-    transform var(--dur-3) var(--ease-out) var(--d, 0ms);
-}
-
-/* The rule under a section heading. Zero width until the panel has
-   arrived, then it draws itself. */
-.panel > h2 { position: relative; }
-.panel > h2::after {
-  content: "";
-  display: block;
-  width: 0;
-  height: 3px;
-  margin-top: 0.75rem;
-  background: var(--red);
-  transition: width 720ms var(--ease-out) 200ms;
-}
-.panel.is-in > h2::after { width: 3.25rem; }
-
-/* The hero does not wait to be scrolled to, so it is a keyframe
-   rather than a reveal: it plays on arrival, and it plays again
-   after the router swaps a new page in. */
-.block--hero > * { animation: rise var(--dur-3) var(--ease-out) both; }
-.block--hero > *:nth-child(1) { animation-delay: 40ms; }
-.block--hero > *:nth-child(2) { animation-delay: 130ms; }
-.block--hero > *:nth-child(3) { animation-delay: 220ms; }
-.block--hero > *:nth-child(4) { animation-delay: 310ms; }
-.block--hero > *:nth-child(5) { animation-delay: 400ms; }
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
-}
 
 /* ------------------------------------------------------------
    Back to the top
@@ -686,12 +570,8 @@ main { padding-bottom: var(--section-gap); }
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px) scale(0.94);
-  transition:
-    opacity var(--dur-2) var(--ease-out),
-    transform var(--dur-2) var(--ease-out),
-    background-color var(--dur) var(--ease),
-    visibility var(--dur-2);
+  transform: translateY(6px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility var(--dur);
   box-shadow: var(--lift);
 }
 .to-top.is-on { opacity: 1; visibility: visible; transform: none; }
@@ -702,17 +582,11 @@ main { padding-bottom: var(--section-gap); }
 
    The router swaps the contents of <main> instead of loading a
    new document, so the header, footer and tile field never blink.
+   This is the only movement that swap makes.
 ------------------------------------------------------------ */
 
 #main { transition: opacity 120ms linear; }
 #main.is-leaving { opacity: 0; }
-
-/* ------------------------------------------------------------
-   Less movement, when it has been asked for
-
-   Everything above is decoration. None of it carries meaning that
-   is lost by switching it off, so all of it goes.
------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -721,7 +595,4 @@ main { padding-bottom: var(--section-gap); }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal, .stagger { opacity: 1; transform: none; }
-  .panel > h2::after { width: 3.25rem; }
-  .steps li::before { transform: scaleX(1); }
 }

@@ -1,0 +1,286 @@
+/* ============================================================
+   TOOLS DEMOS
+
+   The look of the five single-purpose pages, all of which live
+   inside the preview panel.
+
+   Two rules govern everything here.
+
+   One: this is the inside of an app, not part of the catalogue.
+   It uses its own type scale and its own greys so it reads as a
+   different piece of software behind the glass, which is what it
+   is meant to be.
+
+   Two: nothing moves. The rest of the site fades and slides on
+   purpose, but a preview that animates looks like an app failing
+   to load rather than an app working. The only transitions here
+   are on hover and focus, where a person has asked for one.
+============================================================ */
+
+.td {
+  --td-ink: #23211f;
+  --td-ink-2: #56514c;
+  --td-ink-3: #837c74;
+  --td-line: #e2ddd3;
+  --td-line-2: #cec7ba;
+  --td-fill: #faf8f3;
+
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--td-ink);
+}
+
+.td * { box-sizing: border-box; }
+
+.td-lede {
+  margin: 0 0 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--td-ink-3);
+}
+.td-lede + * + .td-lede { margin-top: 1.1rem; }
+
+/* ---------- inputs ---------- */
+
+.td-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+
+.td-field { display: block; }
+.td-field > span {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.74rem;
+  color: var(--td-ink-3);
+}
+
+.td input,
+.td select,
+.td textarea {
+  width: 100%;
+  border: 1px solid var(--td-line-2);
+  background: #fff;
+  padding: 0.42rem 0.55rem;
+  font-family: inherit;
+  font-size: 0.86rem;
+  color: var(--td-ink);
+  transition: border-color 140ms linear;
+}
+.td input:focus,
+.td select:focus,
+.td textarea:focus {
+  outline: none;
+  border-color: var(--td-ink);
+}
+
+.td-btn {
+  border: 1px solid var(--td-ink);
+  background: var(--td-ink);
+  color: #fff;
+  padding: 0.42rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 140ms linear, color 140ms linear;
+}
+.td-btn:hover { background: #000; }
+.td-btn--ghost { background: #fff; color: var(--td-ink); }
+.td-btn--ghost:hover { background: var(--td-fill); }
+.td-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+.td-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.7rem; }
+
+/* ---------- results ---------- */
+
+.td-out { margin-top: 1.1rem; }
+
+.td-headline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--td-ink);
+}
+.td-label { font-size: 0.76rem; color: var(--td-ink-3); }
+.td-big {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.td-rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 0.75rem;
+  margin: 0.75rem 0 0;
+}
+.td-rows dt {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--td-line);
+  font-size: 0.8rem;
+  color: var(--td-ink-2);
+}
+.td-rows dd {
+  margin: 0;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--td-line);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.td-hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.78rem;
+  color: var(--td-ink-3);
+}
+
+/* ---------- average down: the comparison bars ---------- */
+
+.td-bars { margin-top: 1rem; display: grid; gap: 0.4rem; }
+.td-bar {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 4rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+.td-bar-label { font-size: 0.75rem; color: var(--td-ink-2); }
+.td-bar-track { display: block; height: 0.7rem; background: var(--td-fill); border: 1px solid var(--td-line); }
+.td-bar-fill { display: block; height: 100%; }
+.td-bar-value {
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- split: a row per person ---------- */
+
+.td-people { display: grid; gap: 0.4rem; }
+.td-person {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 5.5rem auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+/* Grid children default to min-width:auto, which lets a long value
+   push the row wider than its column instead of shrinking. */
+.td-name, .td-extra, .td-what, .td-when { min-width: 0; }
+
+.td-drop {
+  border: 1px solid var(--td-line-2);
+  background: #fff;
+  padding: 0.42rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.74rem;
+  color: var(--td-ink-2);
+  cursor: pointer;
+}
+.td-drop:hover:not([disabled]) { border-color: #c0574a; color: #c0574a; }
+.td-drop[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+/* ---------- numerology ---------- */
+
+.td-result + .td-result { margin-top: 1.1rem; }
+.td-working {
+  margin: 0.5rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.72rem;
+  line-height: 1.7;
+  color: var(--td-ink-3);
+  word-break: break-word;
+}
+
+/* ---------- json ---------- */
+
+.td-area {
+  min-height: 8.5rem;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  line-height: 1.55;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+.td-status {
+  margin: 0.7rem 0 0;
+  padding: 0.45rem 0.6rem;
+  border-left: 3px solid var(--td-line-2);
+  background: var(--td-fill);
+  font-size: 0.78rem;
+}
+.td-status.is-ok { border-color: #3f7d4e; color: #2f5d3a; }
+.td-status.is-bad { border-color: #c0574a; color: #9a3c30; }
+
+/* ---------- itinerary ---------- */
+
+.td-days { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.td-day {
+  border: 1px solid var(--td-line-2);
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--td-ink-2);
+  cursor: pointer;
+  transition: background-color 140ms linear, color 140ms linear;
+}
+.td-day:hover { background: var(--td-fill); }
+.td-day[aria-pressed="true"] {
+  background: var(--td-ink);
+  border-color: var(--td-ink);
+  color: #fff;
+}
+
+.td-stops { margin: 0.85rem 0 0; padding: 0; list-style: none; }
+.td-stop {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--td-line);
+}
+.td-time {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.76rem;
+  color: var(--td-ink-3);
+}
+.td-what-text { font-size: 0.83rem; }
+.td-stop-tools { display: flex; gap: 0.25rem; }
+.td-tool {
+  border: 1px solid transparent;
+  background: none;
+  padding: 0.15rem 0.35rem;
+  font-family: inherit;
+  font-size: 0.7rem;
+  color: var(--td-ink-3);
+  cursor: pointer;
+  transition: border-color 140ms linear, color 140ms linear;
+}
+.td-tool:hover:not([disabled]) { border-color: var(--td-line-2); color: var(--td-ink); }
+.td-tool[disabled] { opacity: 0.3; cursor: not-allowed; }
+
+.td-empty {
+  padding: 0.9rem 0;
+  font-size: 0.8rem;
+  color: var(--td-ink-3);
+}
+
+.td-addrow {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}

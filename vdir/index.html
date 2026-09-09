@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>beehta.com | Small web apps, one at a time</title>
+<meta name="description" content="A collection of focused web apps for everyday problems. Try a preview here, or open the app when you need the real thing.">
+
+<link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="/assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/pages.css">
+<link rel="stylesheet" href="/assets/demos/logins/logins.css">
+
+<script defer src="/assets/js/data.js"></script>
+<script defer src="/assets/js/tiles.js"></script>
+<script defer src="/assets/demos/logins/logins.js"></script>
+<script defer src="/assets/js/explorer.js"></script>
+<script defer src="/assets/js/contact.js"></script>
+<script defer src="/assets/js/shell.js"></script>
+<script defer src="/assets/js/router.js"></script>
+</head>
+<body>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="/" aria-label="beehta.com, home">
+        <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Apps</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="home">
+
+    <section class="section shell">
+      <div class="panel block block--hero">
+        <span class="kicker">A small catalogue</span>
+        <h1>Small web apps that do <em>one thing</em>, then get out of the way.</h1>
+        <p class="block-lede">beehta.com is a collection of focused web apps for everyday problems. Open one, do what you came to do, and move on.</p>
+        <p class="block-lede">No giant platforms. No feature overload. Just useful little apps.</p>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="#apps">Browse the apps</a>
+          <a class="btn btn--ghost" href="#how">How beehta.com works</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- The apps are the point of the page, so they come first and
+         take the most room. Everything else is after them. -->
+    <section class="section shell" id="apps">
+      <div class="panel block block--tools">
+        <h2>Everything on beehta.com</h2>
+        <p class="block-lede">Every app is built around one small job. Try the preview here, or open the app when you need the real thing.</p>
+        <p class="app-count" id="appCount" role="status"></p>
+
+        <!-- Search and filters unhide themselves once the catalogue
+             passes TOOLS_FROM in data.js. -->
+        <div class="directory-tools" id="directoryTools" hidden>
+          <label class="search">
+            <span class="sr-only">Search the apps</span>
+            <input type="search" id="appSearch" placeholder="Search the apps" autocomplete="off">
+          </label>
+          <div class="filters" id="appFilters" role="group" aria-label="Filter by category"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="shell list-head" id="availableHead">
+      <div class="panel block">
+        <h2 id="available-now">Available now</h2>
+        <p>Ready to use. Every one has a preview you can try without an account.</p>
+      </div>
+    </div>
+
+    <!-- Outside .shell: on a narrow screen the previews take the
+         whole width of the window, and the descriptions get the
+         padding back on their own. -->
+    <div id="available"></div>
+
+    <div class="shell list-head" id="comingSoonHead">
+      <div class="panel block">
+        <h2 id="coming-soon">Coming soon</h2>
+        <p>A few more focused apps are being built. No giant roadmap, just useful things, one at a time.</p>
+      </div>
+    </div>
+
+    <div class="shell">
+      <div class="soon-grid" id="comingSoon"></div>
+      <p class="panel block directory-empty" id="directoryEmpty" hidden>Nothing matches that. Try a different word.</p>
+    </div>
+
+    <section class="section shell">
+      <div class="panel block block--dark statement">
+        <p>One account.<br>One place to find them.<br><em>Nothing you did not ask for.</em></p>
+        <p class="statement-note">beehta.com keeps the apps separate while giving you one place to find them.</p>
+      </div>
+    </section>
+
+    <section class="section shell" id="how">
+      <div class="panel block block--sage">
+        <span class="kicker">How it works</span>
+        <h2>Pick an app. That is it.</h2>
+        <p class="block-lede">Most apps can be used straight away. Some keep your work, and those ask you to sign in once, in one place, for all of them.</p>
+        <ol class="steps">
+          <li>
+            <span class="step-num">01</span>
+            <h3>Open</h3>
+            <p>Find something on the shelf that matches the thing you are trying to do.</p>
+          </li>
+          <li>
+            <span class="step-num">02</span>
+            <h3>Try</h3>
+            <p>Use the preview first. It costs nothing and asks for nothing.</p>
+          </li>
+          <li>
+            <span class="step-num">03</span>
+            <h3>Keep going</h3>
+            <p>Open the real app when you actually need it, and close it when you are done.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section shell" id="limits">
+      <div class="panel block block--clay">
+        <span class="kicker">Where this stops</span>
+        <h2>What beehta.com does not do.</h2>
+        <ul class="plainlist">
+          <li>
+            <h3>No ads</h3>
+            <p>The apps are not built around advertising.</p>
+          </li>
+          <li>
+            <h3>No feature bloat</h3>
+            <p>Every feature needs a reason to exist.</p>
+          </li>
+          <li>
+            <h3>No unnecessary accounts</h3>
+            <p>If an app does not need your account, it will not ask for one.</p>
+          </li>
+          <li>
+            <h3>No dark patterns</h3>
+            <p>No artificial urgency, no engagement tricks, no clutter.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="panel block block--cta">
+        <div>
+          <h2>Missing something?</h2>
+          <p class="block-lede">Tell us about a small problem you wish had a simple web app. Most of the things on this shelf started as somebody's message.</p>
+        </div>
+        <a class="btn btn--primary" href="/contact/">Suggest an app</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="/" aria-label="beehta.com, home">
+            <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>Small web apps for small problems.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Apps</h4>
+          <a href="/#apps">All apps</a>
+          <a href="/#available">Available now</a>
+          <a href="/#coming-soon">Coming soon</a>
+        </div>
+        <div class="footer-col">
+          <h4>beehta.com</h4>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/terms/#terms">Terms</a>
+          <a href="/terms/#privacy">Privacy</a>
+          <a href="/terms/#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; <span id="year">2026</span> beehta.com</span>
+        <button type="button" data-reset-tiles>Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
