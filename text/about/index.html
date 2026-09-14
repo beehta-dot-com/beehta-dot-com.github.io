@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About the shelf</title>
+<meta name="description" content="What beehta.com is, the difference between a page and an app on the shelf, and what it deliberately does not do.">
+
+<link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="/assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="/assets/css/base.css?v=f4d96276">
+<link rel="stylesheet" href="/assets/css/pages.css?v=d4f7d573">
+<link rel="stylesheet" href="/assets/demos/_kit/kit.css?v=42ddc2ec">
+<link rel="stylesheet" href="/assets/demos/average/average.css?v=5547f9a2">
+<link rel="stylesheet" href="/assets/demos/split/split.css?v=1e7dac90">
+<link rel="stylesheet" href="/assets/demos/numerology/numerology.css?v=945ed30d">
+<link rel="stylesheet" href="/assets/demos/json/json.css?v=dfcc228a">
+<link rel="stylesheet" href="/assets/demos/itinerary/itinerary.css?v=0e75f2e2">
+<link rel="stylesheet" href="/assets/demos/logins/logins.css?v=d17b68d8">
+
+<script defer src="/assets/js/data.js?v=cc966002"></script>
+<script defer src="/assets/js/tiles.js?v=729fb7cb"></script>
+<script defer src="/assets/demos/_kit/kit.js?v=5d9c5404"></script>
+<script defer src="/assets/demos/average/average.js?v=0b9b8bed"></script>
+<script defer src="/assets/demos/split/split.js?v=9b47c31c"></script>
+<script defer src="/assets/demos/numerology/numerology.js?v=d40e3364"></script>
+<script defer src="/assets/demos/json/json.js?v=643d098a"></script>
+<script defer src="/assets/demos/itinerary/itinerary.js?v=895cbcee"></script>
+<script defer src="/assets/demos/logins/logins.js?v=0cbf8491"></script>
+<script defer src="/assets/js/explorer.js?v=8ccb6489"></script>
+<script defer src="/assets/js/contact.js?v=0782344d"></script>
+<script defer src="/assets/js/shell.js?v=c767b615"></script>
+<script defer src="/assets/js/router.js?v=0e87b414"></script>
+</head>
+<body>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="/" aria-label="beehta.com, home">
+        <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Shelf</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="about">
+
+    <section class="page-head shell">
+      <div class="panel glass block block--split">
+        <div class="split-head">
+          <span class="kicker">About</span>
+          <h1>One shelf, two sizes of thing.</h1>
+        </div>
+        <div class="split-body">
+          <p>This is not a product. It is a shelf. Some of what is on it is a single page that answers one question; the rest are proper web apps that keep your work.</p>
+          <p>This is where both are listed, and where the difference between them is spelled out rather than glossed over.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="about-grid">
+        <div class="panel about-card">
+          <div class="num">01</div>
+          <h3>Small on purpose</h3>
+          <p>A thing that fits in your head beats one that needs a tour.</p>
+        </div>
+        <div class="panel about-card">
+          <div class="num">02</div>
+          <h3>An account only when needed</h3>
+          <p>If nothing has to be kept for you, nothing asks who you are.</p>
+        </div>
+        <div class="panel about-card">
+          <div class="num">03</div>
+          <h3>Plain words</h3>
+          <p>If a message needs a glossary, the message is wrong.</p>
+        </div>
+        <div class="panel about-card">
+          <div class="num">04</div>
+          <h3>Quiet by default</h3>
+          <p>Nothing here will email you unless you asked it to.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc shell">
+
+      <nav class="panel doc-nav" aria-label="On this page">
+        <h4 class="kicker">On this page</h4>
+        <a href="#what">What this is</a>
+        <a href="#two-kinds">Two kinds of thing</a>
+        <a href="#account">One account</a>
+        <a href="#previews">Try before you sign up</a>
+        <a href="#not">What it does not do</a>
+        <a href="#who">Who makes it</a>
+      </nav>
+
+      <div class="panel doc-body prose">
+        <div class="prose-column">
+
+          <div class="draft">
+            <strong>Draft copy.</strong> This page was written from the project notes so it is not empty. Read it, change what is wrong, and delete this box when you are happy with it.
+          </div>
+
+          <section id="what">
+            <h2>What this is</h2>
+            <p>Most software grows until it does everything badly. The idea here is the opposite: build one small thing that does its job properly, put it on its own address, and leave it alone. When a second thing is needed it becomes a second entry on the shelf, not a new tab inside the first.</p>
+            <p>The shelf itself holds nothing. It is a catalogue. Everything listed lives on its own address and this page points at it.</p>
+          </section>
+
+          <section id="two-kinds">
+            <h2>Two kinds of thing, and why the difference matters</h2>
+            <p>Roughly half the shelf is single pages. A break-even calculator, a numerology reckoner, a JSON formatter, an itinerary you can shuffle into order. They load in one request, they answer one question, and they are finished in the sense that a hammer is finished. There is no account, nothing is saved, and nothing you type into one is sent anywhere.</p>
+            <p>The rest are full web apps. A logins register, a portfolio, a trips planner, a review cycle, a small social network. These hold your work, so they need somewhere to put it, which means an account.</p>
+            <p>Every entry in the catalogue is labelled with which of the two it is, in the list and again on the entry itself. It is the first thing worth knowing about a thing you are about to open, so it is the first thing the page tells you.</p>
+          </section>
+
+          <section id="account">
+            <h2>One account, all of the apps</h2>
+            <p>You sign in once, in one place, and that covers every app on the shelf. No app asks for a password of its own and none of them keeps its own list of users. There is a single sign-in page and everything else borrows from it.</p>
+            <p>So adding a new app does not mean another account to remember, and closing your account closes it everywhere at once. The pages are not part of this at all: they never see a sign-in because they have nothing to sign in to.</p>
+          </section>
+
+          <section id="previews">
+            <h2>Try before you sign up</h2>
+            <p>Every entry that exists has a small working preview on the home page. It is a stand-in, not the real thing: fewer features, no saving, nothing sent anywhere. It is there so you can tell in ten seconds whether the thing is any use to you, without handing over an email address first.</p>
+          </section>
+
+          <section id="not">
+            <h2>What it does not do</h2>
+            <ul>
+              <li>No adverts, anywhere.</li>
+              <li>No selling or sharing of what you put into an app.</li>
+              <li>No account asked for by something that does not need one.</li>
+              <li>No pushing you towards a paid tier you did not ask about.</li>
+              <li>No feature that exists only to make a chart go up.</li>
+            </ul>
+            <div class="draft">
+              <strong>Check these before publishing.</strong> Those five are promises. Keep only the ones you are certain every page and every app will honour, and see <a href="/terms/#privacy">Privacy</a> for what actually gets collected.
+            </div>
+          </section>
+
+          <section id="who">
+            <h2>Who makes it</h2>
+            <div class="draft">
+              <strong>Yet to write.</strong> A short paragraph here: who you are, why you started building these, and how often to expect new ones. Two or three sentences is plenty.
+            </div>
+            <p>Bugs, ideas for the next one, or a question about any of this: <a href="/contact/">the contact page</a> comes straight to us and does not need an account.</p>
+          </section>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="/" aria-label="beehta.com, home">
+            <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>Small pages for a single answer. Small apps for the work that comes back.</p>
+        </div>
+        <div class="footer-col">
+          <h4>The shelf</h4>
+          <a href="/#apps">Available now</a>
+          <a href="/#coming-soon">Coming soon</a>
+        </div>
+        <div class="footer-col">
+          <h4>The site</h4>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/terms/#terms">Terms</a>
+          <a href="/terms/#privacy">Privacy</a>
+          <a href="/terms/#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; <span id="year">2026</span> <img class="wordmark" src="/assets/logo/lockup-dark.png" alt="beehta.com" width="868" height="186"></span>
+        <button type="button" data-reset-tiles>Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

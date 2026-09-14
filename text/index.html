@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Small pages and small apps, one job each</title>
+<meta name="description" content="A shelf of single-purpose pages and small web apps. Search it, filter it, and try any of them in the preview before you open anything.">
+
+<link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="/assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="/assets/css/base.css?v=f4d96276">
+<link rel="stylesheet" href="/assets/css/pages.css?v=d4f7d573">
+<link rel="stylesheet" href="/assets/demos/_kit/kit.css?v=42ddc2ec">
+<link rel="stylesheet" href="/assets/demos/average/average.css?v=5547f9a2">
+<link rel="stylesheet" href="/assets/demos/split/split.css?v=1e7dac90">
+<link rel="stylesheet" href="/assets/demos/numerology/numerology.css?v=945ed30d">
+<link rel="stylesheet" href="/assets/demos/json/json.css?v=dfcc228a">
+<link rel="stylesheet" href="/assets/demos/itinerary/itinerary.css?v=0e75f2e2">
+<link rel="stylesheet" href="/assets/demos/logins/logins.css?v=d17b68d8">
+
+<script defer src="/assets/js/data.js?v=cc966002"></script>
+<script defer src="/assets/js/tiles.js?v=729fb7cb"></script>
+<script defer src="/assets/demos/_kit/kit.js?v=5d9c5404"></script>
+<script defer src="/assets/demos/average/average.js?v=0b9b8bed"></script>
+<script defer src="/assets/demos/split/split.js?v=9b47c31c"></script>
+<script defer src="/assets/demos/numerology/numerology.js?v=d40e3364"></script>
+<script defer src="/assets/demos/json/json.js?v=643d098a"></script>
+<script defer src="/assets/demos/itinerary/itinerary.js?v=895cbcee"></script>
+<script defer src="/assets/demos/logins/logins.js?v=0cbf8491"></script>
+<script defer src="/assets/js/explorer.js?v=8ccb6489"></script>
+<script defer src="/assets/js/contact.js?v=0782344d"></script>
+<script defer src="/assets/js/shell.js?v=c767b615"></script>
+<script defer src="/assets/js/router.js?v=0e87b414"></script>
+</head>
+<body>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="/" aria-label="beehta.com, home">
+        <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Shelf</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="home">
+
+    <section class="section shell">
+      <div class="panel glass block block--hero block--split">
+        <div class="split-head">
+          <span class="kicker">Pages and apps</span>
+          <h1>Small pages for a quick answer. Small apps for <em>the rest</em>.</h1>
+        </div>
+        <div class="split-body">
+          <p class="block-lede">Some things you need once: a number worked out, a file tidied, a plan laid down. Those are single pages here. You open one, get what you came for, and close the tab. Nothing to sign up for.</p>
+          <p class="block-lede">Other things you come back to for years, and those are proper apps with your work kept in them. Both live on this shelf, and the list below says which is which.</p>
+          <div class="hero-actions">
+            <a class="btn btn--primary" href="#apps">Browse the shelf</a>
+            <a class="btn btn--ghost" href="#how">How it works</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Directly before the shelf, because it explains the two
+         labels every entry in that shelf carries. Left out below
+         900px: it needs two columns of text to work, and the about
+         page says the same thing at length. -->
+    <section class="section shell only-wide" id="kinds">
+      <div class="panel block block--split">
+        <div class="split-head">
+          <span class="kicker">Two kinds of thing</span>
+          <h2>Not everything needs to be an app.</h2>
+        </div>
+        <div class="split-body">
+          <p class="block-lede">Most sites turn every small job into a product with a sign-up page in front of it. Half the things on this shelf do not need one, and the page says so rather than pretending otherwise.</p>
+        </div>
+        <div class="split-full">
+          <div class="twoup">
+            <div>
+              <span class="twoup-kind">Page</span>
+              <h3>A single page that answers one question</h3>
+              <p>A calculator, a generator, an editor. It loads in one request, does its job, and forgets you the moment the tab closes.</p>
+              <ul>
+                <li>No account and no sign-in.</li>
+                <li>Nothing saved, and nothing sent to us.</li>
+                <li>Works with the tab offline once it has loaded.</li>
+              </ul>
+            </div>
+            <div>
+              <span class="twoup-kind">App</span>
+              <h3>A web app that keeps your work</h3>
+              <p>Something you come back to: a portfolio, a set of trips, a review cycle. It holds your data, so it needs an account, and it says so on the entry.</p>
+              <ul>
+                <li>One account covers every app on the shelf.</li>
+                <li>Your work stays inside the app you put it in.</li>
+                <li>Closing your account closes it everywhere at once.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- One card: the heading, the search that belongs to it, and
+         the list and open entry it searches. -->
+    <section class="section shell" id="apps">
+      <div class="panel shelf shelf--dark">
+        <div class="shelf-head block--split">
+          <div class="split-head">
+            <span class="kicker">The shelf</span>
+            <h2>Available <em>now</em></h2>
+          </div>
+          <div class="split-body">
+            <p class="block-lede">Ready to open. Search or filter the list, and try any of them in the preview beside it. No account, and nothing you type into a preview is saved or sent anywhere.</p>
+          </div>
+        </div>
+        <!-- explorer.js fills this with the search, the list, the
+             pager and the open entry. -->
+        <div id="catalogue"></div>
+      </div>
+    </section>
+
+    <section class="section shell" id="comingSoonBand">
+      <div class="panel shelf">
+        <div class="shelf-head block--split" id="comingSoonHead">
+          <div class="split-head">
+            <span class="kicker">Being built</span>
+            <h2 id="coming-soon">Coming soon</h2>
+          </div>
+          <div class="split-body">
+            <p class="block-lede">Listed before they exist, so the shelf shows where it is going rather than only where it has been. No preview, because there is nothing yet to preview.</p>
+            <p class="soon-count" id="soonCount"></p>
+          </div>
+        </div>
+        <div class="soon-wrap">
+          <div class="soon-grid" id="comingSoon"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The statement and the three steps were saying one thing in
+         two sections, so they are one section. -->
+    <section class="section shell" id="how">
+      <div class="panel block block--dark statement block--split">
+        <div class="split-head">
+          <span class="kicker">How it works</span>
+          <p class="statement-lines">
+            <span class="line">Open it.</span>
+            <span class="line">Use it.</span>
+            <span class="line"><em>Close it.</em></span>
+          </p>
+        </div>
+        <div class="split-body">
+          <p class="statement-note">That is the whole shape of a page on this shelf. It runs in your browser, it answers the one question it was built for, and it keeps nothing. The apps ask for a little more, and only because they have to hold on to something for you.</p>
+          <p class="statement-note">Pick one and that is it. There is no onboarding here, because for half the shelf there is nothing to onboard into.</p>
+        </div>
+        <div class="split-full">
+          <ol class="steps">
+            <li>
+              <span class="step-num">01</span>
+              <h3>Find it</h3>
+              <p>Search the list or filter it down to pages, apps, or one category. The list stays where it is while you look through it.</p>
+            </li>
+            <li>
+              <span class="step-num">02</span>
+              <h3>Try it</h3>
+              <p>Every entry that exists has a working preview beside it. It costs nothing, asks for nothing, and tells you in ten seconds whether the thing is any use to you.</p>
+            </li>
+            <li>
+              <span class="step-num">03</span>
+              <h3>Open it</h3>
+              <p>A page opens and works straight away. An app asks you to sign in once, in one place, and that same account covers everything else on the shelf.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- The four promises and the invitation are the same thought:
+         here is where we stop, so tell us what is missing. -->
+    <section class="section shell" id="limits">
+      <div class="panel block block--split">
+        <div class="split-head">
+          <span class="kicker">Where this stops</span>
+          <h2>What <img class="wordmark" src="/assets/logo/lockup-light.png" alt="beehta.com" width="868" height="186"> does not do.</h2>
+          <p class="block-lede">Four promises, kept short enough to be checked.</p>
+        </div>
+        <div class="split-body">
+          <ul class="plainlist">
+            <li>
+              <h3>No ads</h3>
+              <p>Not on this page, and not inside anything listed on it.</p>
+            </li>
+            <li>
+              <h3>No feature bloat</h3>
+              <p>Every feature needs a reason to exist. A page that grows a second job becomes a second page.</p>
+            </li>
+            <li>
+              <h3>No unnecessary accounts</h3>
+              <p>If a thing does not need to know who you are, it will not ask. That is why half the shelf has no sign-in at all.</p>
+            </li>
+            <li>
+              <h3>No dark patterns</h3>
+              <p>No artificial urgency, no engagement tricks, no upgrade prompt behind a button you did not press.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="split-full">
+          <div class="cta-inline">
+            <div>
+              <h3>Missing something?</h3>
+              <p>Tell us about a small problem you keep solving the hard way. Most of what is on this shelf started as somebody sending us a message, and quite a few turned out to need only a page.</p>
+            </div>
+            <a class="btn btn--primary" href="/contact/">Suggest one</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="/" aria-label="beehta.com, home">
+            <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>Small pages for a single answer. Small apps for the work that comes back.</p>
+        </div>
+        <div class="footer-col">
+          <h4>The shelf</h4>
+          <a href="/#apps">Available now</a>
+          <a href="/#coming-soon">Coming soon</a>
+        </div>
+        <div class="footer-col">
+          <h4>The site</h4>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/terms/#terms">Terms</a>
+          <a href="/terms/#privacy">Privacy</a>
+          <a href="/terms/#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; <span id="year">2026</span> <img class="wordmark" src="/assets/logo/lockup-dark.png" alt="beehta.com" width="868" height="186"></span>
+        <button type="button" data-reset-tiles>Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

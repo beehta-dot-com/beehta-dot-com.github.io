@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact</title>
+<meta name="description" content="Suggest a page or an app, report a bug, or ask a question. No account needed.">
+
+<link rel="icon" href="/assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/logo/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/logo/apple-touch-icon-180.png">
+<link rel="manifest" href="/assets/logo/site.webmanifest">
+<meta name="theme-color" content="#201e1d">
+
+<link rel="stylesheet" href="/assets/css/base.css?v=f4d96276">
+<link rel="stylesheet" href="/assets/css/pages.css?v=d4f7d573">
+<link rel="stylesheet" href="/assets/demos/_kit/kit.css?v=42ddc2ec">
+<link rel="stylesheet" href="/assets/demos/average/average.css?v=5547f9a2">
+<link rel="stylesheet" href="/assets/demos/split/split.css?v=1e7dac90">
+<link rel="stylesheet" href="/assets/demos/numerology/numerology.css?v=945ed30d">
+<link rel="stylesheet" href="/assets/demos/json/json.css?v=dfcc228a">
+<link rel="stylesheet" href="/assets/demos/itinerary/itinerary.css?v=0e75f2e2">
+<link rel="stylesheet" href="/assets/demos/logins/logins.css?v=d17b68d8">
+
+<script defer src="/assets/js/data.js?v=cc966002"></script>
+<script defer src="/assets/js/tiles.js?v=729fb7cb"></script>
+<script defer src="/assets/demos/_kit/kit.js?v=5d9c5404"></script>
+<script defer src="/assets/demos/average/average.js?v=0b9b8bed"></script>
+<script defer src="/assets/demos/split/split.js?v=9b47c31c"></script>
+<script defer src="/assets/demos/numerology/numerology.js?v=d40e3364"></script>
+<script defer src="/assets/demos/json/json.js?v=643d098a"></script>
+<script defer src="/assets/demos/itinerary/itinerary.js?v=895cbcee"></script>
+<script defer src="/assets/demos/logins/logins.js?v=0cbf8491"></script>
+<script defer src="/assets/js/explorer.js?v=8ccb6489"></script>
+<script defer src="/assets/js/contact.js?v=0782344d"></script>
+<script defer src="/assets/js/shell.js?v=c767b615"></script>
+<script defer src="/assets/js/router.js?v=0e87b414"></script>
+</head>
+<body>
+
+<!-- The page background. Tiles swap by drag or by picking two, and
+     the arrangement is kept in this browser. -->
+<div id="tile-field" aria-hidden="true"></div>
+
+<div class="page">
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="logo logo--mark" href="/" aria-label="beehta.com, home">
+        <img src="/assets/logo/mark.svg" alt="" width="100" height="87">
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Shelf</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" data-page="contact">
+
+    <section class="page-head shell">
+      <div class="panel glass block block--split">
+        <div class="split-head">
+          <span class="kicker">Contact</span>
+          <h1>Say something.</h1>
+        </div>
+        <div class="split-body">
+          <p>A bug, an idea for the next page or app, or a question about any of this.</p>
+          <p>It comes straight to us, you do not need an account, and there is nobody here whose job is to deflect you.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact shell">
+
+      <div class="panel form">
+        <form id="contactForm" novalidate>
+
+          <!-- Two short fields side by side rather than stacked, so
+               the form fills its panel instead of running down one
+               edge of it. -->
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+              <span class="error" role="alert"></span>
+            </div>
+
+            <div class="field">
+              <label for="email">Email <span class="hint">so we can reply</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+              <span class="error" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="subject">What is this about</label>
+            <select id="subject" name="subject">
+              <option>Something is broken</option>
+              <option>An idea for a page</option>
+              <option>An idea for an app</option>
+              <option>A question</option>
+              <option>Something else</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+            <span class="error" role="alert"></span>
+          </div>
+
+          <div class="form-foot">
+            <button type="submit" class="btn btn--primary">Send it</button>
+            <p class="form-note">We use what you write here to answer you, and for nothing else. See <a href="/terms/#privacy">Privacy</a>.</p>
+          </div>
+
+          <p class="form-status" id="formStatus" hidden></p>
+
+          <!-- The human check goes here once it is set up. Read the
+               notes at the top of assets/js/contact.js first: a widget
+               with no server-side token check stops nobody, because
+               anyone can post to the relay directly. -->
+
+        </form>
+      </div>
+
+      <aside class="contact-aside" aria-label="Before you write">
+        <div class="panel aside-card">
+          <h3>Suggesting something</h3>
+          <p>Describe the job rather than the software. Quite often the answer turns out to be a single page and not an app at all, which means it can be built in a weekend.</p>
+        </div>
+        <div class="panel aside-card">
+          <h3>Reporting a bug</h3>
+          <p>Three things help most: which page or app, what you did, and what happened instead. A screenshot beats a description.</p>
+        </div>
+        <div class="panel aside-card">
+          <h3>How long we take</h3>
+          <p>Usually a day or two. If it is a bug that is stopping you working, say so in the first line and it goes to the top.</p>
+        </div>
+        <div class="panel aside-card">
+          <h3>Why there is no address here</h3>
+          <p>An address written on a public page is on a spam list within a week. The form reaches the same inbox.</p>
+        </div>
+        <div class="draft">
+          <strong>Not sending yet.</strong> The form checks what you type but has nowhere to send it until ENDPOINT is set in assets/js/contact.js. Working hours, and anything else worth listing here, are still to be decided.
+        </div>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo logo--word" href="/" aria-label="beehta.com, home">
+            <img src="/assets/logo/lockup-dark.png" alt="" width="868" height="186">
+          </a>
+          <p>Small pages for a single answer. Small apps for the work that comes back.</p>
+        </div>
+        <div class="footer-col">
+          <h4>The shelf</h4>
+          <a href="/#apps">Available now</a>
+          <a href="/#coming-soon">Coming soon</a>
+        </div>
+        <div class="footer-col">
+          <h4>The site</h4>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="/terms/#terms">Terms</a>
+          <a href="/terms/#privacy">Privacy</a>
+          <a href="/terms/#cookies">Cookies</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; <span id="year">2026</span> <img class="wordmark" src="/assets/logo/lockup-dark.png" alt="beehta.com" width="868" height="186"></span>
+        <button type="button" data-reset-tiles>Put the background back how it started</button>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
